@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #0EA5E9;
+  --brand-dark: #0A3C6B;
+  --brand-darker: #062847;
+  --saudi-green: #006C35;
+  --gold: #E3B76B;
+}
+
+[dir="rtl"] {
+  font-family: 'IBM Plex Arabic', 'Noto Kufi Arabic', sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+}

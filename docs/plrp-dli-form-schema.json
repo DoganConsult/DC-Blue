@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PLRP + DLI Lead Intake Form Schema",
+  "description": "Unified schema for public DLI and partner PLRP lead submission. Required fields vary by source.",
+  "type": "object",
+  "properties": {
+    "source": {
+      "type": "string",
+      "enum": ["website", "partner", "referral", "event", "whatsapp", "email"],
+      "description": "Set by backend from context (public vs partner)"
+    },
+    "campaign_tag": { "type": ["string", "null"], "maxLength": 64 },
+    "product_line": {
+      "type": "string",
+      "description": "Required. Product/portal code: shahin-grc | alwad | vendor-portal | network | cybersecurity | cloud | integration | consulting | managed"
+    },
+    "vertical": {
+      "type": "string",
+      "enum": ["government", "banking", "healthcare", "energy", "telecom", "retail", "education", "other", ""]
+    },
+    "company_name": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "company_name_ar": { "type": ["string", "null"], "maxLength": 256 },
+    "cr_number": { "type": ["string", "null"], "maxLength": 32 },
+    "company_website": { "type": ["string", "null"], "format": "uri", "maxLength": 256 },
+    "city": { "type": ["string", "null"], "maxLength": 128 },
+    "country": { "type": "string", "maxLength": 2, "default": "SA" },
+    "contact_name": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "contact_title": { "type": ["string", "null"], "maxLength": 128 },
+    "contact_email": { "type": "string", "format": "email", "maxLength": 256 },
+    "contact_phone": { "type": ["string", "null"], "maxLength": 32 },
+    "contact_department": {
+      "type": ["string", "null"],
+      "enum": ["GRC", "IT", "Internal Audit", "Finance", "Security", "Other", null, ""]
+    },
+    "expected_users": {
+      "type": ["string", "null"],
+      "enum": ["1-50", "51-200", "201-500", "501-1000", "1000+", null, ""]
+    },
+    "budget_range": {
+      "type": ["string", "null"],
+      "enum": ["<50k", "50k-200k", "200k-500k", "500k-1m", "1m+", null, ""]
+    },
+    "timeline": {
+      "type": ["string", "null"],
+      "enum": ["immediate", "1-3months", "3-6months", "6months+", "0-30", "30-90", "3-6months", null, ""]
+    },
+    "message": { "type": ["string", "null"], "maxLength": 4000 },
+    "pain_points": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "PLRP: e.g. compliance complexity, manual evidence, multi-framework"
+    },
+    "current_tools": {
+      "type": ["string", "null"],
+      "enum": ["ServiceNow", "Archer", "Excel", "None", "Other", null, ""]
+    },
+    "relationship_proof": { "type": ["string", "null"], "maxLength": 500 },
+    "consent_pdpl": { "type": "boolean", "const": true },
+    "declaration_accuracy": { "type": "boolean", "description": "PLRP: partner confirms accuracy" },
+    "declaration_non_circumvention": { "type": "boolean", "description": "PLRP: partner acknowledges non-circumvention" }
+  },
+  "required": ["contact_email", "company_name", "product_line", "consent_pdpl"],
+  "required_partner": ["contact_email", "company_name", "product_line", "consent_pdpl", "declaration_accuracy", "declaration_non_circumvention"]
+}

@@ -1,0 +1,65 @@
+{
+  "title": "PLRP + DLI Workflow States",
+  "description": "Canonical states for lead_intakes, partner_leads, and opportunities.",
+  "lead_intakes": {
+    "status": [
+      "new",
+      "needs_info",
+      "qualified",
+      "rejected",
+      "converted",
+      "won"
+    ],
+    "transitions": {
+      "new": ["needs_info", "qualified", "rejected"],
+      "needs_info": ["qualified", "rejected"],
+      "qualified": ["converted", "rejected"],
+      "rejected": [],
+      "converted": ["won"],
+      "won": []
+    }
+  },
+  "partner_leads": {
+    "status": [
+      "submitted",
+      "approved",
+      "rejected",
+      "converted"
+    ],
+    "transitions": {
+      "submitted": ["approved", "rejected"],
+      "approved": ["converted"],
+      "rejected": [],
+      "converted": []
+    },
+    "reject_reason_codes": [
+      "duplicate",
+      "not_icp",
+      "no_consent",
+      "insufficient_info",
+      "already_customer",
+      "other"
+    ]
+  },
+  "opportunities": {
+    "stage": [
+      "discovery",
+      "proposal",
+      "negotiation",
+      "closed_won",
+      "closed_lost"
+    ],
+    "transitions": {
+      "discovery": ["proposal", "closed_lost"],
+      "proposal": ["negotiation", "closed_lost"],
+      "negotiation": ["closed_won", "closed_lost"],
+      "closed_won": [],
+      "closed_lost": []
+    }
+  },
+  "sla": {
+    "approval_business_days": 2,
+    "response_customer_hours": 24,
+    "exclusivity_days": 90
+  }
+}
