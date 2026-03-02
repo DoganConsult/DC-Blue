@@ -1,0 +1,163 @@
+// Luxury Minimal Theme (McKinsey/Apple Model)
+// Premium & Sophisticated Design Language
+
+[data-theme="luxury-minimal"],
+[data-theme-preview="luxury-minimal"] {
+  // Primary Colors - Pure Black (Premium & Sophisticated)
+  --theme-primary: #000000;         // Pure Black
+  --theme-primary-dark: #000000;    // Stays black
+  --theme-primary-light: #1D1D1F;   // Slightly lighter
+
+  // Secondary Colors - Off-white (Clean & Spacious)
+  --theme-secondary: #F5F5F7;       // Apple's off-white
+  --theme-secondary-dark: #E8E8ED;  // Slightly darker
+  --theme-secondary-light: #FBFBFD; // Almost white
+
+  // Accent Colors - Apple Blue (Selective CTAs)
+  --theme-accent: #0071E3;          // Apple Blue
+  --theme-accent-dark: #0051A2;     // Darker blue
+  --theme-accent-light: #42A1FF;    // Lighter blue
+
+  // Foundation Colors - Maximum Contrast
+  --theme-foundation-dark: #000000;  // Pure Black
+  --theme-foundation-light: #FFFFFF; // Pure White
+
+  // Gray Scale - Premium neutrals (Apple's palette)
+  --theme-gray-50: #FBFBFD;
+  --theme-gray-100: #F5F5F7;
+  --theme-gray-200: #E8E8ED;
+  --theme-gray-300: #D2D2D7;
+  --theme-gray-400: #86868B;        // Apple's text gray
+  --theme-gray-500: #6E6E73;
+  --theme-gray-600: #515154;        // Apple's dark gray
+  --theme-gray-700: #424245;
+  --theme-gray-800: #1D1D1F;
+  --theme-gray-900: #000000;
+
+  // Semantic Colors - Subtle & refined
+  --theme-success: #34C759;  // Apple Green
+  --theme-warning: #FF9500;  // Apple Orange
+  --theme-error: #FF3B30;    // Apple Red
+  --theme-info: #007AFF;     // Apple System Blue
+
+  // Special Theme Properties
+  --theme-gradient-primary: linear-gradient(180deg, #000000 0%, #1D1D1F 100%);
+  --theme-gradient-accent: linear-gradient(135deg, #0071E3 0%, #42A1FF 100%);
+  --theme-gradient-hero: linear-gradient(180deg, #FFFFFF 0%, #F5F5F7 100%);
+
+  // Glass Morphism - Ultra minimal
+  --theme-glass-bg: rgba(255, 255, 255, 0.72);
+  --theme-glass-border: rgba(0, 0, 0, 0.04);
+  --theme-glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+
+  // Component-Specific Overrides
+  --theme-hero-bg: var(--theme-gradient-hero);
+  --theme-card-hover-border: var(--theme-gray-300);
+  --theme-button-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --theme-input-focus-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+
+  // Charts & Data Visualization - Monochromatic
+  --theme-chart-1: #000000;
+  --theme-chart-2: #515154;
+  --theme-chart-3: #86868B;
+  --theme-chart-4: #0071E3;
+  --theme-chart-5: #D2D2D7;
+  --theme-chart-6: #F5F5F7;
+
+  // Hover State Multipliers
+  --theme-hover-opacity: 0.7;
+  --theme-active-opacity: 0.5;
+  --theme-disabled-opacity: 0.3;
+
+  // Luxury-specific properties
+  --theme-letter-spacing: 0.02em;
+  --theme-line-height: 1.6;
+  --theme-font-weight-normal: 400;
+  --theme-font-weight-medium: 500;
+  --theme-font-weight-bold: 600;
+}
+
+// Dark Mode Variant
+[data-theme="luxury-minimal"][data-mode="dark"] {
+  // Inverted luxury for dark mode
+  --theme-primary: #FFFFFF;         // White becomes primary
+  --theme-primary-dark: #F5F5F7;
+  --theme-primary-light: #FFFFFF;
+
+  --theme-secondary: #1D1D1F;       // Dark gray secondary
+  --theme-secondary-dark: #000000;
+  --theme-secondary-light: #424245;
+
+  --theme-accent: #42A1FF;          // Brighter blue for dark
+  --theme-accent-dark: #0071E3;
+  --theme-accent-light: #70B8FF;
+
+  // Dark mode glass morphism
+  --theme-glass-bg: rgba(29, 29, 31, 0.72);
+  --theme-glass-border: rgba(255, 255, 255, 0.04);
+  --theme-glass-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+
+  // Dark mode gradients
+  --theme-gradient-primary: linear-gradient(180deg, #1D1D1F 0%, #000000 100%);
+  --theme-gradient-hero: linear-gradient(180deg, #000000 0%, #1D1D1F 100%);
+}
+
+// Theme-specific utility classes
+.theme-luxury-minimal {
+  // Minimalist button
+  .btn-minimal {
+    background: transparent;
+    color: var(--theme-primary);
+    border: 1px solid var(--theme-gray-300);
+    font-weight: var(--theme-font-weight-medium);
+    letter-spacing: var(--theme-letter-spacing);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+      background: var(--theme-primary);
+      color: var(--theme-foundation-light);
+      transform: translateY(-1px);
+    }
+  }
+
+  // Premium card
+  .premium-card {
+    background: var(--theme-foundation-light);
+    border: 1px solid var(--theme-gray-200);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.04);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+      transform: translateY(-4px);
+    }
+  }
+
+  // Subtle accent
+  .subtle-accent {
+    color: var(--theme-gray-600);
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: var(--theme-accent);
+    }
+  }
+
+  // Apple-style badge
+  .luxury-badge {
+    background: var(--theme-gray-100);
+    color: var(--theme-gray-600);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  // Large typography for impact
+  .hero-title {
+    font-size: 80px;
+    font-weight: var(--theme-font-weight-bold);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+}

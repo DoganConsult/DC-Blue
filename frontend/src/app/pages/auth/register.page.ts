@@ -3,157 +3,127 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
+import { I18nService } from '../../core/services/i18n.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   template: `
-    <div class="min-h-screen bg-gray-950 text-white flex flex-col">
+    <div class="min-h-screen bg-th-bg text-th-text flex items-center justify-center px-4">
+      <div class="w-full max-w-md">
 
-      <!-- Header -->
-      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-800">
-        <a routerLink="/" class="flex items-center gap-2 text-white font-bold text-lg tracking-wide hover:opacity-80 transition">
-          <span class="text-[#0EA5E9]">◈</span> Dogan Consult
-        </a>
-        <span class="text-gray-500 text-sm">Already have an account? <a routerLink="/login" class="text-[#0EA5E9] hover:underline">Sign in</a></span>
-      </div>
-
-      <!-- Body -->
-      <div class="flex-1 flex flex-col lg:flex-row">
-
-        <!-- Left: choose your path -->
-        <div class="lg:w-1/2 bg-gradient-to-br from-gray-900 to-gray-950 border-r border-gray-800 flex flex-col justify-center px-10 py-16">
-          <h1 class="text-3xl font-bold mb-3">Join the platform</h1>
-          <p class="text-gray-400 mb-10 text-sm leading-relaxed">
-            Create your account to access the tools, submit inquiries, track projects,<br class="hidden lg:block" />
-            or apply as a consulting partner.
-          </p>
-
-          <div class="space-y-4">
-            <div (click)="setIntent('client')" class="w-full flex items-start gap-4 p-4 rounded-xl border transition text-left cursor-pointer"
-                 [class.border-sky-500]="intent()==='client'" [class.bg-sky-950]="intent()==='client'"
-                 [class.border-gray-700]="intent()!=='client'" [class.hover:bg-gray-800]="true">
-              <span class="text-2xl mt-0.5">&#127962;</span>
-              <div><p class="font-semibold text-sm">Client / Visitor</p><p class="text-gray-500 text-xs mt-0.5">Submit inquiries, track project status, explore ICT services.</p></div>
-            </div>
-
-            <div (click)="setIntent('partner')" class="w-full flex items-start gap-4 p-4 rounded-xl border transition text-left cursor-pointer"
-                 [class.border-sky-500]="intent()==='partner'" [class.bg-sky-950]="intent()==='partner'"
-                 [class.border-gray-700]="intent()!=='partner'">
-              <span class="text-2xl mt-0.5">&#129309;</span>
-              <div><p class="font-semibold text-sm">Consulting Partner</p><p class="text-gray-500 text-xs mt-0.5">Refer leads, earn commissions, access the partner portal.</p></div>
-            </div>
-
-            <div (click)="setIntent('employee')" class="w-full flex items-start gap-4 p-4 rounded-xl border transition text-left cursor-pointer"
-                 [class.border-sky-500]="intent()==='employee'" [class.bg-sky-950]="intent()==='employee'"
-                 [class.border-gray-700]="intent()!=='employee'">
-              <span class="text-2xl mt-0.5">&#128100;</span>
-              <div><p class="font-semibold text-sm">Team Member</p><p class="text-gray-500 text-xs mt-0.5">Internal staff — manage leads, opportunities, and engagements.</p></div>
-            </div>
-          </div>
+        <div class="text-center mb-10">
+          <a routerLink="/" class="inline-flex items-center gap-2 text-th-text font-bold text-xl tracking-wide hover:opacity-80 transition">
+            <span class="w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-cyan-500 inline-flex items-center justify-center"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></span> Dogan Consult
+          </a>
         </div>
 
-        <!-- Right: registration form -->
-        <div class="lg:w-1/2 flex items-center justify-center px-8 py-16">
-          <div class="w-full max-w-md">
-            <h2 class="text-2xl font-bold mb-1">Create your account</h2>
-            <p class="text-gray-500 text-sm mb-8">
-              @if (intent() === 'partner') { You'll be redirected to the partner registration form after sign-up. }
-              @else if (intent() === 'employee') { Team member accounts require admin approval. }
-              @else { Fill in your details to get started. }
-            </p>
+        <div class="bg-th-card border border-th-border rounded-2xl p-8">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">
+              <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-xl font-bold">{{ i18n.t('Create Account', 'إنشاء حساب') }}</h2>
+              <p class="text-th-text-3 text-xs">{{ i18n.t('Partners, customers, freelancers & ecosystem', 'الشركاء والعملاء والمستقلون والنظام البيئي') }}</p>
+            </div>
+          </div>
 
-            @if (success()) {
-              <div class="bg-emerald-900/40 border border-emerald-700 rounded-xl p-5 mb-6 text-center">
-                <p class="text-emerald-300 font-semibold text-lg mb-1">Account created!</p>
-                <p class="text-emerald-400/80 text-sm mb-4">Welcome, <strong>{{ form.username }}</strong>. You are now signed in.</p>
-                @if (intent() === 'partner') {
-                  <a routerLink="/partner/register" class="inline-block px-5 py-2.5 bg-[#0EA5E9] text-white rounded-xl text-sm font-semibold hover:bg-[#0EA5E9]/80 transition">Continue to Partner Registration →</a>
-                } @else if (intent() === 'employee') {
-                  <a routerLink="/admin" class="inline-block px-5 py-2.5 bg-[#0EA5E9] text-white rounded-xl text-sm font-semibold hover:bg-[#0EA5E9]/80 transition">Go to Dashboard →</a>
-                } @else {
-                  <a routerLink="/" class="inline-block px-5 py-2.5 bg-[#0EA5E9] text-white rounded-xl text-sm font-semibold hover:bg-[#0EA5E9]/80 transition">Go to Home →</a>
+          @if (false) {
+          } @else {
+            <form (ngSubmit)="register()" class="space-y-4">
+
+              <div>
+                <label class="block text-th-text-3 text-xs mb-1.5 font-medium">{{ i18n.t('I am a', 'أنا') }} <span class="text-red-500">*</span></label>
+                <div class="grid grid-cols-2 gap-2">
+                  @for (cat of categories; track cat.value) {
+                    <button type="button" (click)="form.category = cat.value"
+                            class="px-3 py-2.5 rounded-xl text-xs font-medium border transition text-left"
+                            [ngClass]="form.category === cat.value ? 'bg-sky-100 border-sky-500 text-sky-700' : 'bg-th-bg-tert border-th-border-dk text-th-text-3 hover:border-th-border-lt0'">
+                      {{ cat.label }}
+                    </button>
+                  }
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-th-text-3 text-xs mb-1.5 font-medium">{{ i18n.t('Full Name', 'الاسم الكامل') }}</label>
+                <input [(ngModel)]="form.name" name="name" placeholder="Jane Smith"
+                       class="w-full bg-th-bg-tert border border-th-border-dk text-th-text placeholder-th-text-3 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition" />
+              </div>
+
+              <div>
+                <label class="block text-th-text-3 text-xs mb-1.5 font-medium">{{ i18n.t('Email Address', 'البريد الإلكتروني') }} <span class="text-red-500">*</span></label>
+                <input [(ngModel)]="form.email" name="email" type="email" placeholder="jane&#64;company.com" required autocomplete="email"
+                       class="w-full bg-th-bg-tert border border-th-border-dk text-th-text placeholder-th-text-3 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition" />
+                @if (isDoganconsultEmail()) {
+                  <p class="text-amber-600 text-xs mt-1">{{ i18n.t('Dogan Consult team accounts are created by your administrator.', 'يتم إنشاء حسابات فريق دوغان كونسلت بواسطة المسؤول.') }}</p>
                 }
               </div>
-            } @else {
-              <form (ngSubmit)="register()" #f="ngForm" class="space-y-4">
 
-                <div class="grid grid-cols-2 gap-4">
-                  <div>
-                    <label class="block text-gray-400 text-xs mb-1.5 font-medium">Full Name</label>
-                    <input [(ngModel)]="form.name" name="name" placeholder="Jane Smith"
-                           class="w-full bg-gray-900 border border-gray-700 text-white placeholder-gray-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#0EA5E9]/50 focus:border-[#0EA5E9] transition" />
-                  </div>
-                  <div>
-                    <label class="block text-gray-400 text-xs mb-1.5 font-medium">Username <span class="text-red-400">*</span></label>
-                    <input [(ngModel)]="form.username" name="username" placeholder="janesmith" required
-                           class="w-full bg-gray-900 border border-gray-700 text-white placeholder-gray-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#0EA5E9]/50 focus:border-[#0EA5E9] transition" />
-                  </div>
+              <div>
+                <label class="block text-th-text-3 text-xs mb-1.5 font-medium">{{ i18n.t('Company / Organisation', 'الشركة / المنظمة') }}</label>
+                <input [(ngModel)]="form.company" name="company" placeholder="Acme Corp (optional)"
+                       class="w-full bg-th-bg-tert border border-th-border-dk text-th-text placeholder-th-text-3 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition" />
+              </div>
+
+              <div>
+                <label class="block text-th-text-3 text-xs mb-1.5 font-medium">{{ i18n.t('Password', 'كلمة المرور') }} <span class="text-red-500">*</span></label>
+                <div class="relative">
+                  <input [(ngModel)]="form.password" name="password" [type]="showPw() ? 'text' : 'password'" placeholder="Min. 8 characters" required autocomplete="new-password"
+                         class="w-full bg-th-bg-tert border border-th-border-dk text-th-text placeholder-th-text-3 rounded-xl px-4 py-3 pr-14 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition" />
+                  <button type="button" (click)="showPw.set(!showPw())" class="absolute right-3 top-3 text-th-text-3 hover:text-th-text-3 transition text-xs px-1 py-0.5">
+                    {{ showPw() ? 'Hide' : 'Show' }}
+                  </button>
                 </div>
-
-                <div>
-                  <label class="block text-gray-400 text-xs mb-1.5 font-medium">Email Address <span class="text-red-400">*</span></label>
-                  <input [(ngModel)]="form.email" name="email" type="email" placeholder="jane@company.com" required
-                         class="w-full bg-gray-900 border border-gray-700 text-white placeholder-gray-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#0EA5E9]/50 focus:border-[#0EA5E9] transition" />
-                </div>
-
-                <div>
-                  <label class="block text-gray-400 text-xs mb-1.5 font-medium">Company / Organisation</label>
-                  <input [(ngModel)]="form.company" name="company" placeholder="Acme Corp (optional)"
-                         class="w-full bg-gray-900 border border-gray-700 text-white placeholder-gray-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#0EA5E9]/50 focus:border-[#0EA5E9] transition" />
-                </div>
-
-                <div>
-                  <label class="block text-gray-400 text-xs mb-1.5 font-medium">Password <span class="text-red-400">*</span></label>
-                  <div class="relative">
-                    <input [(ngModel)]="form.password" name="password" [type]="showPw() ? 'text' : 'password'" placeholder="Min. 8 characters" required
-                           class="w-full bg-gray-900 border border-gray-700 text-white placeholder-gray-600 rounded-xl px-4 py-3 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-[#0EA5E9]/50 focus:border-[#0EA5E9] transition" />
-                    <button type="button" (click)="showPw.set(!showPw())" class="absolute right-3 top-3 text-gray-500 hover:text-gray-300 transition text-xs px-1 py-0.5">
-                      {{ showPw() ? 'Hide' : 'Show' }}
-                    </button>
-                  </div>
-                  <div class="flex gap-1 mt-2">
-                    <div class="h-1 flex-1 rounded-full transition-colors" [class.bg-gray-700]="pwStrength()<1" [class.bg-red-500]="pwStrength()===1" [class.bg-orange-500]="pwStrength()===2" [class.bg-yellow-500]="pwStrength()===3" [class.bg-emerald-500]="pwStrength()===4"></div>
-                    <div class="h-1 flex-1 rounded-full transition-colors" [class.bg-gray-700]="pwStrength()<2" [class.bg-red-500]="pwStrength()===1&&pwStrength()>=2" [class.bg-orange-500]="pwStrength()>=2&&pwStrength()<=2" [class.bg-yellow-500]="pwStrength()>=3&&pwStrength()<=3" [class.bg-emerald-500]="pwStrength()>=4"></div>
-                    <div class="h-1 flex-1 rounded-full transition-colors" [class.bg-gray-700]="pwStrength()<3" [class.bg-yellow-500]="pwStrength()===3" [class.bg-emerald-500]="pwStrength()>=4"></div>
-                    <div class="h-1 flex-1 rounded-full transition-colors" [class.bg-gray-700]="pwStrength()<4" [class.bg-emerald-500]="pwStrength()>=4"></div>
-                  </div>
-                </div>
-
-                <div>
-                  <label class="block text-gray-400 text-xs mb-1.5 font-medium">Confirm Password <span class="text-red-400">*</span></label>
-                  <input [(ngModel)]="form.confirm" name="confirm" [type]="showPw() ? 'text' : 'password'" placeholder="Re-enter password" required
-                         class="w-full bg-gray-900 border border-gray-700 text-white placeholder-gray-600 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#0EA5E9]/50 focus:border-[#0EA5E9] transition"
-                         [class.border-red-600]="form.confirm && form.confirm !== form.password" />
-                  @if (form.confirm && form.confirm !== form.password) {
-                    <p class="text-red-400 text-xs mt-1">Passwords do not match</p>
+                <div class="flex gap-1 mt-2">
+                  @for (i of [1,2,3,4]; track i) {
+                    <div class="h-1 flex-1 rounded-full transition-colors"
+                         [class.bg-th-bg-tert]="pwStrength() < i"
+                         [class.bg-red-500]="pwStrength() >= i && pwStrength() === 1"
+                         [class.bg-orange-500]="pwStrength() >= i && pwStrength() === 2"
+                         [class.bg-yellow-500]="pwStrength() >= i && pwStrength() === 3"
+                         [class.bg-emerald-500]="pwStrength() >= i && pwStrength() === 4"></div>
                   }
                 </div>
+              </div>
 
-                @if (error()) {
-                  <div class="bg-red-900/40 border border-red-700 rounded-xl px-4 py-3 text-red-300 text-sm">{{ error() }}</div>
+              <div>
+                <label class="block text-th-text-3 text-xs mb-1.5 font-medium">{{ i18n.t('Confirm Password', 'تأكيد كلمة المرور') }} <span class="text-red-500">*</span></label>
+                <input [(ngModel)]="form.confirm" name="confirm" [type]="showPw() ? 'text' : 'password'" placeholder="Re-enter password" required autocomplete="new-password"
+                       class="w-full bg-th-bg-tert border border-th-border-dk text-th-text placeholder-th-text-3 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition"
+                       [class.border-red-600]="form.confirm && form.confirm !== form.password" />
+                @if (form.confirm && form.confirm !== form.password) {
+                  <p class="text-red-500 text-xs mt-1">{{ i18n.t('Passwords do not match', 'كلمات المرور غير متطابقة') }}</p>
                 }
+              </div>
 
-                <button type="submit" [disabled]="loading() || !canSubmit()"
-                        class="w-full py-3 rounded-xl bg-[#0EA5E9] text-white font-semibold text-sm hover:bg-[#0EA5E9]/80 transition disabled:opacity-40 disabled:cursor-not-allowed">
-                  @if (loading()) {
-                    <span class="flex items-center justify-center gap-2">
-                      <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity=".25"/><path d="M4 12a8 8 0 018-8" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round"/></svg>
-                      Creating account...
-                    </span>
-                  } @else {
-                    Create Account
-                  }
-                </button>
+              @if (error()) {
+                <div class="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-red-700 text-sm">{{ error() }}</div>
+              }
 
-                <p class="text-center text-gray-600 text-xs pt-2">
-                  By registering you agree to the platform terms. Accounts are for legitimate business use only.
-                </p>
-              </form>
-            }
-          </div>
+              <button type="submit" [disabled]="loading() || !canSubmit()"
+                      class="w-full py-3 rounded-xl bg-primary text-white font-semibold text-sm hover:opacity-90 transition disabled:opacity-40 disabled:cursor-not-allowed">
+                @if (loading()) {
+                  <span class="flex items-center justify-center gap-2">
+                    <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity=".25"/><path d="M4 12a8 8 0 018-8" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round"/></svg>
+                    {{ i18n.t('Creating account...', 'جاري إنشاء الحساب...') }}
+                  </span>
+                } @else {
+                  {{ i18n.t('Create Account', 'إنشاء حساب') }}
+                }
+              </button>
+
+              <p class="text-center text-th-text-2 text-xs pt-2">
+                {{ i18n.t('Already have an account?', 'لديك حساب بالفعل؟') }} <a routerLink="/login" class="text-primary hover:underline">{{ i18n.t('Sign in', 'تسجيل الدخول') }}</a>
+              </p>
+            </form>
+          }
         </div>
+
       </div>
     </div>
   `,
@@ -161,16 +131,28 @@ import { Router, RouterModule } from '@angular/router';
 export class RegisterPage {
   private http = inject(HttpClient);
   private router = inject(Router);
+  i18n = inject(I18nService);
 
-  intent = signal<'client' | 'partner' | 'employee'>('client');
   loading = signal(false);
   error = signal<string | null>(null);
   success = signal(false);
   showPw = signal(false);
 
-  form = { name: '', username: '', email: '', company: '', password: '', confirm: '' };
+  categories = [
+    { value: 'customer', label: 'Customer' },
+    { value: 'partner', label: 'Partner' },
+    { value: 'freelancer', label: 'Freelancer' },
+    { value: 'vendor', label: 'Vendor' },
+    { value: 'technology-partner', label: 'Technology Partner' },
+    { value: 'service-partner', label: 'Service Partner' },
+    { value: 'design-partner', label: 'Design Partner' },
+  ];
 
-  setIntent(v: 'client' | 'partner' | 'employee') { this.intent.set(v); }
+  form = { name: '', email: '', company: '', password: '', confirm: '', category: 'customer' };
+
+  isDoganconsultEmail(): boolean {
+    return this.form.email.split('@')[1]?.toLowerCase() === 'doganconsult.com';
+  }
 
   pwStrength(): number {
     const p = this.form.password;
@@ -183,8 +165,8 @@ export class RegisterPage {
   }
 
   canSubmit() {
-    return this.form.username.trim().length >= 3 &&
-      this.form.email.includes('@') &&
+    return this.form.email.includes('@') &&
+      !this.isDoganconsultEmail() &&
       this.form.password.length >= 8 &&
       this.form.password === this.form.confirm;
   }
@@ -194,17 +176,20 @@ export class RegisterPage {
     this.loading.set(true);
     this.error.set(null);
 
-    this.http.post<{ ok: boolean; token: string; user: any }>('/api/v1/public/auth/register', {
-      username: this.form.username.trim(),
+    this.http.post<{ ok: boolean; token: string; user: any; redirect_url?: string }>('/api/v1/public/auth/register', {
       email: this.form.email.trim(),
       password: this.form.password,
-      name: this.form.name.trim() || this.form.username.trim(),
+      name: this.form.name.trim() || this.form.email.split('@')[0],
+      company: this.form.company.trim() || undefined,
+      category: this.form.category,
     }).subscribe({
       next: (r) => {
         this.loading.set(false);
         localStorage.setItem('dc_user_token', r.token);
         localStorage.setItem('dc_user', JSON.stringify(r.user));
-        this.success.set(true);
+        // Auto-redirect to unified workspace
+        const redirectUrl = r.redirect_url || '/workspace';
+        this.router.navigate([redirectUrl]);
       },
       error: (e) => {
         this.loading.set(false);

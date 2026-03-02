@@ -1,0 +1,19 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: self-hosted
+    timeout-minutes: 15
+
+    steps:
+      - name: Deploy to production
+        run: |
+          cd /root/DoganConsultHup
+          export DEPLOY_BRANCH=main
+          bash scripts/deploy.sh

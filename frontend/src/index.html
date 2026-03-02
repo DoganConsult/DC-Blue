@@ -1,12 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="carbon-g10">
 <head>
   <meta charset="utf-8">
-  <title>Dogan Consult — ICT Engineering Services</title>
+  <title>Dogan Consult — ICT Engineering Services | KSA</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('preferred-theme');
+        var allowed = ['carbon-white','carbon-g10','carbon-g90','carbon-g100','trust-blueprint','luxury-minimal','saudi-excellence'];
+        if (saved && allowed.indexOf(saved) !== -1) {
+          document.documentElement.setAttribute('data-theme', saved);
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <meta name="description" content="Dogan Consult designs, builds, and operates enterprise-grade ICT environments across cloud, network, security, and applications in Saudi Arabia and the GCC.">
+  <meta name="keywords" content="ICT consulting, KSA, Saudi Arabia, cloud migration, cybersecurity, network engineering, data center, digital transformation, GCC">
+  <meta name="author" content="Dogan Consult">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.doganconsult.com/">
+  <meta property="og:title" content="Dogan Consult — ICT Engineering, Delivered.">
+  <meta property="og:description" content="Design, build, and operate enterprise-grade ICT environments across cloud, network, security, and applications in KSA & GCC.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.doganconsult.com/">
+  <meta property="og:site_name" content="Dogan Consult">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Dogan Consult — ICT Engineering, Delivered.">
+  <meta name="twitter:description" content="Enterprise ICT consulting for KSA & GCC. Cloud, security, network, and application engineering.">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=IBM+Plex+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Arabic:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Dogan Consult",
+    "url": "https://www.doganconsult.com",
+    "description": "ICT Engineering Services — Design, build, and operate enterprise-grade ICT environments in KSA & GCC",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Riyadh",
+      "addressCountry": "SA"
+    },
+    "areaServed": ["Saudi Arabia", "GCC"],
+    "serviceType": ["ICT Consulting", "Cloud Migration", "Cybersecurity", "Network Engineering", "Data Center Design"],
+    "sameAs": ["https://linkedin.com/company/doganconsult"]
+  }
+  </script>
 </head>
 <body>
   <app-root></app-root>

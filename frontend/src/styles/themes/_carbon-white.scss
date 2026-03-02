@@ -1,0 +1,257 @@
+// IBM Carbon Design System — White Theme
+// Light theme with pure white background
+// Reference: https://carbondesignsystem.com/guidelines/color/tokens
+
+[data-theme="carbon-white"],
+[data-theme-preview="carbon-white"] {
+  // Primary Colors — IBM Blue 60 (Interactive)
+  --theme-primary: #0f62fe; // Blue 60
+  --theme-primary-dark: #0043ce; // Blue 70
+  --theme-primary-light: #4589ff; // Blue 50
+
+  // Secondary Colors — IBM Teal (Technology & Innovation)
+  --theme-secondary: #009d9a; // Teal 50
+  --theme-secondary-dark: #007d79; // Teal 60
+  --theme-secondary-light: #08bdba; // Teal 40
+
+  // Accent Colors — IBM Purple (Distinction)
+  --theme-accent: #8a3ffc; // Purple 60
+  --theme-accent-dark: #6929c4; // Purple 70
+  --theme-accent-light: #a56eff; // Purple 50
+
+  // Foundation Colors
+  --theme-foundation-dark: #161616; // Gray 100
+  --theme-foundation-light: #ffffff; // White
+
+  // Gray Scale — IBM Carbon Gray Palette
+  --theme-gray-50: #f4f4f4; // Gray 10
+  --theme-gray-100: #e0e0e0; // Gray 20
+  --theme-gray-200: #c6c6c6; // Gray 30
+  --theme-gray-300: #a8a8a8; // Gray 40
+  --theme-gray-400: #8d8d8d; // Gray 50
+  --theme-gray-500: #6f6f6f; // Gray 60
+  --theme-gray-600: #525252; // Gray 70
+  --theme-gray-700: #393939; // Gray 80
+  --theme-gray-800: #262626; // Gray 90
+  --theme-gray-900: #161616; // Gray 100
+
+  // Semantic Colors — IBM Carbon Tokens
+  --theme-success: #24a148; // Green 50
+  --theme-warning: #f1c21b; // Yellow
+  --theme-error: #da1e28; // Red 60
+  --theme-info: #4589ff; // Blue 50
+
+  // Special Theme Properties
+  --theme-gradient-primary: linear-gradient(135deg, #0f62fe 0%, #4589ff 100%);
+  --theme-gradient-accent: linear-gradient(135deg, #8a3ffc 0%, #a56eff 100%);
+  --theme-gradient-hero: linear-gradient(180deg, #161616 0%, #262626 100%);
+
+  // Glass Morphism — Carbon style
+  --theme-glass-bg: rgba(255, 255, 255, 0.80);
+  --theme-glass-border: rgba(0, 0, 0, 0.08);
+  --theme-glass-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+
+  // Component-Specific Overrides
+  --theme-hero-bg: var(--theme-gradient-hero);
+  --theme-card-hover-border: var(--theme-primary);
+  --theme-button-shadow: 0 1px 2px rgba(0, 0, 0, 0.16);
+  --theme-input-focus-shadow: 0 0 0 2px #0f62fe;
+
+  // Charts & Data Visualization — IBM Carbon Data Palette
+  --theme-chart-1: #6929c4; // Purple 70
+  --theme-chart-2: #1192e8; // Cyan 50
+  --theme-chart-3: #005d5d; // Teal 70
+  --theme-chart-4: #9f1853; // Magenta 70
+  --theme-chart-5: #fa4d56; // Red 50
+  --theme-chart-6: #570408; // Red 90
+
+  // Hover State Multipliers
+  --theme-hover-opacity: 0.82;
+  --theme-active-opacity: 0.70;
+  --theme-disabled-opacity: 0.25;
+
+  // --- White theme semantic overrides ---
+
+  // Backgrounds
+  --bg-primary: #ffffff; // White — main page surface
+  --bg-secondary: #f4f4f4; // Gray 10 — subtle sections, sidebars
+  --bg-tertiary: #e0e0e0; // Gray 20 — deeper layering
+  --bg-inverse: #161616; // Gray 100 — inverse panels
+  --bg-accent: rgba(15, 98, 254, 0.08); // Blue tint for accent areas
+
+  // Text
+  --text-primary: #161616; // Gray 100 — body text
+  --text-secondary: #525252; // Gray 70 — secondary labels
+  --text-muted: #6f6f6f; // Gray 50 — placeholders, hints
+  --text-inverse: #ffffff; // White — text on inverse bg
+  --text-accent: #0f62fe; // Blue 60 — links, interactive
+  --text-on-primary: #ffffff; // White — text on primary buttons
+  --text-on-secondary: #ffffff;
+
+  // Borders
+  --border-light: #e0e0e0; // Gray 20
+  --border-default: #c6c6c6; // Gray 30
+  --border-dark: #8d8d8d; // Gray 50
+  --border-primary: #0f62fe; // Blue 60
+  --border-accent: #8a3ffc; // Purple 60
+
+  // Cards
+  --card-bg: #ffffff;
+  --card-border: #e0e0e0;
+  --card-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  --card-hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.10);
+
+  // Navigation
+  --nav-bg: #ffffff;
+  --nav-text: #161616;
+  --nav-hover: #0f62fe;
+  --nav-active: #0f62fe;
+  --nav-border: #e0e0e0;
+
+  // Forms
+  --input-bg: #f4f4f4;
+  --input-border: #8d8d8d;
+  --input-text: #161616;
+  --input-placeholder: #6f6f6f;
+  --input-focus-border: #0f62fe;
+
+  // Buttons
+  --button-primary-bg: #0f62fe;
+  --button-primary-hover: #0043ce;
+  --button-primary-active: #002d9c;
+  --button-primary-text: #ffffff;
+  --button-secondary-bg: transparent;
+  --button-secondary-border: #0f62fe;
+  --button-secondary-hover: rgba(15, 98, 254, 0.08);
+  --button-secondary-text: #0f62fe;
+  --button-accent-bg: #8a3ffc;
+  --button-accent-hover: #6929c4;
+  --button-accent-text: #ffffff;
+}
+
+// Dark Mode Variant — full semantic overrides for true dark rendering
+[data-theme="carbon-white"][data-mode="dark"] {
+  // Theme-level tokens (lighter tints for dark bg)
+  --theme-primary: #78a9ff; // Blue 40
+  --theme-primary-dark: #4589ff; // Blue 50
+  --theme-primary-light: #a6c8ff; // Blue 30
+  --theme-secondary: #08bdba; // Teal 40
+  --theme-secondary-dark: #009d9a; // Teal 50
+  --theme-secondary-light: #3ddbd9; // Teal 30
+  --theme-accent: #a56eff; // Purple 50
+  --theme-accent-dark: #8a3ffc; // Purple 60
+  --theme-accent-light: #be95ff; // Purple 40
+
+  --theme-glass-bg: rgba(22, 22, 22, 0.80);
+  --theme-glass-border: rgba(255, 255, 255, 0.10);
+  --theme-glass-shadow: 0 2px 6px rgba(0, 0, 0, 0.40);
+  --theme-gradient-primary: linear-gradient(135deg, #0043ce 0%, #0f62fe 100%);
+  --theme-gradient-hero: linear-gradient(180deg, #000000 0%, #161616 100%);
+
+  // ── Semantic overrides (dark surfaces, light text) ──
+  // Backgrounds
+  --bg-primary: #161616; // Gray 100
+  --bg-secondary: #262626; // Gray 90
+  --bg-tertiary: #393939; // Gray 80
+  --bg-inverse: #f4f4f4; // Gray 10
+  --bg-accent: rgba(120, 169, 255, 0.10);
+
+  // Text
+  --text-primary: #f4f4f4; // Gray 10
+  --text-secondary: #c6c6c6; // Gray 30
+  --text-muted: #8d8d8d; // Gray 50
+  --text-inverse: #161616; // Gray 100
+  --text-accent: #78a9ff; // Blue 40
+  --text-on-primary: #ffffff;
+  --text-on-secondary: #ffffff;
+
+  // Borders
+  --border-light: #393939; // Gray 80
+  --border-default: #525252; // Gray 70
+  --border-dark: #6f6f6f; // Gray 50
+  --border-primary: #78a9ff; // Blue 40
+  --border-accent: #a56eff; // Purple 50
+
+  // Cards
+  --card-bg: #262626;
+  --card-border: #393939;
+  --card-shadow: 0 2px 6px rgba(0, 0, 0, 0.30);
+  --card-hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.40);
+
+  // Navigation
+  --nav-bg: #161616;
+  --nav-text: #f4f4f4;
+  --nav-hover: #78a9ff;
+  --nav-active: #78a9ff;
+  --nav-border: #393939;
+
+  // Forms
+  --input-bg: #262626;
+  --input-border: #525252;
+  --input-text: #f4f4f4;
+  --input-placeholder: #8d8d8d;
+  --input-focus-border: #78a9ff;
+
+  // Buttons
+  --button-primary-bg: #0f62fe;
+  --button-primary-hover: #4589ff;
+  --button-primary-active: #78a9ff;
+  --button-primary-text: #ffffff;
+  --button-secondary-bg: transparent;
+  --button-secondary-border: #78a9ff;
+  --button-secondary-hover: rgba(120, 169, 255, 0.12);
+  --button-secondary-text: #78a9ff;
+  --button-accent-bg: #a56eff;
+  --button-accent-hover: #8a3ffc;
+  --button-accent-text: #ffffff;
+}
+
+// Theme-specific utility classes
+.theme-carbon-white {
+  .btn-carbon-primary {
+    background: #0f62fe;
+    color: #ffffff;
+    border: none;
+    box-shadow: var(--theme-button-shadow);
+    transition: background 70ms cubic-bezier(0, 0, 0.38, 0.9);
+
+    &:hover {
+      background: #0353e9; // Blue 60 hover
+    }
+
+    &:active {
+      background: #002d9c; // Blue 80
+    }
+  }
+
+  .btn-carbon-secondary {
+    background: #393939;
+    color: #ffffff;
+    border: none;
+    transition: background 70ms cubic-bezier(0, 0, 0.38, 0.9);
+
+    &:hover {
+      background: #4c4c4c; // Gray 70 hover
+    }
+  }
+
+  .btn-carbon-ghost {
+    background: transparent;
+    color: #0f62fe;
+    border: none;
+    transition: background 70ms cubic-bezier(0, 0, 0.38, 0.9);
+
+    &:hover {
+      background: #e5e5e5;
+    }
+  }
+
+  .carbon-tag {
+    background: #e0e0e0;
+    color: #161616;
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.32px;
+    border-radius: 24px;
+  }
+}

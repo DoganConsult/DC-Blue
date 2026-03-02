@@ -1,0 +1,25 @@
+{
+  // ============================================================
+  // CLAUDE CODE EXTENSION — SAFETY OVERRIDES
+  // These settings MUST remain to prevent bypass mode crash
+  // when running as root on remote server.
+  //
+  // Root cause: --dangerously-skip-permissions flag is rejected
+  // when running as root/sudo. These settings ensure it's never sent.
+  // ============================================================
+  "claudeCode.allowDangerouslySkipPermissions": false,
+  "claudeCode.initialPermissionMode": "default",
+  // ============================================================
+  // WORKSPACE GENERAL SETTINGS
+  // ============================================================
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  // TypeScript / Angular
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  // Terminal
+  "terminal.integrated.defaultProfile.linux": "bash"
+}

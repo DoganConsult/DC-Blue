@@ -1,0 +1,170 @@
+// IBM Carbon Design System — Gray 100 Theme
+// Darkest theme with #161616 background
+// Reference: https://carbondesignsystem.com/guidelines/color/tokens
+
+[data-theme="carbon-g100"],
+[data-theme-preview="carbon-g100"] {
+  // Primary Colors — IBM Blue 40 (Interactive on darkest)
+  --theme-primary: #78a9ff;         // Blue 40
+  --theme-primary-dark: #4589ff;    // Blue 50
+  --theme-primary-light: #a6c8ff;   // Blue 30
+
+  // Secondary Colors — IBM Cyan (Analytics on dark)
+  --theme-secondary: #33b1ff;       // Cyan 40
+  --theme-secondary-dark: #1192e8;  // Cyan 50
+  --theme-secondary-light: #82cfff; // Cyan 30
+
+  // Accent Colors — IBM Magenta (Highlights on dark)
+  --theme-accent: #ff7eb6;          // Magenta 40
+  --theme-accent-dark: #ee5396;     // Magenta 50
+  --theme-accent-light: #ffafd2;    // Magenta 30
+
+  // Foundation Colors — Gray 100 surface
+  --theme-foundation-dark: #161616; // Gray 100 (KEY: darkest bg)
+  --theme-foundation-light: #f4f4f4; // Gray 10 (text on darkest)
+
+  // Gray Scale — INVERTED for darkest theme
+  --theme-gray-50: #000000;  // Black
+  --theme-gray-100: #161616; // Gray 100
+  --theme-gray-200: #262626; // Gray 90
+  --theme-gray-300: #393939; // Gray 80
+  --theme-gray-400: #525252; // Gray 70
+  --theme-gray-500: #6f6f6f; // Gray 60
+  --theme-gray-600: #8d8d8d; // Gray 50
+  --theme-gray-700: #a8a8a8; // Gray 40
+  --theme-gray-800: #c6c6c6; // Gray 30
+  --theme-gray-900: #e0e0e0; // Gray 20
+
+  // Semantic Colors — Bright on darkest backgrounds
+  --theme-success: #42be65;  // Green 40
+  --theme-warning: #f1c21b;  // Yellow
+  --theme-error: #ff8389;    // Red 40
+  --theme-info: #4589ff;     // Blue 50
+
+  // Special Theme Properties
+  --theme-gradient-primary: linear-gradient(135deg, #002d9c 0%, #0f62fe 100%);
+  --theme-gradient-accent: linear-gradient(135deg, #ee5396 0%, #ff7eb6 100%);
+  --theme-gradient-hero: linear-gradient(180deg, #000000 0%, #161616 100%);
+
+  // Glass Morphism — Deep dark glass
+  --theme-glass-bg: rgba(22, 22, 22, 0.85);
+  --theme-glass-border: rgba(255, 255, 255, 0.06);
+  --theme-glass-shadow: 0 2px 8px rgba(0, 0, 0, 0.50);
+
+  // Component-Specific Overrides
+  --theme-hero-bg: var(--theme-gradient-hero);
+  --theme-card-hover-border: var(--theme-primary);
+  --theme-button-shadow: 0 1px 2px rgba(0, 0, 0, 0.40);
+  --theme-input-focus-shadow: 0 0 0 2px #4589ff;
+
+  // Charts & Data Visualization — Vivid on darkest
+  --theme-chart-1: #8a3ffc;  // Purple 60
+  --theme-chart-2: #33b1ff;  // Cyan 40
+  --theme-chart-3: #08bdba;  // Teal 40
+  --theme-chart-4: #ff7eb6;  // Magenta 40
+  --theme-chart-5: #fa4d56;  // Red 50
+  --theme-chart-6: #4589ff;  // Blue 50
+
+  // Hover State Multipliers
+  --theme-hover-opacity: 0.88;
+  --theme-active-opacity: 0.72;
+  --theme-disabled-opacity: 0.25;
+
+  // --- Darkest theme semantic overrides ---
+  --bg-primary: #161616;
+  --bg-secondary: #000000;
+  --bg-tertiary: #262626;
+  --bg-inverse: #f4f4f4;
+
+  --text-primary: #f4f4f4;
+  --text-secondary: #c6c6c6;
+  --text-muted: #6f6f6f;
+  --text-inverse: #161616;
+
+  --border-light: #262626;
+  --border-default: #393939;
+  --border-dark: #525252;
+
+  --card-bg: #262626;
+  --card-border: #393939;
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.50);
+  --card-hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.50);
+
+  --nav-bg: #161616;
+  --nav-text: #f4f4f4;
+  --nav-border: #262626;
+
+  --input-bg: #262626;
+  --input-border: #393939;
+  --input-text: #f4f4f4;
+  --input-placeholder: #6f6f6f;
+}
+
+// Theme-specific utility classes
+.theme-carbon-g100 {
+  .btn-carbon-primary {
+    background: #0f62fe;
+    color: #ffffff;
+    border: none;
+    box-shadow: var(--theme-button-shadow);
+    transition: background 70ms cubic-bezier(0, 0, 0.38, 0.9);
+
+    &:hover {
+      background: #0353e9;
+    }
+
+    &:active {
+      background: #002d9c;
+    }
+  }
+
+  .btn-carbon-secondary {
+    background: #6f6f6f;
+    color: #ffffff;
+    border: none;
+    transition: background 70ms cubic-bezier(0, 0, 0.38, 0.9);
+
+    &:hover {
+      background: #606060;
+    }
+  }
+
+  .btn-carbon-danger {
+    background: #da1e28;
+    color: #ffffff;
+    border: none;
+    transition: background 70ms cubic-bezier(0, 0, 0.38, 0.9);
+
+    &:hover {
+      background: #b81922;
+    }
+  }
+
+  .carbon-tile {
+    background: #262626;
+    border: none;
+    padding: 1rem;
+    transition: background 70ms cubic-bezier(0, 0, 0.38, 0.9);
+
+    &:hover {
+      background: #353535;
+    }
+  }
+
+  .carbon-code-snippet {
+    background: #262626;
+    border: 1px solid #393939;
+    color: #f4f4f4;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.875rem;
+  }
+
+  .carbon-data-table-row {
+    background: #262626;
+    border-bottom: 1px solid #393939;
+
+    &:hover {
+      background: #353535;
+    }
+  }
+}

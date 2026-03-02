@@ -1,0 +1,90 @@
+// Shahin-AI Theme (shahin-ai.com design)
+// KSA GRC Platform — primary blue #3B82F6, page bg #f4f4f4, IBM Plex + Arabic
+
+[data-theme="shahin-ai"],
+[data-theme-preview="shahin-ai"] {
+  // Primary — matches live site --primary-color
+  --theme-primary: #3B82F6;
+  --theme-primary-dark: #2563EB;
+  --theme-primary-light: #60A5FA;
+
+  // Secondary — slate for headings
+  --theme-secondary: #0f172a;
+  --theme-secondary-dark: #020617;
+  --theme-secondary-light: #1e293b;
+
+  // Accent — success/CTA green
+  --theme-accent: #10B981;
+  --theme-accent-dark: #059669;
+  --theme-accent-light: #34D399;
+
+  // Foundation
+  --theme-foundation-dark: #161616;
+  --theme-foundation-light: #ffffff;
+
+  // Gray scale (PrimeNG/Tailwind from live site)
+  --theme-gray-50: #f9fafb;
+  --theme-gray-100: #f3f4f6;
+  --theme-gray-200: #e5e7eb;
+  --theme-gray-300: #d1d5db;
+  --theme-gray-400: #9ca3af;
+  --theme-gray-500: #6b7280;
+  --theme-gray-600: #4b5563;
+  --theme-gray-700: #374151;
+  --theme-gray-800: #1f2937;
+  --theme-gray-900: #111827;
+
+  // Semantic
+  --theme-success: #10B981;
+  --theme-warning: #F59E0B;
+  --theme-error: #EF4444;
+  --theme-info: #3B82F6;
+
+  // Page background (body from live: rgb(244,244,244))
+  --theme-page-bg: #f4f4f4;
+
+  // Gradients
+  --theme-gradient-hero: linear-gradient(180deg, #2563EB 0%, #1d4ed8 100%);
+  --theme-gradient-primary: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
+
+  // Component
+  --theme-hero-bg: var(--theme-gradient-hero);
+  --theme-card-hover-border: var(--theme-primary);
+  --theme-button-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+  --theme-input-focus-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+
+  // Charts
+  --theme-chart-1: #3B82F6;
+  --theme-chart-2: #10B981;
+  --theme-chart-3: #F59E0B;
+  --theme-chart-4: #8B5CF6;
+  --theme-chart-5: #EC4899;
+  --theme-chart-6: #06B6D4;
+}
+
+// Override body background when this theme is active
+[data-theme="shahin-ai"] {
+  --bg-primary: var(--theme-page-bg);
+  --bg-secondary: #ffffff;
+}
+
+[data-theme="shahin-ai"][data-mode="dark"] {
+  --theme-primary: #60A5FA;
+  --theme-primary-dark: #3B82F6;
+  --theme-primary-light: #93C5FD;
+  --theme-page-bg: #111827;
+  --bg-primary: var(--theme-page-bg);
+}
+
+.theme-shahin-ai {
+  .hero-bg {
+    background: var(--theme-gradient-hero);
+  }
+  .btn-cta-success {
+    background: var(--theme-accent);
+    color: #fff;
+    &:hover {
+      background: var(--theme-accent-dark);
+    }
+  }
+}

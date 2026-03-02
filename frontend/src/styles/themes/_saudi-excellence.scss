@@ -1,0 +1,184 @@
+// Saudi Excellence Theme (For Your Market)
+// National Pride & Technology Leadership
+
+[data-theme="saudi-excellence"],
+[data-theme-preview="saudi-excellence"] {
+  // Primary Colors - Saudi Green (National Pride & Trust)
+  --theme-primary: #006C35;         // Saudi Arabia flag green
+  --theme-primary-dark: #004D26;    // Darker green
+  --theme-primary-light: #059669;   // Lighter green
+
+  // Secondary Colors - Sky Blue (Innovation & Technology)
+  --theme-secondary: #0EA5E9;       // Sky-500
+  --theme-secondary-dark: #0284C7;  // Sky-600
+  --theme-secondary-light: #38BDF8; // Sky-400
+
+  // Accent Colors - Gold (Premium & Achievement)
+  --theme-accent: #E3B76B;          // Saudi Gold
+  --theme-accent-dark: #D4A04B;     // Darker gold
+  --theme-accent-light: #F5D5A0;    // Light gold
+
+  // Foundation Colors - Authority & Depth
+  --theme-foundation-dark: #0A3C6B;  // Deep Navy
+  --theme-foundation-light: #FFFFFF; // Pure White
+
+  // Gray Scale - Professional with warm undertones
+  --theme-gray-50: #F9FAFB;
+  --theme-gray-100: #F3F4F6;
+  --theme-gray-200: #E5E7EB;
+  --theme-gray-300: #D1D5DB;
+  --theme-gray-400: #9CA3AF;
+  --theme-gray-500: #6B7280;
+  --theme-gray-600: #4B5563;
+  --theme-gray-700: #374151;
+  --theme-gray-800: #1F2937;
+  --theme-gray-900: #0F172A;
+
+  // Semantic Colors - Aligned with Saudi standards
+  --theme-success: #059669;  // Emerald (matches primary green)
+  --theme-warning: #D97706;  // Amber (matches gold)
+  --theme-error: #DC2626;    // Red
+  --theme-info: #0EA5E9;     // Sky Blue (matches secondary)
+
+  // Special Theme Properties
+  --theme-gradient-primary: linear-gradient(135deg, #006C35 0%, #059669 100%);
+  --theme-gradient-accent: linear-gradient(135deg, #E3B76B 0%, #F5D5A0 100%);
+  --theme-gradient-hero: linear-gradient(180deg, #0A3C6B 0%, #006C35 100%);
+
+  // Glass Morphism with Saudi touch
+  --theme-glass-bg: rgba(255, 255, 255, 0.85);
+  --theme-glass-border: rgba(0, 108, 53, 0.1);
+  --theme-glass-shadow: 0 8px 32px rgba(0, 108, 53, 0.08);
+
+  // Component-Specific Overrides
+  --theme-hero-bg: var(--theme-gradient-hero);
+  --theme-card-hover-border: var(--theme-primary);
+  --theme-button-shadow: 0 4px 14px rgba(0, 108, 53, 0.3);
+  --theme-input-focus-shadow: 0 0 0 3px rgba(0, 108, 53, 0.1);
+
+  // Charts & Data Visualization - Saudi palette
+  --theme-chart-1: #006C35;  // Saudi Green
+  --theme-chart-2: #0EA5E9;  // Sky Blue
+  --theme-chart-3: #E3B76B;  // Gold
+  --theme-chart-4: #0A3C6B;  // Navy
+  --theme-chart-5: #059669;  // Emerald
+  --theme-chart-6: #38BDF8;  // Light Blue
+
+  // Hover State Multipliers
+  --theme-hover-opacity: 0.85;
+  --theme-active-opacity: 0.7;
+  --theme-disabled-opacity: 0.4;
+
+  // Saudi-specific properties
+  --theme-border-ornament: 2px solid var(--theme-accent);
+  --theme-flag-ratio: 2 / 3; // Saudi flag aspect ratio
+}
+
+// Dark Mode Variant
+[data-theme="saudi-excellence"][data-mode="dark"] {
+  // Adjusted for dark mode while maintaining Saudi identity
+  --theme-primary: #10B981;         // Brighter green for dark bg
+  --theme-primary-dark: #059669;
+  --theme-primary-light: #34D399;
+
+  --theme-secondary: #38BDF8;       // Brighter sky blue
+  --theme-secondary-dark: #0EA5E9;
+  --theme-secondary-light: #7DD3FC;
+
+  --theme-accent: #F5D5A0;          // Softer gold for dark bg
+  --theme-accent-dark: #E3B76B;
+  --theme-accent-light: #FDE68A;
+
+  --theme-foundation-dark: #0F172A;  // Very dark blue
+  --theme-foundation-light: #FFFFFF;
+
+  // Dark mode glass morphism
+  --theme-glass-bg: rgba(10, 60, 107, 0.6);
+  --theme-glass-border: rgba(16, 185, 129, 0.2);
+  --theme-glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+  // Dark mode gradients
+  --theme-gradient-primary: linear-gradient(135deg, #004D26 0%, #006C35 100%);
+  --theme-gradient-hero: linear-gradient(180deg, #0F172A 0%, #0A3C6B 100%);
+}
+
+// Theme-specific utility classes
+.theme-saudi-excellence {
+  // Saudi green button
+  .btn-saudi {
+    background: var(--theme-gradient-primary);
+    color: white;
+    box-shadow: var(--theme-button-shadow);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 108, 53, 0.4);
+
+      &::before {
+        left: 100%;
+      }
+    }
+  }
+
+  // Gold accent card
+  .gold-card {
+    background: linear-gradient(135deg, var(--theme-foundation-light) 0%, var(--theme-accent-light) 100%);
+    border: 1px solid var(--theme-accent);
+    box-shadow: 0 4px 20px rgba(227, 183, 107, 0.2);
+  }
+
+  // Saudi badge
+  .saudi-badge {
+    background: var(--theme-primary);
+    color: white;
+    position: relative;
+    padding-left: 30px;
+
+    &::before {
+      content: '🇸🇦';
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  // Excellence indicator
+  .excellence-indicator {
+    background: var(--theme-gradient-accent);
+    color: var(--theme-foundation-dark);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  // Vision 2030 aligned
+  .vision-2030 {
+    background: linear-gradient(90deg, var(--theme-primary) 0%, var(--theme-secondary) 50%, var(--theme-accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: bold;
+  }
+
+  // Premium residency badge
+  .premium-residency {
+    background: var(--theme-gradient-accent);
+    color: var(--theme-foundation-dark);
+    border: 2px solid var(--theme-accent-dark);
+    box-shadow: 0 4px 12px rgba(227, 183, 107, 0.3);
+  }
+}

@@ -12,29 +12,29 @@ const FAQ_ITEMS = [
   selector: 'app-faq-section',
   standalone: true,
   template: `
-    <section class="py-20 px-4 bg-gray-50" id="faq">
+    <section class="py-20 px-4 bg-th-bg-alt" id="faq">
       <div class="container mx-auto max-w-3xl">
         <h2 class="text-3xl font-bold text-center text-brand-dark mb-2">
           {{ i18n.t('Frequently asked questions', 'الأسئلة الشائعة') }}
         </h2>
-        <p class="text-center text-gray-600 mb-12">
+        <p class="text-center text-th-text-2 mb-12">
           {{ i18n.t('SLAs, support windows, and engagement details.', 'التزامات SLA ونوافذ الدعم وتفاصيل التعاقد.') }}
         </p>
         <div class="space-y-3">
           @for (item of faqItems; track item.qEn) {
             <div
-              class="bg-white rounded-xl border border-gray-200 overflow-hidden"
+              class="bg-th-card rounded-xl border border-th-border overflow-hidden"
             >
               <button
                 type="button"
-                class="w-full flex items-center justify-between py-4 px-4 text-start font-semibold text-gray-900 hover:bg-gray-50 transition"
+                class="w-full flex items-center justify-between py-4 px-4 text-start font-semibold text-th-text hover:bg-th-bg-alt transition"
                 (click)="toggle(item.qEn)"
               >
                 {{ i18n.t(item.qEn, item.qAr) }}
                 <span class="pi text-primary" [class.pi-chevron-down]="open() !== item.qEn" [class.pi-chevron-up]="open() === item.qEn"></span>
               </button>
               @if (open() === item.qEn) {
-                <div class="px-4 pb-4 text-gray-600 text-sm border-t border-gray-100 pt-2">
+                <div class="px-4 pb-4 text-th-text-2 text-sm border-t border-th-border-lt pt-2">
                   {{ i18n.t(item.aEn, item.aAr) }}
                 </div>
               }

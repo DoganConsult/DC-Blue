@@ -1,0 +1,159 @@
+// IBM Carbon Design System — Gray 90 Theme
+// Dark theme with #262626 background
+// Reference: https://carbondesignsystem.com/guidelines/color/tokens
+
+[data-theme="carbon-g90"],
+[data-theme-preview="carbon-g90"] {
+  // Primary Colors — IBM Blue 40 (Interactive on dark)
+  --theme-primary: #78a9ff;         // Blue 40
+  --theme-primary-dark: #4589ff;    // Blue 50
+  --theme-primary-light: #a6c8ff;   // Blue 30
+
+  // Secondary Colors — IBM Teal (Innovation on dark)
+  --theme-secondary: #08bdba;       // Teal 40
+  --theme-secondary-dark: #009d9a;  // Teal 50
+  --theme-secondary-light: #3ddbd9; // Teal 30
+
+  // Accent Colors — IBM Purple (Distinction on dark)
+  --theme-accent: #a56eff;          // Purple 50
+  --theme-accent-dark: #8a3ffc;     // Purple 60
+  --theme-accent-light: #be95ff;    // Purple 40
+
+  // Foundation Colors — Gray 90 surface
+  --theme-foundation-dark: #262626; // Gray 90 (KEY: dark bg)
+  --theme-foundation-light: #f4f4f4; // Gray 10 (text on dark)
+
+  // Gray Scale — INVERTED for dark theme
+  --theme-gray-50: #161616;  // Gray 100 (darkest)
+  --theme-gray-100: #262626; // Gray 90
+  --theme-gray-200: #393939; // Gray 80
+  --theme-gray-300: #525252; // Gray 70
+  --theme-gray-400: #6f6f6f; // Gray 60
+  --theme-gray-500: #8d8d8d; // Gray 50
+  --theme-gray-600: #a8a8a8; // Gray 40
+  --theme-gray-700: #c6c6c6; // Gray 30
+  --theme-gray-800: #e0e0e0; // Gray 20
+  --theme-gray-900: #f4f4f4; // Gray 10 (lightest)
+
+  // Semantic Colors — Adjusted for dark backgrounds
+  --theme-success: #42be65;  // Green 40
+  --theme-warning: #f1c21b;  // Yellow
+  --theme-error: #ff8389;    // Red 40
+  --theme-info: #4589ff;     // Blue 50
+
+  // Special Theme Properties
+  --theme-gradient-primary: linear-gradient(135deg, #0043ce 0%, #0f62fe 100%);
+  --theme-gradient-accent: linear-gradient(135deg, #8a3ffc 0%, #a56eff 100%);
+  --theme-gradient-hero: linear-gradient(180deg, #161616 0%, #262626 100%);
+
+  // Glass Morphism — Dark glass
+  --theme-glass-bg: rgba(38, 38, 38, 0.80);
+  --theme-glass-border: rgba(255, 255, 255, 0.08);
+  --theme-glass-shadow: 0 2px 6px rgba(0, 0, 0, 0.40);
+
+  // Component-Specific Overrides
+  --theme-hero-bg: var(--theme-gradient-hero);
+  --theme-card-hover-border: var(--theme-primary);
+  --theme-button-shadow: 0 1px 2px rgba(0, 0, 0, 0.32);
+  --theme-input-focus-shadow: 0 0 0 2px #4589ff;
+
+  // Charts & Data Visualization — Bright on dark
+  --theme-chart-1: #8a3ffc;  // Purple 60
+  --theme-chart-2: #33b1ff;  // Cyan 40
+  --theme-chart-3: #08bdba;  // Teal 40
+  --theme-chart-4: #ff7eb6;  // Magenta 40
+  --theme-chart-5: #fa4d56;  // Red 50
+  --theme-chart-6: #4589ff;  // Blue 50
+
+  // Hover State Multipliers
+  --theme-hover-opacity: 0.85;
+  --theme-active-opacity: 0.70;
+  --theme-disabled-opacity: 0.25;
+
+  // --- Dark theme semantic overrides ---
+  // These ensure correct light-on-dark rendering without data-mode="dark"
+  --bg-primary: #262626;
+  --bg-secondary: #161616;
+  --bg-tertiary: #393939;
+  --bg-inverse: #f4f4f4;
+
+  --text-primary: #f4f4f4;
+  --text-secondary: #c6c6c6;
+  --text-muted: #6f6f6f;
+  --text-inverse: #161616;
+
+  --border-light: #393939;
+  --border-default: #525252;
+  --border-dark: #6f6f6f;
+
+  --card-bg: #393939;
+  --card-border: #525252;
+  --card-shadow: 0 2px 6px rgba(0, 0, 0, 0.40);
+  --card-hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.40);
+
+  --nav-bg: #262626;
+  --nav-text: #f4f4f4;
+  --nav-border: #393939;
+
+  --input-bg: #393939;
+  --input-border: #525252;
+  --input-text: #f4f4f4;
+  --input-placeholder: #6f6f6f;
+}
+
+// Theme-specific utility classes
+.theme-carbon-g90 {
+  .btn-carbon-primary {
+    background: #0f62fe;
+    color: #ffffff;
+    border: none;
+    box-shadow: var(--theme-button-shadow);
+    transition: background 70ms cubic-bezier(0, 0, 0.38, 0.9);
+
+    &:hover {
+      background: #0353e9;
+    }
+
+    &:active {
+      background: #002d9c;
+    }
+  }
+
+  .btn-carbon-secondary {
+    background: #6f6f6f;
+    color: #ffffff;
+    border: none;
+    transition: background 70ms cubic-bezier(0, 0, 0.38, 0.9);
+
+    &:hover {
+      background: #606060;
+    }
+  }
+
+  .btn-carbon-ghost {
+    background: transparent;
+    color: #78a9ff;
+    border: none;
+    transition: background 70ms cubic-bezier(0, 0, 0.38, 0.9);
+
+    &:hover {
+      background: #353535;
+    }
+  }
+
+  .carbon-card-dark {
+    background: #393939;
+    border: 1px solid #525252;
+    transition: all 70ms cubic-bezier(0, 0, 0.38, 0.9);
+
+    &:hover {
+      background: #4c4c4c;
+    }
+  }
+
+  .carbon-inline-notification {
+    background: #393939;
+    border-left: 3px solid #78a9ff;
+    color: #f4f4f4;
+  }
+}

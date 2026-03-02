@@ -14,23 +14,23 @@ const INDUSTRIES = [
   selector: 'app-industries-section',
   standalone: true,
   template: `
-    <section class="py-20 px-4 bg-gray-50" id="industries">
+    <section class="py-20 px-4 bg-th-bg-alt" id="industries">
       <div class="container mx-auto max-w-6xl">
         <h2 class="text-3xl font-bold text-center text-brand-dark mb-2">
           {{ i18n.t('Industries we serve', 'القطاعات التي نخدمها') }}
         </h2>
-        <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+        <p class="text-center text-th-text-2 mb-12 max-w-2xl mx-auto">
           {{ i18n.t('Sector-specific ICT engineering and compliance alignment.', 'هندسة تقنية المعلومات والمطابقة حسب القطاع.') }}
         </p>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           @for (ind of industries; track ind.id) {
             <div
-              class="bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:-translate-y-1 transition-all"
+              class="bg-th-card rounded-2xl border border-th-border-lt p-6 hover:shadow-xl hover:-translate-y-1 transition-all"
               [style.borderTopColor]="ind.color"
               [style.borderTopWidth]="'4px'"
             >
               <span [class]="'pi ' + ind.icon + ' text-2xl block mb-3'" [style.color]="ind.color" aria-hidden="true"></span>
-              <h3 class="font-semibold text-gray-900">{{ i18n.t(ind.titleEn, ind.titleAr) }}</h3>
+              <h3 class="font-semibold text-th-text">{{ i18n.t(ind.titleEn, ind.titleAr) }}</h3>
             </div>
           }
         </div>

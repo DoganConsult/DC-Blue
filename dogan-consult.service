@@ -1,0 +1,56 @@
+[Unit]
+Description=Dogan Consult ICT Platform API
+Documentation=https://doganconsult.com/docs
+After=network.target postgresql.service redis.service
+Wants=postgresql.service redis.service
+
+[Service]
+Type=forking
+User=dogan
+Group=dogan
+WorkingDirectory=/var/www/dogan-consult
+Environment="NODE_ENV=production"
+Environment="PATH=/usr/bin:/usr/local/bin"
+Environment="NODE_OPTIONS=--max-old-space-size=4096"
+
+# PM2 specific
+ExecStart=/usr/local/bin/pm2 start ecosystem.config.js --env production
+ExecReload=/usr/local/bin/pm2 reload ecosystem.config.js --env production
+ExecStop=/usr/local/bin/pm2 stop ecosystem.config.js
+
+# Process management
+Restart=always
+RestartSec=10
+KillMode=process
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=dogan-consult
+
+# Security hardening
+PrivateTmp=true
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/www/dogan-consult /var/log/dogan-consult /var/dogan-consult
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictRealtime=true
+RestrictNamespaces=true
+RestrictSUIDSGID=true
+MemoryDenyWriteExecute=false
+LockPersonality=true
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+MemoryLimit=4G
+CPUQuota=200%
+TasksMax=4096
+
+# Health check
+ExecStartPost=/bin/sleep 10
+ExecStartPost=/usr/local/bin/dogan-health-check
+
+[Install]
+WantedBy=multi-user.target

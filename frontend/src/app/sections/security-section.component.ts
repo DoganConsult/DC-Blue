@@ -14,19 +14,19 @@ const PILLARS = [
   selector: 'app-security-section',
   standalone: true,
   template: `
-    <section class="py-20 px-4 bg-white" id="security">
+    <section class="py-20 px-4 bg-th-card" id="security">
       <div class="container mx-auto max-w-6xl">
         <h2 class="text-3xl font-bold text-center text-brand-dark mb-2">
           {{ i18n.t('Security architecture', 'هندسة الأمن') }}
         </h2>
-        <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+        <p class="text-center text-th-text-2 mb-12 max-w-2xl mx-auto">
           {{ i18n.t('Zero-trust alignment, RBAC, and secure SDLC practices.', 'محاذاة عدم الثقة و RBAC وممارسات SDLC آمنة.') }}
         </p>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           @for (p of pillars; track p.titleEn) {
-            <div class="bg-gradient-to-br from-gray-50 to-white rounded-2xl border border-gray-100 p-6 hover:shadow-lg transition">
+            <div class="bg-gradient-to-br from-th-bg-alt to-th-card rounded-2xl border border-th-border-lt p-6 hover:shadow-lg transition">
               <span [class]="'pi ' + p.icon + ' text-primary text-2xl block mb-3'" aria-hidden="true"></span>
-              <h3 class="font-semibold text-gray-900">{{ i18n.t(p.titleEn, p.titleAr) }}</h3>
+              <h3 class="font-semibold text-th-text">{{ i18n.t(p.titleEn, p.titleAr) }}</h3>
             </div>
           }
         </div>

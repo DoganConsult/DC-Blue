@@ -19,59 +19,49 @@ export interface PartnerRegisterForm {
   imports: [CommonModule, FormsModule],
   selector: 'app-partner-register',
   template: `
-    <div class="min-h-screen bg-gradient-to-br from-[var(--brand-dark)] via-[#0c4a82] to-[var(--brand-darker)]">
-      <nav class="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
-        <a class="text-white font-bold text-xl tracking-tight cursor-pointer" (click)="goHome()">
-          Dogan<span class="text-[var(--gold)]">Consult</span>
-        </a>
-        <button (click)="i18n.setLang(i18n.lang() === 'en' ? 'ar' : 'en')"
-                class="text-white/80 hover:text-white text-sm border border-white/20 px-3 py-1 rounded-full transition">
-          {{ i18n.t('عربي', 'English') }}
-        </button>
-      </nav>
-
+    <div class="bg-th-bg">
       <div class="max-w-2xl mx-auto px-4 py-12">
         <div class="text-center mb-10">
-          <div class="w-14 h-14 bg-[var(--gold)]/20 rounded-xl flex items-center justify-center mx-auto mb-4">
-            <svg class="w-7 h-7 text-[var(--gold)]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <div class="w-14 h-14 bg-gold/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-7 h-7 text-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
             </svg>
           </div>
-          <h1 class="text-3xl font-bold text-white mb-3">
+          <h1 class="text-3xl font-bold text-th-text mb-3">
             {{ i18n.t('Partner Program', 'برنامج الشركاء') }}
           </h1>
-          <p class="text-white/70">
+          <p class="text-th-text-3">
             {{ i18n.t('Join our reseller and referral network. Earn commissions on every deal.', 'انضم إلى شبكة الموزعين والإحالات. اكسب عمولات على كل صفقة.') }}
           </p>
         </div>
 
         @if (success()) {
-          <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 text-center">
-            <div class="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
-              <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          <div class="bg-th-card border border-th-border rounded-2xl p-8 text-center shadow-lg">
+            <div class="w-16 h-16 rounded-full bg-success/20 flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-success" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
             </div>
-            <h2 class="text-xl font-bold text-white mb-2">{{ i18n.t('Application Submitted!', 'تم إرسال الطلب!') }}</h2>
-            <p class="text-white/70 mb-4">{{ i18n.t('We\\'ll review your application and send your API key once approved.', 'سنراجع طلبك ونرسل لك مفتاح API بعد الموافقة.') }}</p>
+            <h2 class="text-xl font-bold text-th-text mb-2">{{ i18n.t('Application Submitted!', 'تم إرسال الطلب!') }}</h2>
+            <p class="text-th-text-3 mb-4">{{ i18n.t('We\\'ll review your application and send your API key once approved.', 'سنراجع طلبك ونرسل لك مفتاح API بعد الموافقة.') }}</p>
             @if (apiKey()) {
-              <div class="bg-black/30 rounded-xl p-4 mb-4">
-                <p class="text-white/50 text-xs mb-1">{{ i18n.t('Your API Key (save it securely)', 'مفتاح API الخاص بك (احفظه بأمان)') }}</p>
-                <p class="text-emerald-400 font-mono text-sm break-all">{{ apiKey() }}</p>
+              <div class="bg-th-bg-inv/30 rounded-xl p-4 mb-4">
+                <p class="text-th-text-3 text-xs mb-1">{{ i18n.t('Your API Key (save it securely)', 'مفتاح API الخاص بك (احفظه بأمان)') }}</p>
+                <p class="text-success font-mono text-sm break-all">{{ apiKey() }}</p>
               </div>
             }
-            <button (click)="goHome()" class="px-6 py-2 rounded-xl bg-[var(--primary)] text-white font-semibold hover:bg-[var(--primary)]/80 transition">
+            <button (click)="goHome()" class="px-6 py-2 rounded-xl bg-primary text-white font-semibold hover:bg-primary/80 transition">
               {{ i18n.t('Back to Home', 'العودة للرئيسية') }}
             </button>
           </div>
         } @else {
           @if (error()) {
-            <div class="bg-red-500/10 border border-red-400/30 text-red-200 rounded-xl p-4 mb-6 text-center">{{ error() }}</div>
+            <div class="bg-error/10 border border-error/30 text-error rounded-xl p-4 mb-6 text-center">{{ error() }}</div>
             <div class="flex flex-col sm:flex-row gap-3 mb-6">
               <button type="button" (click)="goPortal()"
-                      class="flex-1 py-3 rounded-xl border border-white/20 text-white hover:bg-white/10 transition text-sm font-semibold">
+                      class="flex-1 py-3 rounded-xl border border-th-border text-th-text hover:bg-th-bg-alt transition text-sm font-semibold">
                 {{ i18n.t('Go to Partner Portal', 'الانتقال إلى بوابة الشركاء') }}
               </button>
               <button type="button" (click)="resendAccess()" [disabled]="resendLoading() || !(form.email || '').trim()"
-                      class="flex-1 py-3 rounded-xl font-semibold bg-[var(--primary)] text-white hover:bg-[var(--primary)]/80 transition disabled:opacity-50 text-sm">
+                      class="flex-1 py-3 rounded-xl font-semibold bg-primary text-white hover:bg-primary/80 transition disabled:opacity-50 text-sm">
                 @if (resendLoading()) {
                   <span class="inline-flex items-center gap-2">
                     <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity=".25"/><path d="M4 12a8 8 0 018-8" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round"/></svg>
@@ -83,47 +73,47 @@ export interface PartnerRegisterForm {
               </button>
             </div>
             @if (resendSuccess()) {
-              <div class="bg-emerald-500/10 border border-emerald-400/30 text-emerald-200 rounded-xl p-4 mb-6 text-center text-sm">
+              <div class="bg-success/10 border border-success/30 text-success rounded-xl p-4 mb-6 text-center text-sm">
                 {{ i18n.t('Email sent. Please check your inbox (and spam).', 'تم إرسال البريد الإلكتروني. يرجى التحقق من بريدك الوارد (والرسائل غير المرغوب فيها).') }}
               </div>
             }
           }
 
-          <form #f="ngForm" (ngSubmit)="register()" class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 md:p-10 space-y-5">
+          <form #f="ngForm" (ngSubmit)="register()" class="bg-th-card border border-th-border rounded-2xl p-6 md:p-10 space-y-5 shadow-lg">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label class="block text-white/80 text-sm font-medium mb-1.5">{{ i18n.t('Company Name', 'اسم الشركة') }} *</label>
+                <label class="block text-th-text-2 text-sm font-medium mb-1.5">{{ i18n.t('Company Name', 'اسم الشركة') }} *</label>
                 <input name="company_name" [(ngModel)]="form.company_name" required
-                       class="w-full bg-white/10 text-white placeholder-white/40 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--gold)]" />
+                       class="w-full bg-th-input text-th-text placeholder-th-text-3 border border-th-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" />
               </div>
               <div>
-                <label class="block text-white/80 text-sm font-medium mb-1.5">{{ i18n.t('Contact Name', 'الاسم') }} *</label>
+                <label class="block text-th-text-2 text-sm font-medium mb-1.5">{{ i18n.t('Contact Name', 'الاسم') }} *</label>
                 <input name="contact_name" [(ngModel)]="form.contact_name" required
-                       class="w-full bg-white/10 text-white placeholder-white/40 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--gold)]" />
+                       class="w-full bg-th-input text-th-text placeholder-th-text-3 border border-th-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" />
               </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label class="block text-white/80 text-sm font-medium mb-1.5">{{ i18n.t('Email', 'البريد الإلكتروني') }} *</label>
+                <label class="block text-th-text-2 text-sm font-medium mb-1.5">{{ i18n.t('Email', 'البريد الإلكتروني') }} *</label>
                 <input name="email" [(ngModel)]="form.email" required type="email"
-                       class="w-full bg-white/10 text-white placeholder-white/40 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--gold)]" />
+                       class="w-full bg-th-input text-th-text placeholder-th-text-3 border border-th-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" />
               </div>
               <div>
-                <label class="block text-white/80 text-sm font-medium mb-1.5">{{ i18n.t('Phone', 'الهاتف') }}</label>
+                <label class="block text-th-text-2 text-sm font-medium mb-1.5">{{ i18n.t('Phone', 'الهاتف') }}</label>
                 <input name="phone" [(ngModel)]="form.phone" type="tel"
-                       class="w-full bg-white/10 text-white placeholder-white/40 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--gold)]" />
+                       class="w-full bg-th-input text-th-text placeholder-th-text-3 border border-th-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" />
               </div>
             </div>
             <div>
-              <label class="block text-white/80 text-sm font-medium mb-1.5">{{ i18n.t('Website', 'الموقع') }}</label>
+              <label class="block text-th-text-2 text-sm font-medium mb-1.5">{{ i18n.t('Website', 'الموقع') }}</label>
               <input name="website" [(ngModel)]="form.website" type="url" placeholder="https://"
-                     class="w-full bg-white/10 text-white placeholder-white/40 border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--gold)]" />
+                     class="w-full bg-th-input text-th-text placeholder-th-text-3 border border-th-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary" />
             </div>
             <div>
-              <label class="block text-white/80 text-sm font-medium mb-1.5">{{ i18n.t('Partner Type', 'نوع الشراكة') }} *</label>
+              <label class="block text-th-text-2 text-sm font-medium mb-1.5">{{ i18n.t('Partner Type', 'نوع الشراكة') }} *</label>
               <select name="type" [(ngModel)]="form.type" required
-                      class="w-full bg-white/10 text-white border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--gold)] [&>option]:text-gray-900">
-                <option value="" disabled selected class="text-gray-500">{{ i18n.t('Select partner type...', 'اختر نوع الشراكة...') }}</option>
+                      class="w-full bg-th-input text-th-text border border-th-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary [&>option]:text-th-text">
+                <option value="" disabled selected class="text-th-text-3">{{ i18n.t('Select partner type...', 'اختر نوع الشراكة...') }}</option>
                 <option value="reseller">{{ i18n.t('Reseller', 'موزع') }}</option>
                 <option value="referral">{{ i18n.t('Referral Partner', 'شريك إحالة') }}</option>
                 <option value="technology">{{ i18n.t('Technology Partner', 'شريك تقني') }}</option>
@@ -132,8 +122,8 @@ export interface PartnerRegisterForm {
 
             <button type="submit" [disabled]="loading() || !f.valid"
                     class="w-full py-4 rounded-xl font-semibold text-lg transition-all
-                           bg-gradient-to-r from-[var(--gold)] to-amber-600 text-white
-                           hover:shadow-lg hover:shadow-amber-500/30 hover:-translate-y-0.5
+                           bg-th-btn text-th-btn-text
+                           hover:bg-th-btn-hover hover:shadow-lg hover:-translate-y-0.5
                            disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0">
               @if (loading()) {
                 <span class="inline-flex items-center gap-2">

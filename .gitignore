@@ -1,6 +1,7 @@
 node_modules/
 dist/
 .env
+.env.*
 *.log
 .DS_Store
 .angular/
@@ -8,3 +9,8 @@ dist/
 coverage/
 tmp/
 *.tgz
+backend/public/
+backend/.env*
+backend/routes/auth.js.backup
+*.backup
+.claude/plans/

@@ -1,0 +1,156 @@
+{
+  "version": "1.0.0",
+  "charts": [
+    {
+      "id": "bar",
+      "engine": "chartjs",
+      "name": "Bar Chart",
+      "description": "Vertical bar chart for comparisons — project delivery, quarterly metrics",
+      "category": "basic",
+      "angularBuilder": "ChartFactoryService.createBarChartData()",
+      "pythonBuilder": "/api/charts/bar",
+      "useCases": ["Project delivery %", "Revenue by quarter", "Team performance"]
+    },
+    {
+      "id": "line",
+      "engine": "chartjs",
+      "name": "Line / Area Chart",
+      "description": "Trend lines with optional area fill for time-series data",
+      "category": "basic",
+      "angularBuilder": "ChartFactoryService.createLineChartData()",
+      "pythonBuilder": "/api/charts/line",
+      "useCases": ["Threat intelligence trend", "MTTR over time", "Revenue growth"]
+    },
+    {
+      "id": "radar",
+      "engine": "chartjs",
+      "name": "Radar / Spider Chart",
+      "description": "Multi-axis radar for scoring and compliance posture",
+      "category": "basic",
+      "angularBuilder": "ChartFactoryService.createRadarChartData()",
+      "pythonBuilder": "/api/charts/radar",
+      "useCases": ["Compliance posture (NCA, ISO, PDPL)", "Skill assessment", "Vendor comparison"]
+    },
+    {
+      "id": "stacked-bar",
+      "engine": "chartjs",
+      "name": "Stacked Bar Chart",
+      "description": "Stacked categories over time periods",
+      "category": "basic",
+      "angularBuilder": "ChartFactoryService.createStackedBarData()",
+      "pythonBuilder": null,
+      "useCases": ["IoT telemetry by category", "Budget allocation", "Resource utilization"]
+    },
+    {
+      "id": "doughnut",
+      "engine": "chartjs",
+      "name": "Doughnut Chart",
+      "description": "Proportional ring chart for distribution visualization",
+      "category": "basic",
+      "angularBuilder": "ChartFactoryService.createDoughnutData()",
+      "pythonBuilder": null,
+      "useCases": ["Market share", "Budget breakdown", "Asset distribution"]
+    },
+    {
+      "id": "topology",
+      "engine": "echarts",
+      "name": "Network Topology",
+      "description": "Cisco-style L2/L3 force-directed graph with draggable nodes",
+      "category": "enterprise",
+      "angularBuilder": "ChartFactoryService.createTopology()",
+      "pythonBuilder": "/api/charts/topology",
+      "useCases": ["Network architecture maps", "Data center interconnects", "WAN topology"]
+    },
+    {
+      "id": "gauge",
+      "engine": "echarts",
+      "name": "Gauge Meter",
+      "description": "Single animated gauge with gradient progress arc",
+      "category": "noc",
+      "angularBuilder": "ChartFactoryService.createGauge()",
+      "pythonBuilder": "/api/charts/gauge",
+      "useCases": ["CPU utilization", "Memory usage", "SLA compliance level"]
+    },
+    {
+      "id": "multi-gauge",
+      "engine": "echarts",
+      "name": "Multi-Gauge Panel",
+      "description": "4-quadrant gauge dashboard for system health overview",
+      "category": "noc",
+      "angularBuilder": "ChartFactoryService.createMultiGauge()",
+      "pythonBuilder": "/api/charts/multi-gauge",
+      "useCases": ["NOC system health", "Server cluster status", "Network segment health"]
+    },
+    {
+      "id": "sankey",
+      "engine": "echarts",
+      "name": "Sankey Flow Diagram",
+      "description": "Data flow visualization between network layers with gradient links",
+      "category": "enterprise",
+      "angularBuilder": "ChartFactoryService.createSankey()",
+      "pythonBuilder": "/api/charts/sankey",
+      "useCases": ["Network traffic flow", "Data pipeline visualization", "Cost allocation"]
+    },
+    {
+      "id": "heatmap",
+      "engine": "echarts",
+      "name": "Threat Heatmap",
+      "description": "Time-based heatmap with 5-color scale for threat activity",
+      "category": "noc",
+      "angularBuilder": "ChartFactoryService.createHeatmap()",
+      "pythonBuilder": "/api/charts/heatmap",
+      "useCases": ["Threat activity by time/day", "Server load patterns", "User activity"]
+    },
+    {
+      "id": "treemap",
+      "engine": "echarts",
+      "name": "Asset Treemap",
+      "description": "Hierarchical nested treemap for asset inventory",
+      "category": "enterprise",
+      "angularBuilder": "ChartFactoryService.createTreemap()",
+      "pythonBuilder": "/api/charts/treemap",
+      "useCases": ["IT asset inventory", "Storage allocation", "Department budgets"]
+    },
+    {
+      "id": "bandwidth-gauge",
+      "engine": "echarts",
+      "name": "Bandwidth Gauge",
+      "description": "Large throughput gauge with tri-color zones",
+      "category": "noc",
+      "angularBuilder": "ChartFactoryService.createBandwidthGauge()",
+      "pythonBuilder": "/api/charts/bandwidth",
+      "useCases": ["WAN throughput", "ISP bandwidth", "CDN capacity"]
+    }
+  ],
+  "engines": {
+    "chartjs": {
+      "version": "4.4.1",
+      "wrapper": "primeng/chart (p-chart)",
+      "runtime": "Angular frontend",
+      "strengths": ["Lightweight", "Canvas-based", "Wide browser support"]
+    },
+    "echarts": {
+      "version": "6.0.0",
+      "wrapper": "ngx-echarts",
+      "runtime": "Angular frontend",
+      "strengths": ["Enterprise visualizations", "Force graphs", "WebGL support", "Animation"]
+    },
+    "plotly": {
+      "version": "5.22.0",
+      "wrapper": "Flask + Plotly Dash",
+      "runtime": "Python backend (design-hub)",
+      "strengths": ["Scientific charts", "3D rendering", "Statistical plots", "Server-side generation"]
+    }
+  },
+  "themes": {
+    "noc-dark": {
+      "background": "linear-gradient(135deg, #020617 0%, #0a1628 30%, #0c1e3a 60%, #020617 100%)",
+      "panelBg": "rgba(30,41,59,0.4)",
+      "panelBorder": "rgba(51,65,85,0.5)",
+      "fontFamily": "JetBrains Mono, monospace",
+      "textPrimary": "#e2e8f0",
+      "textSecondary": "#94a3b8",
+      "accentColor": "#38bdf8"
+    }
+  }
+}

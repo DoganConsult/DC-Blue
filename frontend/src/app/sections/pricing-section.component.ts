@@ -12,12 +12,12 @@ const TIERS = [
   selector: 'app-pricing-section',
   standalone: true,
   template: `
-    <section class="py-20 px-4 bg-white" id="pricing">
+    <section class="py-20 px-4 bg-th-card" id="pricing">
       <div class="container mx-auto max-w-6xl">
         <h2 class="text-3xl font-bold text-center text-brand-dark mb-2">
           {{ i18n.t('Engagement models', 'نماذج التعاقد') }}
         </h2>
-        <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+        <p class="text-center text-th-text-2 mb-12 max-w-2xl mx-auto">
           {{ i18n.t('From assessment to full managed services.', 'من التقييم إلى الخدمات المُدارة الكاملة.') }}
         </p>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -27,15 +27,15 @@ const TIERS = [
               [class.border-primary]="t.popular"
               [class.border-2]="t.popular"
               [class.shadow-xl]="t.popular"
-              [class.border-gray-200]="!t.popular"
+              [class.border-th-border]="!t.popular"
             >
               @if (t.popular) {
                 <span class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-primary text-white text-xs font-semibold">
                   {{ i18n.t('Most popular', 'الأكثر طلباً') }}
                 </span>
               }
-              <h3 class="font-bold text-lg text-gray-900">{{ i18n.t(t.titleEn, t.titleAr) }}</h3>
-              <p class="text-sm text-gray-500 mt-1">{{ i18n.t(t.descEn, t.descAr) }}</p>
+              <h3 class="font-bold text-lg text-th-text">{{ i18n.t(t.titleEn, t.titleAr) }}</h3>
+              <p class="text-sm text-th-text-3 mt-1">{{ i18n.t(t.descEn, t.descAr) }}</p>
               <a
                 href="#contact"
                 class="mt-4 inline-block w-full text-center py-2 rounded-lg font-medium transition"

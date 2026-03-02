@@ -4,22 +4,19 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { calculateLeadScore } from '../services/scoring.js';
 import { sendEmail, sendInternalAlert } from '../services/email.js';
+import { notifyPartner } from '../services/notifications.js';
+import { getJwtSecret } from '../config/jwt.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || process.env.ADMIN_PASSWORD || 'dogan-consult-portal-secret';
+/** Used only for legacy password-only login and setup token validation (not for JWT). */
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'changeme';
 
-/** Portal auth: legacy X-Admin-Token (password) or Bearer JWT. Sets req.portalUser = { id?, email?, role }. */
+/** Portal auth: Bearer JWT only. Sets req.portalUser = { id?, email?, role }. */
 export function portalAuth(req, res, next) {
-  const legacyToken = req.headers['x-admin-token'];
-  if (legacyToken && legacyToken === ADMIN_PASSWORD) {
-    req.portalUser = { role: 'admin' };
-    return next();
-  }
   const authHeader = req.headers.authorization;
   const bearer = authHeader && authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
   if (!bearer) return res.status(401).json({ error: 'Unauthorized' });
   try {
-    const payload = jwt.verify(bearer, JWT_SECRET);
+    const payload = jwt.verify(bearer, getJwtSecret());
     req.portalUser = { id: payload.id, email: payload.email, role: payload.role || 'employee' };
     next();
   } catch (e) {
@@ -31,6 +28,20 @@ export function portalAuth(req, res, next) {
 export function adminOnly(req, res, next) {
   if (req.portalUser && req.portalUser.role === 'admin') return next();
   return res.status(403).json({ error: 'Forbidden' });
+}
+
+/** Optional auth: if Bearer JWT present & valid, sets req.portalUser. Otherwise continues without error. */
+export function optionalAuth(req, res, next) {
+  const authHeader = req.headers.authorization;
+  const bearer = authHeader && authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+  if (!bearer) { req.portalUser = null; return next(); }
+  try {
+    const payload = jwt.verify(bearer, getJwtSecret());
+    req.portalUser = { id: payload.id, email: payload.email, role: payload.role || 'employee' };
+  } catch (e) {
+    req.portalUser = null;
+  }
+  next();
 }
 
 export default function leadsRouter(pool) {
@@ -77,8 +88,36 @@ export default function leadsRouter(pool) {
     res.json({ data: KSA_CR_ACTIVITIES });
   });
 
+  /** POST /api/v1/public/contact — short contact form → lead_intakes (source=website_contact) */
+  router.post('/public/contact', async (req, res) => {
+    try {
+      const { name, email, company, message } = req.body || {};
+      if (!(email && String(email).trim())) return res.status(400).json({ error: 'Email required' });
+      const companyName = (company && String(company).trim()) || '—';
+      const contactName = (name && String(name).trim()) || '—';
+      const msg = (message && String(message).trim()) || null;
+      const hash = dedupeHash(email.trim(), companyName);
+      const ticket = genTicket();
+      const assignTo = 'sales@doganconsult.com';
+      const score = 50;
+
+      const result = await pool.query(
+        `INSERT INTO lead_intakes (
+          source, company_name, contact_name, contact_email, message,
+          dedupe_hash, ticket_number, assigned_to, score, consent_pdpl
+        ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+        RETURNING id, ticket_number, created_at`,
+        ['website_contact', companyName, contactName, email.trim().toLowerCase(), msg, hash, ticket, assignTo, score, true]
+      );
+      res.status(201).json({ ok: true, ticket_number: result.rows[0].ticket_number });
+    } catch (e) {
+      console.error('Contact form error:', e.message);
+      res.status(500).json({ error: 'Failed to save' });
+    }
+  });
+
   /* ── PUBLIC: submit inquiry ──────────────────────────── */
-  router.post('/public/inquiries', async (req, res) => {
+  router.post('/public/inquiries', optionalAuth, async (req, res) => {
     try {
       const b = req.body || {};
       if (!b.contact_email?.trim()) return res.status(400).json({ error: 'Email is required / البريد الإلكتروني مطلوب' });
@@ -117,6 +156,7 @@ export default function leadsRouter(pool) {
 
       let result;
       try {
+        const userId = req.portalUser?.id || null;
         result = await pool.query(
           `INSERT INTO lead_intakes (
             source, campaign_tag, product_line, vertical,
@@ -124,9 +164,9 @@ export default function leadsRouter(pool) {
             contact_name, contact_title, contact_email, contact_phone, contact_department,
             expected_users, budget_range, timeline, message,
             company_size, expected_decision_date, conditions_notes,
-            consent_pdpl, dedupe_hash, ticket_number, assigned_to, score
+            consent_pdpl, dedupe_hash, ticket_number, assigned_to, score, user_id
           ) VALUES (
-            $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27
+            $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28
           ) RETURNING id, ticket_number, created_at`,
           [
             b.source || 'website', b.campaign_tag || null, b.product_line || null, b.vertical || null,
@@ -135,7 +175,7 @@ export default function leadsRouter(pool) {
             b.contact_phone || null, b.contact_department || null,
             b.expected_users || null, b.budget_range || null, b.timeline || null, b.message?.trim() || null,
             b.company_size || null, b.expected_decision_date || null, (b.conditions_notes || '').trim() || null,
-            true, hash, ticket, assignTo, score,
+            true, hash, ticket, assignTo, score, userId,
           ]
         );
       } catch (e) {
@@ -147,9 +187,9 @@ export default function leadsRouter(pool) {
               contact_name, contact_title, contact_email, contact_phone,
               expected_users, budget_range, timeline, message,
               company_size, expected_decision_date, conditions_notes,
-              consent_pdpl, dedupe_hash, ticket_number, assigned_to, score
+              consent_pdpl, dedupe_hash, ticket_number, assigned_to, score, user_id
             ) VALUES (
-              $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26
+              $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27
             ) RETURNING id, ticket_number, created_at`,
             [
               b.source || 'website', b.campaign_tag || null, b.product_line || null, b.vertical || null,
@@ -158,7 +198,7 @@ export default function leadsRouter(pool) {
               b.contact_phone || null,
               b.expected_users || null, b.budget_range || null, b.timeline || null, b.message?.trim() || null,
               b.company_size || null, b.expected_decision_date || null, (b.conditions_notes || '').trim() || null,
-              true, hash, ticket, assignTo, score,
+              true, hash, ticket, assignTo, score, userId,
             ]
           );
         } else {
@@ -233,67 +273,150 @@ export default function leadsRouter(pool) {
     }
   });
 
-  /* ── ADMIN: portal login (employee or admin) ────────────────────────────── */
-  router.post('/admin/login', async (req, res) => {
-    const { email, password } = req.body || {};
-    if (email && password) {
-      try {
-        const u = await pool.query(
-          'SELECT id, email, password_hash, role, name FROM portal_users WHERE LOWER(email) = LOWER($1)',
-          [email.trim()]
-        );
-        if (!u.rows.length) return res.status(401).json({ error: 'Invalid email or password' });
-        const user = u.rows[0];
-        const match = await bcrypt.compare(password, user.password_hash);
-        if (!match) return res.status(401).json({ error: 'Invalid email or password' });
-        const token = jwt.sign(
-          { id: user.id, email: user.email, role: user.role },
-          JWT_SECRET,
-          { expiresIn: '7d' }
-        );
-        return res.json({
-          ok: true,
-          token,
-          user: { id: user.id, email: user.email, name: user.name || user.email, role: user.role },
-        });
-      } catch (e) {
-        console.error('Portal login error:', e.message);
-        return res.status(500).json({ error: 'Login failed' });
-      }
-    }
-    const pwOnly = req.body?.password;
-    if (pwOnly && pwOnly === ADMIN_PASSWORD) {
-      const token = jwt.sign(
-        { role: 'admin' },
-        JWT_SECRET,
-        { expiresIn: '7d' }
+  /* ── ADMIN: login/MFA consolidated — uses /api/v1/auth/* from auth.js ── */
+  /* (Removed duplicate /admin/login and /admin/resend-mfa — now using consolidated auth routes) */
+
+  /* ── ADMIN: registration management ──────────────────────────────────── */
+  router.get('/admin/registrations', portalAuth, adminOnly, async (req, res) => {
+    try {
+      const { status, page = 1, limit = 25 } = req.query;
+      const offset = (Number(page) - 1) * Number(limit);
+      let where = `WHERE role NOT IN ('admin', 'employee')`;
+      const params = [];
+      if (status) { params.push(status); where += ` AND approval_status = $${params.length}`; }
+      const countR = await pool.query(`SELECT COUNT(*) AS cnt FROM users ${where}`, params);
+      params.push(Number(limit), offset);
+      const dataR = await pool.query(
+        `SELECT id, email, full_name, company, role, category, approval_status, is_active, created_at
+         FROM users ${where} ORDER BY created_at DESC LIMIT $${params.length - 1} OFFSET $${params.length}`, params
       );
-      return res.json({ ok: true, token, user: { role: 'admin' } });
+      res.json({ data: dataR.rows, total: Number(countR.rows[0].cnt) });
+    } catch (e) {
+      console.error('Registrations list error:', e.message);
+      res.status(500).json({ error: 'Failed to load registrations' });
     }
-    res.status(401).json({ error: 'Invalid password' });
   });
 
-  /* ── ADMIN: one-time first user registration (when no portal users exist) ─ */
-  router.post('/admin/register', async (req, res) => {
-    const { setup_token, email, password, name, role } = req.body || {};
-    if (!setup_token || setup_token !== ADMIN_PASSWORD) return res.status(403).json({ error: 'Invalid setup token' });
-    if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
-      return res.status(400).json({ error: 'email and password required' });
-    }
-    const safeRole = role === 'admin' ? 'admin' : 'employee';
+  router.patch('/admin/registrations/:id/approve', portalAuth, adminOnly, async (req, res) => {
     try {
-      const count = await pool.query('SELECT count(*) FROM portal_users');
-      if (+count.rows[0].count > 0) return res.status(403).json({ error: 'Portal users already exist' });
-      const hash = await bcrypt.hash(password, 10);
       await pool.query(
-        'INSERT INTO portal_users (email, password_hash, role, name) VALUES ($1, $2, $3, $4)',
-        [email.trim().toLowerCase(), hash, safeRole, (name || '').trim() || null]
+        `UPDATE users SET approval_status = 'approved', approved_by = $2, approved_at = NOW(), is_active = true WHERE id = $1`,
+        [req.params.id, req.portalUser.id]
       );
-      res.json({ ok: true, message: 'User created. Use email and password to log in.' });
+      res.json({ ok: true });
     } catch (e) {
-      if (e.code === '23505') return res.status(400).json({ error: 'Email already registered' });
-      console.error('Portal register error:', e.message);
-      res.status(500).json({ error: 'Registration failed' });
+      res.status(500).json({ error: 'Failed to approve' });
+    }
+  });
+
+  router.patch('/admin/registrations/:id/reject', portalAuth, adminOnly, async (req, res) => {
+    try {
+      await pool.query(
+        `UPDATE users SET approval_status = 'rejected', is_active = false WHERE id = $1`,
+        [req.params.id]
+      );
+      res.json({ ok: true });
+    } catch (e) {
+      res.status(500).json({ error: 'Failed to reject' });
+    }
+  });
+
+  /* ── ADMIN: create team member (admin-only, @doganconsult.com only) ────── */
+  router.post('/admin/users', portalAuth, adminOnly, async (req, res) => {
+    try {
+      const { email, password, name, role } = req.body || {};
+      if (!email || !password) {
+        return res.status(400).json({ error: 'Email and password are required' });
+      }
+      if (password.length < 8) {
+        return res.status(400).json({ error: 'Password must be at least 8 characters' });
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ error: 'Invalid email format' });
+      }
+      const domain = email.split('@')[1]?.toLowerCase();
+      if (domain !== 'doganconsult.com') {
+        return res.status(400).json({ error: 'Team members must use @doganconsult.com email' });
+      }
+      const safeRole = role === 'admin' ? 'admin' : 'employee';
+      const existing = await pool.query(
+        'SELECT id FROM users WHERE LOWER(email) = LOWER($1) LIMIT 1',
+        [email.trim()]
+      );
+      if (existing.rows.length) {
+        return res.status(409).json({ error: 'Email already registered' });
+      }
+      const hash = await bcrypt.hash(password, 12);
+      const result = await pool.query(
+        `INSERT INTO users (email, password_hash, full_name, role, category, is_active, must_change_password, mfa_enabled, created_by)
+         VALUES ($1, $2, $3, $4, 'employee', true, true, true, $5)
+         RETURNING id, email, role, full_name, category, must_change_password, created_at`,
+        [
+          email.trim().toLowerCase(),
+          hash,
+          (name || '').trim() || email.split('@')[0],
+          safeRole,
+          req.portalUser.id || null,
+        ]
+      );
+      res.status(201).json({ ok: true, user: result.rows[0] });
+    } catch (e) {
+      if (e.code === '23505') return res.status(409).json({ error: 'Email already registered' });
+      console.error('Create team member error:', e.message);
+      res.status(500).json({ error: 'Failed to create user' });
+    }
+  });
+
+  /* ── ADMIN: list team members (admin-only) ────────────────────────────── */
+  router.get('/admin/users', portalAuth, adminOnly, async (req, res) => {
+    try {
+      const result = await pool.query(
+        `SELECT id, email, role, full_name, category, must_change_password, created_at
+         FROM users WHERE role IN ('admin','employee') OR category = 'employee'
+         ORDER BY created_at DESC`
+      );
+      res.json({ ok: true, data: result.rows });
+    } catch (e) {
+      console.error('List team members error:', e.message);
+      res.status(500).json({ error: 'Failed to list users' });
+    }
+  });
+
+  /* ── AUTH: change password (own account, used for first-login force change) */
+  router.post('/admin/change-password', portalAuth, async (req, res) => {
+    try {
+      const { current_password, new_password } = req.body || {};
+      if (!current_password || !new_password) {
+        return res.status(400).json({ error: 'Current password and new password are required' });
+      }
+      if (new_password.length < 8) {
+        return res.status(400).json({ error: 'New password must be at least 8 characters' });
+      }
+      const u = await pool.query(
+        'SELECT id, password_hash FROM users WHERE id = $1',
+        [req.portalUser.id]
+      );
+      if (!u.rows.length) return res.status(404).json({ error: 'User not found' });
+      const match = await bcrypt.compare(current_password, u.rows[0].password_hash);
+      if (!match) return res.status(401).json({ error: 'Current password is incorrect' });
+      if (current_password === new_password) {
+        return res.status(400).json({ error: 'New password must be different from current password' });
+      }
+      const hash = await bcrypt.hash(new_password, 12);
+      await pool.query(
+        'UPDATE users SET password_hash = $1, must_change_password = false, updated_at = NOW() WHERE id = $2',
+        [hash, req.portalUser.id]
+      );
+      const token = jwt.sign(
+        { id: req.portalUser.id, email: req.portalUser.email, role: req.portalUser.role },
+        getJwtSecret(),
+        { expiresIn: '7d' }
+      );
+      res.json({ ok: true, token });
+    } catch (e) {
+      console.error('Change password error:', e.message);
+      res.status(500).json({ error: 'Failed to change password' });
     }
   });
 
@@ -393,12 +516,28 @@ export default function leadsRouter(pool) {
 
       await pool.query(`UPDATE lead_intakes SET ${sets.join(', ')} WHERE id = $${idx}`, params);
 
-      // log activity
+      // log activity (partner-visible so they see status updates)
       const changes = Object.keys(b).filter(k => allowed.includes(k)).map(k => `${k} → ${b[k]}`).join(', ');
       await pool.query(
-        `INSERT INTO lead_activities (lead_intake_id, type, body, created_by) VALUES ($1, 'status_change', $2, $3)`,
+        `INSERT INTO lead_activities (lead_intake_id, type, body, created_by, visibility) VALUES ($1, 'status_change', $2, $3, 'partner')`,
         [req.params.id, changes, b.updated_by || 'admin']
       );
+
+      // Notify associated partner about status change
+      const pr = await pool.query(
+        `SELECT pl.partner_id, li.company_name, li.ticket_number
+         FROM partner_leads pl JOIN lead_intakes li ON li.id = pl.lead_intake_id
+         WHERE pl.lead_intake_id = $1 LIMIT 1`,
+        [req.params.id]
+      ).catch(() => ({ rows: [] }));
+      if (pr.rows.length) {
+        await notifyPartner(pool, pr.rows[0].partner_id, {
+          type: 'pipeline',
+          title: `Lead ${pr.rows[0].ticket_number} updated`,
+          body: `${pr.rows[0].company_name}: ${changes}`,
+          link: '/partner?tab=activity',
+        }).catch(() => {});
+      }
 
       res.json({ ok: true });
     } catch (e) {
@@ -409,13 +548,33 @@ export default function leadsRouter(pool) {
   /* ── INTERNAL: add activity ─────────────────────────── */
   router.post('/leads/:id/activities', portalAuth, async (req, res) => {
     try {
-      const { type = 'note', body, created_by = 'admin' } = req.body || {};
+      const { type = 'note', body, created_by = 'admin', visibility = 'internal' } = req.body || {};
       if (!body?.trim()) return res.status(400).json({ error: 'Body required' });
+      const safeVisibility = ['internal', 'partner'].includes(visibility) ? visibility : 'internal';
 
       await pool.query(
-        `INSERT INTO lead_activities (lead_intake_id, type, body, created_by) VALUES ($1, $2, $3, $4)`,
-        [req.params.id, type, body.trim(), created_by]
+        `INSERT INTO lead_activities (lead_intake_id, type, body, created_by, visibility) VALUES ($1, $2, $3, $4, $5)`,
+        [req.params.id, type, body.trim(), created_by, safeVisibility]
       );
+
+      // If partner-visible, notify associated partner
+      if (safeVisibility === 'partner') {
+        const pr = await pool.query(
+          `SELECT pl.partner_id, li.company_name, li.ticket_number
+           FROM partner_leads pl JOIN lead_intakes li ON li.id = pl.lead_intake_id
+           WHERE pl.lead_intake_id = $1 LIMIT 1`,
+          [req.params.id]
+        );
+        if (pr.rows.length) {
+          await notifyPartner(pool, pr.rows[0].partner_id, {
+            type: 'pipeline',
+            title: `Update on ${pr.rows[0].company_name}`,
+            body: body.trim().substring(0, 200),
+            link: '/partner?tab=activity',
+          }).catch(() => {});
+        }
+      }
+
       res.status(201).json({ ok: true });
     } catch (e) {
       res.status(500).json({ error: 'Failed to add activity' });
@@ -934,9 +1093,20 @@ export default function leadsRouter(pool) {
       );
       if (!r.rows.length) return res.status(404).json({ error: 'Partner lead not found' });
       await pool.query(
-        `INSERT INTO lead_activities (lead_intake_id, type, body, created_by) VALUES ($1, 'system', 'Partner lead approved.', $2)`,
+        `INSERT INTO lead_activities (lead_intake_id, type, body, created_by, visibility) VALUES ($1, 'system', 'Partner lead approved.', $2, 'partner')`,
         [r.rows[0].lead_intake_id, req.body?.approved_by || 'admin']
       );
+
+      // Notify partner
+      const partnerQ = await pool.query('SELECT partner_id FROM partner_leads WHERE id = $1', [plId]);
+      if (partnerQ.rows.length) {
+        await notifyPartner(pool, partnerQ.rows[0].partner_id, {
+          type: 'pipeline',
+          title: 'Your lead has been approved!',
+          body: `Lead ${ctx.rows[0]?.ticket_number || ''} for ${ctx.rows[0]?.company_name || 'a client'} was approved.`,
+          link: '/partner?tab=overview',
+        }).catch(() => {});
+      }
 
       try {
         const ctx = await pool.query(
@@ -974,9 +1144,20 @@ export default function leadsRouter(pool) {
       );
       if (!r.rows.length) return res.status(404).json({ error: 'Partner lead not found' });
       await pool.query(
-        `INSERT INTO lead_activities (lead_intake_id, type, body, created_by) VALUES ($1, 'system', $2, 'admin')`,
+        `INSERT INTO lead_activities (lead_intake_id, type, body, created_by, visibility) VALUES ($1, 'system', $2, 'admin', 'partner')`,
         [r.rows[0].lead_intake_id, `Partner lead rejected.${reason ? ' Reason: ' + reason : ''}`]
       );
+
+      // Notify partner
+      const partnerQR = await pool.query('SELECT partner_id FROM partner_leads WHERE id = $1', [plId]);
+      if (partnerQR.rows.length) {
+        await notifyPartner(pool, partnerQR.rows[0].partner_id, {
+          type: 'pipeline',
+          title: 'Lead submission update',
+          body: `Your lead was not accepted.${reason ? ' Reason: ' + reason : ''}`,
+          link: '/partner?tab=overview',
+        }).catch(() => {});
+      }
 
       try {
         const ctx = await pool.query(
@@ -1001,6 +1182,428 @@ export default function leadsRouter(pool) {
       res.json({ ok: true });
     } catch (e) {
       res.status(500).json({ error: 'Failed to reject partner lead' });
+    }
+  });
+
+  /* ── ADMIN: partner messages summary (all partners) ───── */
+  router.get('/admin/partners/messages/summary', portalAuth, adminOnly, async (req, res) => {
+    try {
+      const rows = await pool.query(
+        `SELECT p.id, p.company_name, p.contact_name,
+                COALESCE(m.unread, 0) AS unread_count,
+                m.last_message_at, m.last_body
+         FROM partners p
+         LEFT JOIN LATERAL (
+           SELECT COUNT(*) FILTER (WHERE sender = 'partner' AND read = FALSE) AS unread,
+                  MAX(created_at) AS last_message_at,
+                  (SELECT body FROM partner_messages WHERE partner_id = p.id ORDER BY created_at DESC LIMIT 1) AS last_body
+           FROM partner_messages WHERE partner_id = p.id
+         ) m ON true
+         WHERE p.status = 'approved'
+         ORDER BY m.last_message_at DESC NULLS LAST`
+      );
+      res.json({ data: rows.rows });
+    } catch (e) {
+      console.error('Admin messages summary:', e.message);
+      res.status(500).json({ error: 'Failed to fetch messages summary' });
+    }
+  });
+
+  /* ── ADMIN: get messages for a specific partner ──────── */
+  router.get('/admin/partners/:partnerId/messages', portalAuth, adminOnly, async (req, res) => {
+    try {
+      const rows = await pool.query(
+        `SELECT id, sender, sender_name, body, read, created_at
+         FROM partner_messages WHERE partner_id = $1
+         ORDER BY created_at DESC LIMIT 100`,
+        [req.params.partnerId]
+      );
+      // Mark partner messages as read
+      await pool.query(
+        `UPDATE partner_messages SET read = TRUE WHERE partner_id = $1 AND sender = 'partner' AND read = FALSE`,
+        [req.params.partnerId]
+      );
+      const unreadQ = await pool.query(
+        `SELECT COUNT(*) FROM partner_messages WHERE partner_id = $1 AND read = FALSE AND sender = 'partner'`,
+        [req.params.partnerId]
+      );
+      res.json({ data: rows.rows, unread_count: +unreadQ.rows[0].count });
+    } catch (e) {
+      console.error('Admin partner messages:', e.message);
+      res.status(500).json({ error: 'Failed to fetch messages' });
+    }
+  });
+
+  /* ── ADMIN: reply to partner ─────────────────────────── */
+  router.post('/admin/partners/:partnerId/messages', portalAuth, adminOnly, async (req, res) => {
+    try {
+      const { body } = req.body || {};
+      if (!body?.trim()) return res.status(400).json({ error: 'Message body required' });
+
+      const senderName = req.portalUser?.name || req.portalUser?.email || 'Account Manager';
+
+      await pool.query(
+        `INSERT INTO partner_messages (partner_id, sender, sender_name, body)
+         VALUES ($1, 'manager', $2, $3)`,
+        [req.params.partnerId, senderName, body.trim()]
+      );
+
+      // Notify partner via notification + SSE + optional email
+      await notifyPartner(pool, req.params.partnerId, {
+        type: 'message',
+        title: 'New message from your account manager',
+        body: body.trim().substring(0, 200),
+        link: '/partner?tab=messages',
+      });
+
+      res.json({ ok: true });
+    } catch (e) {
+      console.error('Admin reply error:', e.message);
+      res.status(500).json({ error: 'Failed to send reply' });
+    }
+  });
+
+  // ════════════════════════════════════════════════════════
+  // ADMIN: Tenders CRUD
+  // ════════════════════════════════════════════════════════
+  router.post('/tenders', portalAuth, adminOnly, async (req, res) => {
+    try {
+      const { opportunity_id, lead_intake_id, user_id, title, rfp_number, issuing_entity, tender_type, submission_deadline, budget_estimate, currency, requirements } = req.body || {};
+      if (!title) return res.status(400).json({ error: 'Title is required' });
+
+      const result = await pool.query(
+        `INSERT INTO tenders (opportunity_id, lead_intake_id, user_id, title, rfp_number, issuing_entity, tender_type, submission_deadline, budget_estimate, currency, requirements)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *`,
+        [opportunity_id || null, lead_intake_id || null, user_id || null, title, rfp_number || null, issuing_entity || null, tender_type || 'open', submission_deadline || null, budget_estimate || null, currency || 'SAR', requirements || null]
+      );
+
+      // Notify client if user_id set
+      if (user_id) {
+        try {
+          await pool.query(
+            `INSERT INTO client_notifications (user_id, type, title, body, link) VALUES ($1, 'tender', $2, $3, '/workspace?tab=tenders')`,
+            [user_id, `New tender: ${title}`, `A tender has been created for your opportunity.`]
+          );
+        } catch (_) {}
+      }
+
+      res.status(201).json(result.rows[0]);
+    } catch (e) {
+      console.error('Create tender error:', e.message);
+      res.status(500).json({ error: 'Failed to create tender' });
+    }
+  });
+
+  router.patch('/tenders/:id', portalAuth, adminOnly, async (req, res) => {
+    try {
+      const fields = ['status', 'rfp_number', 'issuing_entity', 'tender_type', 'submission_deadline', 'budget_estimate', 'technical_score', 'financial_score', 'our_solution_summary', 'submission_notes', 'result_notes', 'awarded_at'];
+      const sets = [];
+      const params = [req.params.id];
+      let idx = 2;
+      for (const f of fields) {
+        if (req.body[f] !== undefined) { sets.push(`${f} = $${idx++}`); params.push(req.body[f]); }
+      }
+      if (!sets.length) return res.status(400).json({ error: 'No fields to update' });
+      sets.push('updated_at = NOW()');
+
+      const result = await pool.query(`UPDATE tenders SET ${sets.join(', ')} WHERE id = $1 RETURNING *`, params);
+      if (!result.rows.length) return res.status(404).json({ error: 'Not found' });
+      res.json(result.rows[0]);
+    } catch (e) {
+      console.error('Update tender error:', e.message);
+      res.status(500).json({ error: 'Failed to update tender' });
+    }
+  });
+
+  // ════════════════════════════════════════════════════════
+  // ADMIN: Demos/POC CRUD
+  // ════════════════════════════════════════════════════════
+  router.post('/demos', portalAuth, adminOnly, async (req, res) => {
+    try {
+      const { opportunity_id, lead_intake_id, user_id, title, demo_type, scheduled_date, duration_minutes, environment_url, agenda, evaluation_criteria, success_criteria, poc_start_date, poc_end_date } = req.body || {};
+      if (!title) return res.status(400).json({ error: 'Title is required' });
+
+      const result = await pool.query(
+        `INSERT INTO demos (opportunity_id, lead_intake_id, user_id, title, demo_type, scheduled_date, duration_minutes, environment_url, agenda, evaluation_criteria, success_criteria, poc_start_date, poc_end_date)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) RETURNING *`,
+        [opportunity_id || null, lead_intake_id || null, user_id || null, title, demo_type || 'demo', scheduled_date || null, duration_minutes || 60, environment_url || null, agenda || null, evaluation_criteria || null, success_criteria || null, poc_start_date || null, poc_end_date || null]
+      );
+
+      if (user_id) {
+        try {
+          await pool.query(
+            `INSERT INTO client_notifications (user_id, type, title, body, link) VALUES ($1, 'demo', $2, $3, '/workspace?tab=demos')`,
+            [user_id, `${demo_type === 'poc' ? 'POC' : 'Demo'} scheduled: ${title}`, scheduled_date ? `Scheduled for ${new Date(scheduled_date).toLocaleDateString()}` : 'Details available in your workspace.']
+          );
+        } catch (_) {}
+      }
+
+      res.status(201).json(result.rows[0]);
+    } catch (e) {
+      console.error('Create demo error:', e.message);
+      res.status(500).json({ error: 'Failed to create demo' });
+    }
+  });
+
+  router.patch('/demos/:id', portalAuth, adminOnly, async (req, res) => {
+    try {
+      const fields = ['status', 'scheduled_date', 'duration_minutes', 'environment_url', 'agenda', 'outcome', 'evaluation_score', 'next_steps', 'poc_start_date', 'poc_end_date'];
+      const sets = [];
+      const params = [req.params.id];
+      let idx = 2;
+      for (const f of fields) {
+        if (req.body[f] !== undefined) { sets.push(`${f} = $${idx++}`); params.push(req.body[f]); }
+      }
+      if (!sets.length) return res.status(400).json({ error: 'No fields to update' });
+      sets.push('updated_at = NOW()');
+
+      const result = await pool.query(`UPDATE demos SET ${sets.join(', ')} WHERE id = $1 RETURNING *`, params);
+      if (!result.rows.length) return res.status(404).json({ error: 'Not found' });
+      res.json(result.rows[0]);
+    } catch (e) {
+      res.status(500).json({ error: 'Failed to update demo' });
+    }
+  });
+
+  // ════════════════════════════════════════════════════════
+  // ADMIN: Projects (PMO) CRUD
+  // ════════════════════════════════════════════════════════
+  router.post('/projects', portalAuth, adminOnly, async (req, res) => {
+    try {
+      const { opportunity_id, engagement_id, user_id, title, project_code, start_date, end_date, budget, currency, owner } = req.body || {};
+      if (!title) return res.status(400).json({ error: 'Title is required' });
+
+      const result = await pool.query(
+        `INSERT INTO projects (opportunity_id, engagement_id, user_id, title, project_code, start_date, end_date, budget, currency, owner)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *`,
+        [opportunity_id || null, engagement_id || null, user_id || null, title, project_code || null, start_date || null, end_date || null, budget || null, currency || 'SAR', owner || null]
+      );
+
+      if (user_id) {
+        try {
+          await pool.query(
+            `INSERT INTO client_notifications (user_id, type, title, body, link) VALUES ($1, 'project', $2, $3, '/workspace?tab=projects')`,
+            [user_id, `New project: ${title}`, 'A new project has been created for you.']
+          );
+        } catch (_) {}
+      }
+
+      res.status(201).json(result.rows[0]);
+    } catch (e) {
+      console.error('Create project error:', e.message);
+      res.status(500).json({ error: 'Failed to create project' });
+    }
+  });
+
+  router.patch('/projects/:id', portalAuth, adminOnly, async (req, res) => {
+    try {
+      const fields = ['status', 'phase', 'progress_pct', 'actual_start', 'actual_end', 'actual_cost', 'owner', 'risks', 'notes'];
+      const sets = [];
+      const params = [req.params.id];
+      let idx = 2;
+      for (const f of fields) {
+        if (req.body[f] !== undefined) { sets.push(`${f} = $${idx++}`); params.push(req.body[f]); }
+      }
+      if (!sets.length) return res.status(400).json({ error: 'No fields to update' });
+      sets.push('updated_at = NOW()');
+
+      const result = await pool.query(`UPDATE projects SET ${sets.join(', ')} WHERE id = $1 RETURNING *`, params);
+      if (!result.rows.length) return res.status(404).json({ error: 'Not found' });
+      res.json(result.rows[0]);
+    } catch (e) {
+      res.status(500).json({ error: 'Failed to update project' });
+    }
+  });
+
+  router.post('/projects/:id/milestones', portalAuth, adminOnly, async (req, res) => {
+    try {
+      const { title, description, due_date, sort_order } = req.body || {};
+      if (!title) return res.status(400).json({ error: 'Title is required' });
+      const result = await pool.query(
+        `INSERT INTO milestones (project_id, title, description, due_date, sort_order) VALUES ($1,$2,$3,$4,$5) RETURNING *`,
+        [req.params.id, title, description || null, due_date || null, sort_order || 0]
+      );
+      res.status(201).json(result.rows[0]);
+    } catch (e) {
+      res.status(500).json({ error: 'Failed to create milestone' });
+    }
+  });
+
+  router.patch('/milestones/:id', portalAuth, adminOnly, async (req, res) => {
+    try {
+      const fields = ['title', 'description', 'due_date', 'status', 'completed_at', 'sort_order'];
+      const sets = [];
+      const params = [req.params.id];
+      let idx = 2;
+      for (const f of fields) {
+        if (req.body[f] !== undefined) { sets.push(`${f} = $${idx++}`); params.push(req.body[f]); }
+      }
+      if (!sets.length) return res.status(400).json({ error: 'No fields to update' });
+      const result = await pool.query(`UPDATE milestones SET ${sets.join(', ')} WHERE id = $1 RETURNING *`, params);
+      if (!result.rows.length) return res.status(404).json({ error: 'Not found' });
+      res.json(result.rows[0]);
+    } catch (e) {
+      res.status(500).json({ error: 'Failed to update milestone' });
+    }
+  });
+
+  router.post('/projects/:id/tasks', portalAuth, adminOnly, async (req, res) => {
+    try {
+      const { milestone_id, title, description, assigned_to, priority, due_date, sort_order } = req.body || {};
+      if (!title) return res.status(400).json({ error: 'Title is required' });
+      const result = await pool.query(
+        `INSERT INTO tasks (project_id, milestone_id, title, description, assigned_to, priority, due_date, sort_order) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`,
+        [req.params.id, milestone_id || null, title, description || null, assigned_to || null, priority || 'medium', due_date || null, sort_order || 0]
+      );
+      res.status(201).json(result.rows[0]);
+    } catch (e) {
+      res.status(500).json({ error: 'Failed to create task' });
+    }
+  });
+
+  router.patch('/tasks/:id', portalAuth, adminOnly, async (req, res) => {
+    try {
+      const fields = ['title', 'description', 'assigned_to', 'status', 'priority', 'due_date', 'completed_at', 'sort_order'];
+      const sets = [];
+      const params = [req.params.id];
+      let idx = 2;
+      for (const f of fields) {
+        if (req.body[f] !== undefined) { sets.push(`${f} = $${idx++}`); params.push(req.body[f]); }
+      }
+      if (!sets.length) return res.status(400).json({ error: 'No fields to update' });
+      const result = await pool.query(`UPDATE tasks SET ${sets.join(', ')} WHERE id = $1 RETURNING *`, params);
+      if (!result.rows.length) return res.status(404).json({ error: 'Not found' });
+      res.json(result.rows[0]);
+    } catch (e) {
+      res.status(500).json({ error: 'Failed to update task' });
+    }
+  });
+
+  // ════════════════════════════════════════════════════════
+  // ADMIN: Contracts & Licenses CRUD
+  // ════════════════════════════════════════════════════════
+  router.post('/contracts', portalAuth, adminOnly, async (req, res) => {
+    try {
+      const { opportunity_id, project_id, user_id, title, contract_number, contract_type, vendor, start_date, end_date, auto_renew, renewal_notice_days, value, currency, payment_terms, sla_terms, notes } = req.body || {};
+      if (!title) return res.status(400).json({ error: 'Title is required' });
+
+      const result = await pool.query(
+        `INSERT INTO contracts (opportunity_id, project_id, user_id, title, contract_number, contract_type, vendor, start_date, end_date, auto_renew, renewal_notice_days, value, currency, payment_terms, sla_terms, notes)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16) RETURNING *`,
+        [opportunity_id || null, project_id || null, user_id || null, title, contract_number || null, contract_type || 'service', vendor || null, start_date || null, end_date || null, auto_renew || false, renewal_notice_days || 30, value || null, currency || 'SAR', payment_terms || null, sla_terms || null, notes || null]
+      );
+
+      if (user_id) {
+        try {
+          await pool.query(
+            `INSERT INTO client_notifications (user_id, type, title, body, link) VALUES ($1, 'contract', $2, $3, '/workspace?tab=contracts')`,
+            [user_id, `New contract: ${title}`, 'A new contract has been added to your workspace.']
+          );
+        } catch (_) {}
+      }
+
+      res.status(201).json(result.rows[0]);
+    } catch (e) {
+      console.error('Create contract error:', e.message);
+      res.status(500).json({ error: 'Failed to create contract' });
+    }
+  });
+
+  router.patch('/contracts/:id', portalAuth, adminOnly, async (req, res) => {
+    try {
+      const fields = ['status', 'end_date', 'auto_renew', 'renewal_notice_days', 'value', 'payment_terms', 'sla_terms', 'notes'];
+      const sets = [];
+      const params = [req.params.id];
+      let idx = 2;
+      for (const f of fields) {
+        if (req.body[f] !== undefined) { sets.push(`${f} = $${idx++}`); params.push(req.body[f]); }
+      }
+      if (!sets.length) return res.status(400).json({ error: 'No fields to update' });
+      sets.push('updated_at = NOW()');
+      const result = await pool.query(`UPDATE contracts SET ${sets.join(', ')} WHERE id = $1 RETURNING *`, params);
+      if (!result.rows.length) return res.status(404).json({ error: 'Not found' });
+      res.json(result.rows[0]);
+    } catch (e) {
+      res.status(500).json({ error: 'Failed to update contract' });
+    }
+  });
+
+  router.post('/contracts/:id/licenses', portalAuth, adminOnly, async (req, res) => {
+    try {
+      const { user_id, product_name, license_key, license_type, quantity, start_date, expiry_date, auto_renew, cost_per_unit, currency, vendor, notes } = req.body || {};
+      if (!product_name) return res.status(400).json({ error: 'Product name is required' });
+
+      const result = await pool.query(
+        `INSERT INTO licenses (contract_id, user_id, product_name, license_key, license_type, quantity, start_date, expiry_date, auto_renew, cost_per_unit, currency, vendor, notes)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) RETURNING *`,
+        [req.params.id, user_id || null, product_name, license_key || null, license_type || null, quantity || 1, start_date || null, expiry_date || null, auto_renew || false, cost_per_unit || null, currency || 'SAR', vendor || null, notes || null]
+      );
+      res.status(201).json(result.rows[0]);
+    } catch (e) {
+      res.status(500).json({ error: 'Failed to create license' });
+    }
+  });
+
+  router.patch('/licenses/:id', portalAuth, adminOnly, async (req, res) => {
+    try {
+      const fields = ['product_name', 'license_key', 'license_type', 'quantity', 'assigned_users', 'start_date', 'expiry_date', 'auto_renew', 'cost_per_unit', 'status', 'notes'];
+      const sets = [];
+      const params = [req.params.id];
+      let idx = 2;
+      for (const f of fields) {
+        if (req.body[f] !== undefined) { sets.push(`${f} = $${idx++}`); params.push(req.body[f]); }
+      }
+      if (!sets.length) return res.status(400).json({ error: 'No fields to update' });
+      const result = await pool.query(`UPDATE licenses SET ${sets.join(', ')} WHERE id = $1 RETURNING *`, params);
+      if (!result.rows.length) return res.status(404).json({ error: 'Not found' });
+      res.json(result.rows[0]);
+    } catch (e) {
+      res.status(500).json({ error: 'Failed to update license' });
+    }
+  });
+
+  // ════════════════════════════════════════════════════════
+  // ADMIN: Client Messages Management
+  // ════════════════════════════════════════════════════════
+  router.get('/admin/client-messages', portalAuth, adminOnly, async (req, res) => {
+    try {
+      const limit = Math.min(100, parseInt(req.query.limit) || 50);
+      const offset = parseInt(req.query.offset) || 0;
+      const result = await pool.query(
+        `SELECT cm.*, u.full_name AS client_name, u.email AS client_email, u.company AS client_company
+         FROM client_messages cm JOIN users u ON cm.user_id = u.id
+         ORDER BY cm.created_at DESC LIMIT $1 OFFSET $2`,
+        [limit, offset]
+      );
+      res.json({ data: result.rows });
+    } catch (e) {
+      res.status(500).json({ error: 'Failed to load messages' });
+    }
+  });
+
+  router.post('/admin/client-messages/:userId', portalAuth, adminOnly, async (req, res) => {
+    try {
+      const { body, opportunity_id } = req.body || {};
+      if (!body?.trim()) return res.status(400).json({ error: 'Message body required' });
+
+      const senderName = req.portalUser?.name || req.portalUser?.email || 'Dogan Consult Team';
+
+      const result = await pool.query(
+        `INSERT INTO client_messages (user_id, opportunity_id, sender, sender_name, body)
+         VALUES ($1, $2, 'team', $3, $4) RETURNING *`,
+        [req.params.userId, opportunity_id || null, senderName, body.trim()]
+      );
+
+      try {
+        await pool.query(
+          `INSERT INTO client_notifications (user_id, type, title, body, link) VALUES ($1, 'message', $2, $3, '/workspace?tab=messages')`,
+          [req.params.userId, `Message from ${senderName}`, body.trim().substring(0, 200)]
+        );
+      } catch (_) {}
+
+      res.status(201).json(result.rows[0]);
+    } catch (e) {
+      res.status(500).json({ error: 'Failed to send message' });
     }
   });
 

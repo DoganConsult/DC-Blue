@@ -1,0 +1,64 @@
+{
+  "id": "noc-dark",
+  "name": "NOC/SOC Dark Dashboard",
+  "description": "Enterprise network operations center theme with dark backgrounds and monospace fonts",
+  "colors": {
+    "background": {
+      "primary": "#020617",
+      "secondary": "#0a1628",
+      "tertiary": "#0c1e3a",
+      "gradient": "linear-gradient(135deg, #020617 0%, #0a1628 30%, #0c1e3a 60%, #020617 100%)"
+    },
+    "surface": {
+      "panel": "rgba(30,41,59,0.4)",
+      "panelHover": "rgba(30,41,59,0.6)",
+      "border": "rgba(51,65,85,0.5)",
+      "borderHover": "rgba(56,189,248,0.3)"
+    },
+    "text": {
+      "primary": "#e2e8f0",
+      "secondary": "#94a3b8",
+      "muted": "#64748b",
+      "inverse": "#0f172a"
+    },
+    "accent": {
+      "cyan": "#38bdf8",
+      "emerald": "#34d399",
+      "purple": "#c084fc",
+      "red": "#f87171",
+      "amber": "#fbbf24",
+      "teal": "#2dd4bf",
+      "indigo": "#818cf8",
+      "orange": "#fb923c"
+    },
+    "status": {
+      "online": "#34d399",
+      "warning": "#fbbf24",
+      "critical": "#f87171",
+      "offline": "#64748b"
+    },
+    "chart": {
+      "gridLine": "rgba(148,163,184,0.06)",
+      "axisLabel": "#64748b",
+      "tooltipBg": "rgba(15,23,42,0.95)",
+      "tooltipBorder": "rgba(56,189,248,0.3)"
+    }
+  },
+  "typography": {
+    "fontFamily": "JetBrains Mono, monospace",
+    "headingSize": 14,
+    "bodySize": 11,
+    "labelSize": 10,
+    "smallSize": 9
+  },
+  "spacing": {
+    "panelPadding": "20px",
+    "panelGap": "16px",
+    "panelRadius": "12px"
+  },
+  "css": {
+    "panel": "rounded-xl border border-slate-700/50 bg-slate-800/40 backdrop-blur-sm",
+    "panelHeader": "flex items-center justify-between px-5 pt-4 pb-2",
+    "kpiCard": "rounded-xl border border-slate-700/50 bg-slate-800/40 backdrop-blur-sm p-4 hover:border-sky-500/30 transition-all"
+  }
+}

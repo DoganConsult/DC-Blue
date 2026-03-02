@@ -14,20 +14,20 @@ const STEPS = [
   selector: 'app-engagement-flow-section',
   standalone: true,
   template: `
-    <section class="py-20 px-4 bg-white" id="engagement">
+    <section class="py-20 px-4 bg-th-card" id="engagement">
       <div class="container mx-auto max-w-6xl">
         <h2 class="text-3xl font-bold text-center text-brand-dark mb-2">
           {{ i18n.t('How we engage', 'كيف نتعامل معك') }}
         </h2>
-        <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+        <p class="text-center text-th-text-2 mb-12 max-w-2xl mx-auto">
           {{ i18n.t('From request to delivery and ongoing support.', 'من الطلب إلى التسليم والدعم المستمر.') }}
         </p>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           @for (step of steps; track step.titleEn) {
-            <div class="flex gap-4 items-start rounded-xl border border-gray-100 p-4 hover:border-primary/30 transition">
+            <div class="flex gap-4 items-start rounded-xl border border-th-border-lt p-4 hover:border-primary/30 transition">
               <span [class]="'pi ' + step.icon + ' text-primary text-xl mt-0.5'" aria-hidden="true"></span>
               <div>
-                <h3 class="font-semibold text-gray-900">{{ i18n.t(step.titleEn, step.titleAr) }}</h3>
+                <h3 class="font-semibold text-th-text">{{ i18n.t(step.titleEn, step.titleAr) }}</h3>
               </div>
             </div>
           }

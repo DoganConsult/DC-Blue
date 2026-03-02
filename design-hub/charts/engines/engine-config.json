@@ -1,0 +1,47 @@
+{
+  "chartjs": {
+    "package": "chart.js@^4.4.1",
+    "angularWrapper": "primeng/chart (ChartModule)",
+    "importStatement": "import { ChartModule } from 'primeng/chart';",
+    "templateUsage": "<p-chart type=\"bar\" [data]=\"data\" [options]=\"options\" height=\"280\" />",
+    "darkThemeDefaults": {
+      "tooltip": {
+        "backgroundColor": "rgba(15,23,42,0.95)",
+        "borderColor": "rgba(56,189,248,0.2)",
+        "borderWidth": 1,
+        "titleFont": { "family": "monospace", "size": 11 },
+        "bodyFont": { "family": "monospace", "size": 11 }
+      },
+      "scales": {
+        "gridColor": "rgba(148,163,184,0.06)",
+        "tickColor": "#64748b",
+        "tickFont": { "size": 10, "family": "monospace" }
+      }
+    }
+  },
+  "echarts": {
+    "package": "echarts@^6.0.0",
+    "angularWrapper": "ngx-echarts@^21.0.0",
+    "importStatement": "import { NgxEchartsDirective } from 'ngx-echarts';",
+    "providerSetup": "provideEchartsCore({ echarts })",
+    "templateUsage": "<div echarts [options]=\"options\" class=\"w-full h-[350px]\"></div>",
+    "darkThemeDefaults": {
+      "backgroundColor": "transparent",
+      "tooltip": {
+        "backgroundColor": "rgba(15,23,42,0.95)",
+        "borderColor": "rgba(56,189,248,0.3)",
+        "textStyle": { "color": "#e2e8f0", "fontFamily": "monospace", "fontSize": 11 }
+      }
+    }
+  },
+  "plotly": {
+    "package": "plotly==5.22.0",
+    "pythonWrapper": "Flask REST API",
+    "apiBase": "/api/charts/",
+    "darkThemeDefaults": {
+      "paper_bgcolor": "rgba(2,6,23,1)",
+      "plot_bgcolor": "rgba(10,22,40,1)",
+      "font": { "family": "JetBrains Mono, monospace", "color": "#e2e8f0", "size": 11 }
+    }
+  }
+}

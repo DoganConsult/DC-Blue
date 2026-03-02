@@ -3,5 +3,28 @@
 		{
 			"path": "."
 		}
-	]
+	],
+	"settings": {
+		"chat.agent.enabled": true,
+		"chat.agent.maxRequests": 30,
+		"github.copilot.chat.agent.thinkingTool": true,
+		"github.copilot.chat.codeGeneration.useInstructionFiles": true,
+		"claude-dev.allowedCommands": [
+			"npm",
+			"npx",
+			"node",
+			"git",
+			"cd",
+			"ls",
+			"cat",
+			"grep",
+			"find",
+			"python3",
+			"pip3",
+			"claude"
+		],
+		"terminal.integrated.env.linux": {
+			"ANTHROPIC_MODEL": "claude-sonnet-4-20250514"
+		}
+	}
 }

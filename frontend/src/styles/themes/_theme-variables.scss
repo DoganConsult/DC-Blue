@@ -1,0 +1,179 @@
+// Theme Variables System - Semantic Design Tokens
+// All components reference these variables, never hardcoded colors
+
+:root {
+  // Core Color Tokens (mapped to theme-specific values)
+  --color-primary: var(--theme-primary);
+  --color-primary-dark: var(--theme-primary-dark);
+  --color-primary-light: var(--theme-primary-light);
+  // Primary scale for gradients/shadows (design-system buttons, empty-states, etc.)
+  --color-primary-600: var(--theme-primary);
+  --color-primary-700: var(--theme-primary-dark);
+  --color-primary-800: var(--theme-primary-dark);
+  --color-primary-900: var(--theme-primary-dark);
+  --color-primary-rgb: var(--theme-primary-rgb, 15, 98, 254);
+  --color-secondary: var(--theme-secondary);
+  --color-secondary-dark: var(--theme-secondary-dark);
+  --color-secondary-light: var(--theme-secondary-light);
+  --color-accent: var(--theme-accent);
+  --color-accent-dark: var(--theme-accent-dark);
+  --color-accent-light: var(--theme-accent-light);
+
+  // Foundation Colors
+  --color-foundation-dark: var(--theme-foundation-dark);
+  --color-foundation-light: var(--theme-foundation-light);
+
+  // Gray Scale
+  --color-gray-50: var(--theme-gray-50);
+  --color-gray-100: var(--theme-gray-100);
+  --color-gray-200: var(--theme-gray-200);
+  --color-gray-300: var(--theme-gray-300);
+  --color-gray-400: var(--theme-gray-400);
+  --color-gray-500: var(--theme-gray-500);
+  --color-gray-600: var(--theme-gray-600);
+  --color-gray-700: var(--theme-gray-700);
+  --color-gray-800: var(--theme-gray-800);
+  --color-gray-900: var(--theme-gray-900);
+
+  // Semantic Colors
+  --color-success: var(--theme-success, #10B981);
+  --color-warning: var(--theme-warning, #F59E0B);
+  --color-error: var(--theme-error, #EF4444);
+  --color-info: var(--theme-info, #3B82F6);
+
+  // Component-Level Design Tokens
+
+  // Backgrounds
+  --bg-primary: var(--color-foundation-light);
+  --bg-secondary: var(--color-gray-50);
+  --bg-tertiary: var(--color-gray-100);
+  --bg-inverse: var(--color-foundation-dark);
+  --bg-accent: var(--color-accent-light);
+
+  // Text Colors
+  --text-primary: var(--color-foundation-dark);
+  --text-secondary: var(--color-gray-600);
+  --text-muted: var(--color-gray-400);
+  --text-inverse: var(--color-foundation-light);
+  --text-accent: var(--color-accent);
+  --text-on-primary: var(--color-foundation-light);
+  --text-on-secondary: var(--color-foundation-light);
+
+  // Borders
+  --border-light: var(--color-gray-200);
+  --border-default: var(--color-gray-300);
+  --border-dark: var(--color-gray-400);
+  --border-primary: var(--color-primary);
+  --border-accent: var(--color-accent);
+
+  // Buttons
+  --button-primary-bg: var(--color-primary);
+  --button-primary-hover: var(--color-primary-dark);
+  --button-primary-active: var(--color-primary-dark);
+  --button-primary-text: var(--text-on-primary);
+
+  --button-secondary-bg: transparent;
+  --button-secondary-border: var(--color-primary);
+  --button-secondary-hover: var(--color-primary-light);
+  --button-secondary-text: var(--color-primary);
+
+  --button-accent-bg: var(--color-accent);
+  --button-accent-hover: var(--color-accent-dark);
+  --button-accent-text: var(--text-on-primary);
+
+  // Cards
+  --card-bg: var(--bg-primary);
+  --card-border: var(--border-light);
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --card-hover-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+
+  // Navigation
+  --nav-bg: var(--bg-primary);
+  --nav-text: var(--text-primary);
+  --nav-hover: var(--color-primary);
+  --nav-active: var(--color-primary);
+  --nav-border: var(--border-light);
+
+  // Forms
+  --input-bg: var(--bg-primary);
+  --input-border: var(--border-default);
+  --input-focus-border: var(--color-primary);
+  --input-text: var(--text-primary);
+  --input-placeholder: var(--text-muted);
+
+  // Shadows (theme-independent)
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+  // Spacing (consistent across themes)
+  --spacing-unit: 8px;
+  --spacing-xs: calc(var(--spacing-unit) * 0.5);
+  --spacing-sm: var(--spacing-unit);
+  --spacing-md: calc(var(--spacing-unit) * 2);
+  --spacing-lg: calc(var(--spacing-unit) * 3);
+  --spacing-xl: calc(var(--spacing-unit) * 4);
+  --spacing-2xl: calc(var(--spacing-unit) * 6);
+  --spacing-3xl: calc(var(--spacing-unit) * 8);
+
+  // Typography (theme-independent)
+  --font-primary: 'IBM Plex Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-arabic: 'IBM Plex Arabic', 'Noto Kufi Arabic', sans-serif;
+  --font-mono: 'IBM Plex Mono', 'JetBrains Mono', 'Fira Code', monospace;
+
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+
+  // Border Radius (consistent across themes)
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-full: 9999px;
+
+  // Transitions (theme-independent)
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 250ms ease-in-out;
+  --transition-slow: 350ms ease-in-out;
+
+  // Z-Index Scale
+  --z-dropdown: 1000;
+  --z-sticky: 1100;
+  --z-overlay: 1200;
+  --z-modal: 1300;
+  --z-popover: 1400;
+  --z-tooltip: 1500;
+  --z-toast: 1600;
+}
+
+// Dark mode adjustments (applies to all themes)
+[data-mode="dark"] {
+  --bg-primary: var(--color-foundation-dark);
+  --bg-secondary: var(--color-gray-900);
+  --bg-tertiary: var(--color-gray-800);
+  --bg-inverse: var(--color-foundation-light);
+
+  --text-primary: var(--color-foundation-light);
+  --text-secondary: var(--color-gray-400);
+  --text-muted: var(--color-gray-500);
+  --text-inverse: var(--color-foundation-dark);
+
+  --border-light: var(--color-gray-700);
+  --border-default: var(--color-gray-600);
+  --border-dark: var(--color-gray-500);
+
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --card-hover-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+
+  --input-bg: var(--color-gray-800);
+}
