@@ -7,6 +7,9 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 LOG_FILE="/var/log/dogan-consult/deploy-$(date +%Y%m%d-%H%M%S).log"
 
+# Ensure PM2 uses the root user's PM2 home (runner may have different PM2_HOME)
+export PM2_HOME="${PM2_HOME:-/root/.pm2}"
+
 log() { echo "[$(date '+%H:%M:%S')] $1" | tee -a "$LOG_FILE"; }
 
 mkdir -p /var/log/dogan-consult
@@ -47,9 +50,16 @@ if [ -f "$ROOT_DIR/backend/services/migrations.js" ]; then
   node -e "import('./services/migrations.js').then(m => m.runMigrations ? m.runMigrations().then(() => process.exit(0)) : process.exit(0)).catch(e => { console.error(e.message); process.exit(0); })" 2>&1 || true
 fi
 
-# 6. Restart PM2
+# 6. Restart PM2 (start if not running)
 log "Restarting PM2 process..."
-pm2 restart dogan-consult-api --update-env 2>&1 | tail -5
+if pm2 describe dogan-consult-api > /dev/null 2>&1; then
+  pm2 restart dogan-consult-api --update-env 2>&1 | tail -5
+else
+  log "PM2 process not found, starting fresh..."
+  cd "$ROOT_DIR/backend"
+  pm2 start server.js --name dogan-consult-api --env production 2>&1 | tail -5
+  pm2 save 2>&1
+fi
 
 # 7. Health check (wait up to 15s)
 log "Running health check..."
