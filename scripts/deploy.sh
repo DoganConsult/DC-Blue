@@ -24,11 +24,11 @@ git reset --hard "origin/$BRANCH"
 # 2. Install dependencies
 log "Installing backend dependencies..."
 cd "$ROOT_DIR/backend"
-npm ci --production --ignore-scripts 2>&1 | tail -3
+npm ci --production --legacy-peer-deps --ignore-scripts 2>&1 | tail -3
 
 log "Installing frontend dependencies..."
 cd "$ROOT_DIR/frontend"
-npm ci --ignore-scripts 2>&1 | tail -3
+npm ci --legacy-peer-deps --ignore-scripts 2>&1 | tail -3
 
 # 3. Build frontend (AOT production)
 log "Building frontend (AOT production)..."
