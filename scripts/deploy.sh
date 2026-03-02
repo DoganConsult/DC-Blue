@@ -53,11 +53,11 @@ fi
 # 6. Restart PM2 (start if not running)
 log "Restarting PM2 process..."
 if pm2 describe dogan-consult-api > /dev/null 2>&1; then
-  pm2 restart dogan-consult-api --update-env 2>&1 | tail -5
+  PORT=5500 pm2 restart dogan-consult-api --update-env 2>&1 | tail -5
 else
   log "PM2 process not found, starting fresh..."
   cd "$ROOT_DIR/backend"
-  pm2 start server.js --name dogan-consult-api --env production 2>&1 | tail -5
+  PORT=5500 pm2 start server.js --name dogan-consult-api 2>&1 | tail -5
   pm2 save 2>&1
 fi
 
@@ -65,7 +65,8 @@ fi
 log "Running health check..."
 for i in $(seq 1 5); do
   sleep 3
-  STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:4000/health 2>/dev/null || echo "000")
+  APP_PORT=$(grep -E '^PORT=' "$ROOT_DIR/backend/.env.production" 2>/dev/null | cut -d= -f2 || echo "5500")
+  STATUS=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:${APP_PORT}/health" 2>/dev/null || echo "000")
   if [ "$STATUS" = "200" ]; then
     log "Health check passed (HTTP 200)"
     break
