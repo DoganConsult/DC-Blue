@@ -1,6 +1,6 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { I18nService } from '../../core/services/i18n.service';
 import { WorkspaceOverviewComponent } from './components/workspace-overview.component';
@@ -12,17 +12,21 @@ import { WorkspaceProjectsComponent } from './components/workspace-projects.comp
 import { WorkspaceContractsComponent } from './components/workspace-contracts.component';
 import { WorkspaceMessagesComponent } from './components/workspace-messages.component';
 import { WorkspaceSettingsComponent } from './components/workspace-settings.component';
+import { WorkspaceNotificationsComponent } from './components/workspace-notifications.component';
+import { WorkspaceFilesComponent } from './components/workspace-files.component';
 
-type WorkspaceTab = 'overview' | 'pipeline' | 'inquiries' | 'tenders' | 'demos' | 'projects' | 'contracts' | 'messages' | 'settings';
+type WorkspaceTab = 'overview' | 'pipeline' | 'inquiries' | 'tenders' | 'demos' | 'projects' | 'contracts' | 'documents' | 'messages' | 'settings';
 
 @Component({
   selector: 'app-client-workspace',
   standalone: true,
   imports: [
     CommonModule,
+    RouterLink,
     WorkspaceOverviewComponent, WorkspacePipelineComponent, WorkspaceInquiriesComponent,
     WorkspaceTendersComponent, WorkspaceDemosComponent, WorkspaceProjectsComponent,
     WorkspaceContractsComponent, WorkspaceMessagesComponent, WorkspaceSettingsComponent,
+    WorkspaceNotificationsComponent, WorkspaceFilesComponent,
   ],
   template: `
     <div class="min-h-screen bg-th-bg text-th-text">
@@ -40,7 +44,9 @@ type WorkspaceTab = 'overview' | 'pipeline' | 'inquiries' | 'tenders' | 'demos' 
               <span class="text-th-text-3 text-xs px-2 py-0.5 border border-th-border rounded-full">{{ i18n.t('Workspace', 'مساحة العمل') }}</span>
             </div>
 
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 sm:gap-3">
+              <a [routerLink]="['/inquiry']" class="text-th-text-3 hover:text-th-text text-xs transition hidden sm:inline">{{ i18n.t('Help / Contact', 'المساعدة / اتصل') }}</a>
+              <app-workspace-notifications />
               <span class="text-th-text-3 text-sm hidden sm:inline">{{ userName() }}</span>
               <span class="text-xs px-2 py-1 rounded-full font-medium"
                     [class]="userRole() === 'partner' ? 'bg-purple-100 text-purple-700' : 'bg-sky-100 text-sky-700'">
@@ -57,7 +63,7 @@ type WorkspaceTab = 'overview' | 'pipeline' | 'inquiries' | 'tenders' | 'demos' 
         <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <div class="flex gap-0.5 -mb-px">
             @for (tab of tabs; track tab.key) {
-              <button (click)="activeTab.set(tab.key)"
+              <button (click)="setTab(tab.key)"
                       class="px-3 py-3 text-xs font-medium border-b-2 transition whitespace-nowrap"
                       [class]="activeTab() === tab.key
                         ? 'border-primary text-primary'
@@ -79,6 +85,7 @@ type WorkspaceTab = 'overview' | 'pipeline' | 'inquiries' | 'tenders' | 'demos' 
           @case ('demos') { <app-workspace-demos /> }
           @case ('projects') { <app-workspace-projects /> }
           @case ('contracts') { <app-workspace-contracts /> }
+          @case ('documents') { <app-workspace-files /> }
           @case ('messages') { <app-workspace-messages /> }
           @case ('settings') { <app-workspace-settings /> }
         }
@@ -103,6 +110,7 @@ export class ClientWorkspacePage implements OnInit {
     { key: 'demos', label: 'Demos & POC' },
     { key: 'projects', label: 'Projects' },
     { key: 'contracts', label: 'Contracts' },
+    { key: 'documents', label: 'Documents' },
     { key: 'messages', label: 'Messages' },
     { key: 'settings', label: 'Settings' },
   ];
@@ -122,6 +130,16 @@ export class ClientWorkspacePage implements OnInit {
     if (tabParam && this.tabs.some(t => t.key === tabParam)) {
       this.activeTab.set(tabParam);
     }
+  }
+
+  setTab(tab: WorkspaceTab) {
+    this.activeTab.set(tab);
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { tab },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
   }
 
   logout() {

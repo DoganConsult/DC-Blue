@@ -36,14 +36,17 @@ export interface InquiryForm {
   imports: [CommonModule, FormsModule],
   selector: 'app-inquiry',
   template: `
-    <div class="bg-gradient-to-br from-brand-dark via-primary-dark to-brand-darker">
+    <div class="bg-[#0B1220] min-h-screen">
       <div class="max-w-3xl mx-auto px-4 py-12">
-        <!-- Header -->
+        <!-- Header (enterprise style: overline + H1 + description) -->
         <div class="text-center mb-10">
+          <p class="text-[11px] font-semibold tracking-[0.15em] uppercase text-white/70 mb-2">
+            {{ i18n.t('Contact', 'اتصل بنا') }}
+          </p>
           <h1 class="text-3xl md:text-4xl font-bold text-white mb-3">
             {{ i18n.t('Request a Proposal', 'طلب عرض') }}
           </h1>
-          <p class="text-white/70 text-lg">
+          <p class="text-white/75 text-lg max-w-2xl mx-auto">
             {{ i18n.t(
               'Tell us about your project and we\\'ll respond within 24 hours.',
               'أخبرنا عن مشروعك وسنرد خلال 24 ساعة.'

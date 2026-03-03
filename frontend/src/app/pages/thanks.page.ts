@@ -8,7 +8,7 @@ import { I18nService } from '../core/services/i18n.service';
   imports: [CommonModule],
   selector: 'app-thanks',
   template: `
-    <div class="bg-gradient-to-br from-brand-dark via-primary-dark to-brand-darker flex items-center justify-center px-4 py-16">
+    <div class="bg-[#0B1220] min-h-screen flex items-center justify-center px-4 py-16">
       <div class="max-w-lg w-full text-center">
         <!-- Check Icon -->
         <div class="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center mx-auto mb-8 shadow-lg shadow-emerald-500/30">

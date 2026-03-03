@@ -138,10 +138,14 @@ app.use('/api/sbg', sbgRouter(pool));
 startScheduler(pool);
 
 // Serve Angular static (after API routes) for production deploy
+// Prefer backend/public when present (e.g. after scripts/deploy.sh copy); else use frontend dist
 const path = await import('path');
+const fs = await import('fs');
 const { fileURLToPath } = await import('url');
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const staticDir = path.join(__dirname, '../frontend/dist/dogan-consult-web/browser');
+const publicDir = path.join(__dirname, 'public');
+const distDir = path.join(__dirname, '../frontend/dist/dogan-consult-web/browser');
+const staticDir = fs.existsSync(publicDir) ? publicDir : distDir;
 app.use(express.static(staticDir));
 app.get('*', (req, res) => {
   if (req.path.startsWith('/api') || req.path.startsWith('/health')) return res.status(404).end();

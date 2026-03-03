@@ -75,7 +75,11 @@ export class WorkspaceInquiriesComponent implements OnInit {
   load() {
     this.api.getInquiries({ page: String(this.page), limit: '20' }).subscribe({
       next: (r) => {
-        this.inquiries.set([...this.inquiries(), ...r.data]);
+        if (this.page === 1) {
+          this.inquiries.set(r.data);
+        } else {
+          this.inquiries.set([...this.inquiries(), ...r.data]);
+        }
         this.total.set(r.total);
         this.loading.set(false);
       },

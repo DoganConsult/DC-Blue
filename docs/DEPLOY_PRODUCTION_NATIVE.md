@@ -2,6 +2,8 @@
 
 Deploy the Dogan Consult Hup platform on a single Linux server using Node, PostgreSQL, and (optionally) nginx. **No Docker.**
 
+**End-to-end flow for doganconsult.com (build → deploy → nginx → DNS/SSL):** see [DEPLOY_E2E_DOGANCONSULT.md](./DEPLOY_E2E_DOGANCONSULT.md).
+
 ---
 
 ## 0. Quick build + deploy (from repo root)

@@ -9,11 +9,13 @@ import { AwardsSectionComponent } from '../sections/awards-section.component';
 import { GovernmentCredentialsComponent } from '../sections/government-credentials.component';
 import { GlobalReachComponent } from '../sections/global-reach.component';
 import { StrategicAchievementsComponent } from '../sections/strategic-achievements.component';
+import { PageHeroComponent } from '../sections/page-hero.component';
 
 @Component({
   selector: 'app-about-page',
   standalone: true,
   imports: [
+    PageHeroComponent,
     ExecutiveProfileComponent,
     LeadershipSectionComponent,
     CertificationsShowcaseComponent,
@@ -24,21 +26,14 @@ import { StrategicAchievementsComponent } from '../sections/strategic-achievemen
     StrategicAchievementsComponent,
   ],
   template: `
-    <section class="relative pt-20 pb-12 sm:pb-16 px-6 lg:px-8 bg-gradient-to-br from-surface-dark via-brand-dark to-surface-dark overflow-hidden">
-        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/15 via-transparent to-transparent"></div>
-        <div class="container mx-auto max-w-5xl text-center relative z-10">
-          <p class="text-[13px] font-semibold text-sky-400 tracking-widest uppercase mb-4">
-            {{ i18n.t(heroSubtitle().en, heroSubtitle().ar) }}
-          </p>
-          <h1 class="text-3xl lg:text-5xl font-bold text-white tracking-tight mb-5">
-            {{ i18n.t(heroTitle().en, heroTitle().ar) }}
-          </h1>
-          <p class="text-lg text-white/60 max-w-2xl mx-auto leading-relaxed">
-            {{ i18n.t(heroDesc().en, heroDesc().ar) }}
-          </p>
-        </div>
-      </section>
-
+    <app-page-hero
+      [overlineEn]="heroSubtitle().en"
+      [overlineAr]="heroSubtitle().ar"
+      [titleEn]="heroTitle().en"
+      [titleAr]="heroTitle().ar"
+      [descriptionEn]="heroDesc().en"
+      [descriptionAr]="heroDesc().ar"
+    />
       <app-executive-profile />
       <app-leadership-section />
       <div id="certifications">

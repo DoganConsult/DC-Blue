@@ -4,24 +4,24 @@
 
 [data-theme="carbon-g10"],
 [data-theme-preview="carbon-g10"] {
-  // Primary Colors — IBM Blue 60 (Interactive)
-  --theme-primary: #0f62fe; // Blue 60
-  --theme-primary-dark: #0043ce; // Blue 70
-  --theme-primary-light: #4589ff; // Blue 50
+  // Primary Colors — Deep Royal Blue
+  --theme-primary: #2454E6;
+  --theme-primary-dark: #1f49c7;
+  --theme-primary-light: #2f6df3;
 
-  // Secondary Colors — IBM Cyan (Data & Analytics)
-  --theme-secondary: #1192e8; // Cyan 50
-  --theme-secondary-dark: #0072c3; // Cyan 60
-  --theme-secondary-light: #33b1ff; // Cyan 40
+  // Secondary Colors
+  --theme-secondary: #1192e8;
+  --theme-secondary-dark: #0072c3;
+  --theme-secondary-light: #33b1ff;
 
-  // Accent Colors — IBM Magenta (Distinction & Alerts)
-  --theme-accent: #ee5396; // Magenta 50
-  --theme-accent-dark: #9f1853; // Magenta 70
-  --theme-accent-light: #ff7eb6; // Magenta 40
+  // Accent Colors — Gold
+  --theme-accent: #F4B223;
+  --theme-accent-dark: #d99e1f;
+  --theme-accent-light: #FFF1CC;
 
-  // Foundation Colors — g10 surface is Gray 10
-  --theme-foundation-dark: #161616; // Gray 100
-  --theme-foundation-light: #f4f4f4; // Gray 10 (KEY DIFFERENCE from White)
+  // Foundation Colors
+  --theme-foundation-dark: #061224; // Dark navy footer
+  --theme-foundation-light: #ffffff; // White main surface
 
   // Gray Scale — IBM Carbon Gray Palette
   --theme-gray-50: #ffffff; // White (lighter than g10)
@@ -42,9 +42,9 @@
   --theme-info: #4589ff; // Blue 50
 
   // Special Theme Properties
-  --theme-gradient-primary: linear-gradient(135deg, #0f62fe 0%, #1192e8 100%);
-  --theme-gradient-accent: linear-gradient(135deg, #ee5396 0%, #ff7eb6 100%);
-  --theme-gradient-hero: linear-gradient(180deg, #161616 0%, #262626 100%);
+  --theme-gradient-primary: linear-gradient(135deg, #1f49c7 0%, #2f6df3 100%);
+  --theme-gradient-accent: linear-gradient(135deg, #F4B223 0%, #FFF1CC 100%);
+  --theme-gradient-hero: linear-gradient(135deg, #1f49c7 0%, #2f6df3 100%);
 
   // Glass Morphism — Carbon style on gray
   --theme-glass-bg: rgba(244, 244, 244, 0.85);
@@ -74,27 +74,27 @@
   // G10 surface is Gray 10 (#f4f4f4); cards/nav are white for contrast
 
   // Backgrounds
-  --bg-primary: #f4f4f4; // Gray 10 — main page surface (distinguishes G10 from White)
-  --bg-secondary: #e0e0e0; // Gray 20 — subtle sections
-  --bg-tertiary: #c6c6c6; // Gray 30 — deeper layering
-  --bg-inverse: #161616; // Gray 100 — inverse panels
-  --bg-accent: rgba(15, 98, 254, 0.08);
+  --bg-primary: #ffffff; // White main surface
+  --bg-secondary: #F6F7FB; // Light gray sections
+  --bg-tertiary: #e0e0e0; // Deeper layering
+  --bg-inverse: #061224; // Dark navy
+  --bg-accent: #FFF1CC; // Gold soft
 
   // Text
-  --text-primary: #161616; // Gray 100
-  --text-secondary: #525252; // Gray 70
-  --text-muted: #6f6f6f; // Gray 50
+  --text-primary: #1D2433; // Dark body
+  --text-secondary: #525252;
+  --text-muted: #7A8090; // Muted
   --text-inverse: #ffffff;
-  --text-accent: #0f62fe; // Blue 60
+  --text-accent: #2454E6; // Blue
   --text-on-primary: #ffffff;
   --text-on-secondary: #ffffff;
 
   // Borders
-  --border-light: #e0e0e0; // Gray 20
-  --border-default: #c6c6c6; // Gray 30
-  --border-dark: #8d8d8d; // Gray 50
-  --border-primary: #0f62fe;
-  --border-accent: #ee5396; // Magenta 50 (matches G10 accent)
+  --border-light: #e0e0e0;
+  --border-default: #c6c6c6;
+  --border-dark: #8d8d8d;
+  --border-primary: #2454E6;
+  --border-accent: #F4B223; // Gold accent
 
   // Cards (white to contrast with gray page)
   --card-bg: #ffffff;
@@ -102,12 +102,12 @@
   --card-shadow: 0 2px 6px rgba(0, 0, 0, 0.10);
   --card-hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 
-  // Navigation (white to contrast with gray page)
-  --nav-bg: #ffffff;
-  --nav-text: #161616;
-  --nav-hover: #0f62fe;
-  --nav-active: #0f62fe;
-  --nav-border: #e0e0e0;
+  // Navigation
+  --nav-bg: #061224;
+  --nav-text: #ffffff;
+  --nav-hover: #F4B223;
+  --nav-active: #F4B223;
+  --nav-border: rgba(255,255,255,0.1);
 
   // Forms (white inputs on gray page)
   --input-bg: #ffffff;
@@ -117,17 +117,17 @@
   --input-focus-border: #0f62fe;
 
   // Buttons
-  --button-primary-bg: #0f62fe;
-  --button-primary-hover: #0043ce;
-  --button-primary-active: #002d9c;
-  --button-primary-text: #ffffff;
+  --button-primary-bg: #F4B223;
+  --button-primary-hover: #d99e1f;
+  --button-primary-active: #c08a18;
+  --button-primary-text: #1D2433;
   --button-secondary-bg: transparent;
-  --button-secondary-border: #0f62fe;
-  --button-secondary-hover: rgba(15, 98, 254, 0.08);
-  --button-secondary-text: #0f62fe;
-  --button-accent-bg: #ee5396;
-  --button-accent-hover: #9f1853;
-  --button-accent-text: #ffffff;
+  --button-secondary-border: #2454E6;
+  --button-secondary-hover: rgba(36, 84, 230, 0.08);
+  --button-secondary-text: #2454E6;
+  --button-accent-bg: #F4B223;
+  --button-accent-hover: #d99e1f;
+  --button-accent-text: #1D2433;
 }
 
 // Dark Mode Variant — full semantic overrides for true dark rendering

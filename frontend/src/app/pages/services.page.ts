@@ -8,11 +8,13 @@ import { ChartSectionComponent } from '../sections/chart-section.component';
 import { RoiCalculatorSectionComponent } from '../sections/roi-calculator-section.component';
 import { SimulationsSectionComponent } from '../sections/simulations-section.component';
 import { ContactSectionComponent } from '../sections/contact-section.component';
+import { PageHeroComponent } from '../sections/page-hero.component';
 
 @Component({
   selector: 'app-services-page',
   standalone: true,
   imports: [
+    PageHeroComponent,
     ServicesDetailedComponent,
     TechnicalArchitectureComponent,
     ChartSectionComponent,
@@ -21,21 +23,14 @@ import { ContactSectionComponent } from '../sections/contact-section.component';
     ContactSectionComponent,
   ],
   template: `
-    <section class="relative pt-20 pb-16 px-6 lg:px-8 bg-gradient-to-br from-surface-dark via-brand-dark to-surface-dark overflow-hidden">
-        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/15 via-transparent to-transparent"></div>
-        <div class="container mx-auto max-w-5xl text-center relative z-10">
-          <p class="text-[13px] font-semibold text-sky-400 tracking-widest uppercase mb-4">
-            {{ i18n.t('Our Services', 'خدماتنا') }}
-          </p>
-          <h1 class="text-3xl lg:text-5xl font-bold text-white tracking-tight mb-5">
-            {{ i18n.t('ICT Solutions Portfolio', 'محفظة حلول تقنية المعلومات') }}
-          </h1>
-          <p class="text-lg text-white/60 max-w-2xl mx-auto leading-relaxed">
-            {{ i18n.t('17 licensed services backed by Saudi government registration and 15+ years of technical expertise.', '17 خدمة مرخصة مدعومة بتسجيل حكومي سعودي وأكثر من 15 عامًا من الخبرة التقنية.') }}
-          </p>
-        </div>
-      </section>
-
+    <app-page-hero
+      overlineEn="Our Services"
+      overlineAr="خدماتنا"
+      titleEn="ICT Solutions Portfolio"
+      titleAr="محفظة حلول تقنية المعلومات"
+      descriptionEn="17 licensed services backed by Saudi government registration and 15+ years of technical expertise."
+      descriptionAr="17 خدمة مرخصة مدعومة بتسجيل حكومي سعودي وأكثر من 15 عامًا من الخبرة التقنية."
+    />
       <app-services-detailed />
       <div id="architecture">
         <app-technical-architecture />

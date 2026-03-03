@@ -21,7 +21,7 @@ interface TicketInfo {
   imports: [CommonModule, FormsModule],
   selector: 'app-track',
   template: `
-    <div class="bg-gradient-to-br from-brand-dark via-primary-dark to-brand-darker">
+    <div class="bg-[#0B1220] min-h-screen">
       <div class="max-w-lg mx-auto px-4 py-16">
         <div class="text-center mb-10">
           <div class="w-14 h-14 bg-primary/20 rounded-xl flex items-center justify-center mx-auto mb-4">

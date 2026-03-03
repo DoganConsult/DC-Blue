@@ -210,23 +210,29 @@ export const CAREER_COMPANY_COLORS = [
 
 // ── Gradient Definitions ─────────────────────────────────────────────
 
-export const GRADIENTS = {
-  // Page hero backgrounds
-  pageHeroDark:     'bg-gradient-to-br from-surface-dark via-brand-dark to-surface-dark',
-  inquiryBg:        'bg-gradient-to-br from-brand-dark via-primary-dark to-brand-darker',
+// Enterprise marketing pages: single navy background (centralized)
+export const MARKETING_PAGE = {
+  heroBg:    '#0B1220',
+  heroClass: 'bg-[#0B1220]',
+} as const;
 
-  // Hero ICT CSS background (radial gradients)
-  heroIctBgCss:     'radial-gradient(ellipse 80% 60% at 50% -20%, rgba(0, 120, 212, 0.18), transparent), radial-gradient(ellipse 50% 50% at 80% 50%, rgba(14, 165, 233, 0.10), transparent), radial-gradient(ellipse 40% 40% at 20% 70%, rgba(6, 182, 212, 0.08), transparent), radial-gradient(ellipse 30% 30% at 70% 80%, rgba(139, 92, 246, 0.06), transparent)',
+export const GRADIENTS = {
+  // Page hero backgrounds (prefer MARKETING_PAGE.heroClass for all marketing pages)
+  pageHeroDark:     'bg-[#0B1220]',
+  inquiryBg:        'bg-[#0B1220]',
+
+  // Hero ICT CSS background (blue gradient)
+  heroIctBgCss:     'linear-gradient(135deg, #1f49c7 0%, #2f6df3 100%)',
 
   // Section backgrounds
   roiSection:       'bg-gradient-to-br from-brand-dark via-sky-800 to-brand-darker',
-  ctaSection:       'bg-gradient-to-br from-primary via-sky-600 to-blue-600',
+  ctaSection:       'bg-gradient-to-br from-[#1f49c7] to-[#2f6df3]',
   chartSection:     'bg-gradient-to-br from-brand-darker via-surface-dark to-brand-darker',
   simulationsSection: 'bg-gradient-to-b from-brand-darker via-surface-dark to-brand-darker',
 
   // Button gradients
-  buttonContact:    'bg-gradient-to-r from-primary to-sky-500',
-  buttonPrimary:    'bg-gradient-to-r from-primary to-blue-600',
+  buttonContact:    'bg-gold-accent hover:bg-gold-accent/90',
+  buttonPrimary:    'bg-gold-accent hover:bg-gold-accent/90',
 
   // Hero text gradient
   heroText:         'bg-gradient-to-r from-sky-400 to-cyan-300',
@@ -288,7 +294,7 @@ export const PAGE_REGISTRY: PageEntry[] = [
   { id: 'reset-password',  route: '/reset-password',  sections: [], pageBackground: 'bg-th-bg' },
   { id: 'change-password', route: '/change-password',  sections: [], pageBackground: 'bg-th-bg' },
   { id: 'partner-register', route: '/partner/register', sections: [], pageBackground: 'bg-th-bg' },
-  { id: 'not-found',    route: '**',               sections: [], pageBackground: 'bg-th-card' },
+  { id: 'not-found',    route: '**',               sections: [], pageBackground: GRADIENTS.pageHeroDark },
 ];
 
 export function getPageEntry(id: PageId): PageEntry | undefined {

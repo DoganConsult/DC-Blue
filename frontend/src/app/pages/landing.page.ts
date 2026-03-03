@@ -1,7 +1,5 @@
-import { Component, inject, signal, OnInit, HostListener } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, inject, signal, HostListener } from '@angular/core';
 import { I18nService } from '../core/services/i18n.service';
-import { COLOR_PALETTE } from '../core/data/page-styles';
 import { SiteSettingsService } from '../core/services/site-settings.service';
 import { HeroSectionIctComponent } from '../sections/hero-section-ict.component';
 import { SocialProofSectionComponent } from '../sections/social-proof-section.component';
@@ -9,9 +7,6 @@ import { ProblemSectionComponent } from '../sections/problem-section.component';
 import { ServicesSectionComponent } from '../sections/services-section.component';
 import { WhyChooseSectionComponent } from '../sections/why-choose-section.component';
 import { ContactSectionComponent } from '../sections/contact-section.component';
-
-export { LandingContent } from '../core/models/landing.model';
-import { LandingContent } from '../core/models/landing.model';
 
 @Component({
   selector: 'app-landing-page',
@@ -28,7 +23,7 @@ import { LandingContent } from '../core/models/landing.model';
     <app-hero-section-ict />
     <app-social-proof-section />
     <app-problem-section />
-    <app-services-section [content]="content()" />
+    <app-services-section />
     <app-why-choose-section />
     <app-contact-section />
 
@@ -44,17 +39,15 @@ import { LandingContent } from '../core/models/landing.model';
     @if (showScrollTop()) {
       <button (click)="scrollToTop()"
               aria-label="Scroll to top"
-              class="fixed bottom-20 sm:bottom-6 right-24 z-toast w-12 h-12 rounded-full bg-th-bg-inv/80 hover:bg-th-bg-inv text-white flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300 backdrop-blur-sm">
+              class="fixed bottom-20 sm:bottom-6 right-24 z-toast w-12 h-12 rounded-full bg-[#061224]/80 hover:bg-[#061224] text-white flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300 backdrop-blur-sm">
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
       </button>
     }
   `,
 })
-export class LandingPage implements OnInit {
-  private http = inject(HttpClient);
+export class LandingPage {
   i18n = inject(I18nService);
   siteSettings = inject(SiteSettingsService);
-  content = signal<LandingContent | null>(null);
   showScrollTop = signal(false);
 
   @HostListener('window:scroll')
@@ -66,33 +59,7 @@ export class LandingPage implements OnInit {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  private defaultContent: LandingContent = {
-    hero: {
-      headline: { en: 'ICT Engineering, Delivered.', ar: 'هندسة تقنية المعلومات والاتصالات، مُنفّذة.' },
-      subline: { en: 'Design, build, and operate enterprise-grade ICT environments.', ar: 'نصمم ونبني ونشغّل بيئات تقنية معلومات واتصالات مؤسسية.' },
-      cta: { en: 'Request Proposal', ar: 'طلب عرض' },
-    },
-    stats: [
-      { value: 15, suffix: '+', label: { en: 'Years Experience', ar: 'سنوات خبرة' } },
-      { value: 120, suffix: '+', label: { en: 'Projects Delivered', ar: 'مشاريع منجزة' } },
-      { value: 99, suffix: '%', label: { en: 'SLAs Met', ar: 'التزام ب SLA' } },
-      { value: 6, suffix: '', label: { en: 'Regions', ar: 'مناطق' } },
-    ],
-    services: [
-      { id: '1', title: { en: 'Network & Data Center', ar: 'الشبكات ومركز البيانات' }, color: COLOR_PALETTE.network.hex },
-      { id: '2', title: { en: 'Cybersecurity', ar: 'الأمن السيبراني' }, color: COLOR_PALETTE.cybersecurity.hex },
-      { id: '3', title: { en: 'Cloud & DevOps', ar: 'السحابة و DevOps' }, color: COLOR_PALETTE.cloud.hex },
-      { id: '4', title: { en: 'Systems Integration', ar: 'تكامل الأنظمة' }, color: COLOR_PALETTE.integration.hex },
-    ],
-    chartData: { labels: ['Q1', 'Q2', 'Q3', 'Q4'], values: [72, 85, 78, 92] },
-  };
-
   ngOnInit(): void {
     this.siteSettings.load();
-    this.content.set(this.defaultContent);
-    this.http.get<LandingContent>('/api/public/landing').subscribe({
-      next: (c) => this.content.set(c),
-      error: () => {},
-    });
   }
 }

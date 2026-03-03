@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { I18nService } from '../../core/services/i18n.service';
+import { PageHeroComponent } from '../../sections/page-hero.component';
 
 export interface PartnerRegisterForm {
   company_name: string;
@@ -16,24 +17,19 @@ export interface PartnerRegisterForm {
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PageHeroComponent],
   selector: 'app-partner-register',
   template: `
+    <app-page-hero
+      overlineEn="Partners"
+      overlineAr="الشركاء"
+      titleEn="Partner Program"
+      titleAr="برنامج الشركاء"
+      descriptionEn="Join our reseller and referral network. Earn commissions on every deal."
+      descriptionAr="انضم إلى شبكة الموزعين والإحالات. اكسب عمولات على كل صفقة."
+    />
     <div class="bg-th-bg">
       <div class="max-w-2xl mx-auto px-4 py-12">
-        <div class="text-center mb-10">
-          <div class="w-14 h-14 bg-gold/20 rounded-xl flex items-center justify-center mx-auto mb-4">
-            <svg class="w-7 h-7 text-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-            </svg>
-          </div>
-          <h1 class="text-3xl font-bold text-th-text mb-3">
-            {{ i18n.t('Partner Program', 'برنامج الشركاء') }}
-          </h1>
-          <p class="text-th-text-3">
-            {{ i18n.t('Join our reseller and referral network. Earn commissions on every deal.', 'انضم إلى شبكة الموزعين والإحالات. اكسب عمولات على كل صفقة.') }}
-          </p>
-        </div>
 
         @if (success()) {
           <div class="bg-th-card border border-th-border rounded-2xl p-8 text-center shadow-lg">

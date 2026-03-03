@@ -213,3 +213,14 @@ export interface GateChecklistItem {
   checked: boolean;
   checked_at: string | null;
 }
+
+export interface ClientFile {
+  id: string;
+  entity_type: string;
+  entity_id: string;
+  filename: string;
+  original_name: string;
+  mime_type: string | null;
+  size_bytes: number | null;
+  created_at: string;
+}
