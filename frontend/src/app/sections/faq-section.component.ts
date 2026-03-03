@@ -30,6 +30,7 @@ const FAQ_ITEMS = [
                 type="button"
                 class="w-full flex items-center justify-between py-4 px-4 text-start font-semibold text-th-text hover:bg-th-bg-alt transition"
                 (click)="toggle(item.qEn)"
+                [attr.aria-expanded]="open() === item.qEn"
               >
                 {{ i18n.t(item.qEn, item.qAr) }}
                 <span class="pi text-primary" [class.pi-chevron-down]="open() !== item.qEn" [class.pi-chevron-up]="open() === item.qEn"></span>

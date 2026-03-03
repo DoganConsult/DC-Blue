@@ -24,6 +24,13 @@ All auth and portal login use the **users** table only. The `portal_users` table
 
 - **fix-schema.sql** defines `users` with `id SERIAL` and no CHECK on role. Use only if you need integer FKs (e.g. partner_leads, opportunities). It does not add lockout columns; run **add-lockout-columns.sql** after it if you use auth lockout.
 
+### Public content (site_settings, public_content, legal_pages)
+
+- **public-content-migration.sql** (run automatically via `runMigrations`): Creates `site_settings` (single row), `public_content`, and `legal_pages`. Seeds:
+  - **public_content** pages: `landing`, `about`, `services`, `case_studies`, `insights` (required for public pages API).
+  - **legal_pages** keys: `privacy`, `terms`, `pdpl`, `cookies` (required for `/api/public/legal/:key`).
+- Missing rows cause 404 or fallback defaults; ensure migration has run on deploy.
+
 ### Other scripts
 
 - **portal-users-migration.sql** / **run-portal-migration.js**: legacy portal_users table; auth no longer uses it for login.

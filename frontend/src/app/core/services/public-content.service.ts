@@ -1,28 +1,18 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { PageContent, PublicPageKey } from '../models/public-content.model';
+import { ApiConfigService } from './api-config.service';
 
-export type PublicPageKey = 'about' | 'services' | 'case_studies' | 'insights';
-
-export interface PageContent {
-  hero?: {
-    title_en?: string;
-    title_ar?: string;
-    subtitle_en?: string;
-    subtitle_ar?: string;
-  };
-  sections?: unknown[];
-  [key: string]: unknown;
-}
+export type { PageContent, PublicPageKey } from '../models/public-content.model';
 
 @Injectable({ providedIn: 'root' })
 export class PublicContentService {
   private http = inject(HttpClient);
+  private apiConfig = inject(ApiConfigService);
 
-  getPage(page: PublicPageKey): Observable<PageContent | null> {
-    return this.http.get<PageContent>(`/api/public/content/${page}`).pipe(
-      catchError(() => of(null))
-    );
+  /** Fetches page content; errors (including 404) propagate to subscriber so pages can show retry/message. */
+  getPage(page: PublicPageKey): Observable<PageContent> {
+    return this.http.get<PageContent>(this.apiConfig.apiUrl(`/api/public/content/${page}`));
   }
 }

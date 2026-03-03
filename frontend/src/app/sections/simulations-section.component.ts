@@ -1,5 +1,4 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { I18nService } from '../core/services/i18n.service';
 import { COLOR_PALETTE } from '../core/data/page-styles';
 
@@ -254,7 +253,7 @@ const SIMULATIONS: Simulation[] = [
 @Component({
   selector: 'app-simulations-section',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <section class="py-24 px-4 bg-gradient-to-b from-brand-darker via-surface-dark to-brand-darker text-white" id="simulations">
       <div class="container mx-auto max-w-7xl">
@@ -312,9 +311,11 @@ const SIMULATIONS: Simulation[] = [
                         [class.bg-red-400]="activeSim().threatLevel! >= 60"></span>
                   {{ activeSim().threatLevel ? 'Threat: ' + activeSim().threatLevel + '%' : 'Status: Nominal' }}
                 </span>
-                <span *ngIf="activeSim().complianceScore" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-900 text-emerald-400 text-xs font-medium">
+                @if (activeSim().complianceScore) {
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-900 text-emerald-400 text-xs font-medium">
                   Compliance: {{ activeSim().complianceScore }}%
                 </span>
+                }
               </div>
             </div>
 
@@ -386,14 +387,7 @@ const SIMULATIONS: Simulation[] = [
       </div>
     </section>
   `,
-  styles: [`
-    .line-clamp-2 {
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-  `],
+  styles: [],
 })
 export class SimulationsSectionComponent {
   i18n = inject(I18nService);

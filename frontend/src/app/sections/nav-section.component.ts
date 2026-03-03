@@ -1,7 +1,6 @@
 import { Component, output, inject, signal, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { I18nService } from '../core/services/i18n.service';
-import { DesignSystemService } from '../core/services/design-system.service';
 import { TranslatePipe } from '../core/pipes/translate.pipe';
 import { Subscription, filter } from 'rxjs';
 
@@ -159,7 +158,6 @@ import { Subscription, filter } from 'rxjs';
 export class NavSectionComponent implements OnInit, OnDestroy {
   langChange = output<'en' | 'ar'>();
   i18n = inject(I18nService);
-  ds = inject(DesignSystemService);
   private router = inject(Router);
   private routerSub?: Subscription;
 

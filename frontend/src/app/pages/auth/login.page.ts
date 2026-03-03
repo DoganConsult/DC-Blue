@@ -164,7 +164,7 @@ export class LoginPage {
   }
 
   login() {
-    if (!this.identifier.trim() || !this.password) return;
+    if (this.loading() || !this.identifier.trim() || !this.password) return;
     this.loading.set(true);
     this.error.set(null);
 
@@ -247,8 +247,9 @@ export class LoginPage {
     }
 
     const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-    if (returnUrl) {
-      this.router.navigateByUrl(returnUrl);
+    const safeReturn = returnUrl && returnUrl.startsWith('/') && !returnUrl.startsWith('//');
+    if (safeReturn) {
+      this.router.navigateByUrl(returnUrl!);
     } else if (r.user.role === 'admin' || r.user.role === 'employee') {
       this.router.navigate(['/admin']);
     } else {

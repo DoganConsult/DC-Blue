@@ -1,6 +1,5 @@
 import { Component, inject, input } from '@angular/core';
 import { I18nService } from '../core/services/i18n.service';
-import { DesignSystemService } from '../core/services/design-system.service';
 import { LandingContent } from '../core/models/landing.model';
 
 @Component({
@@ -45,7 +44,6 @@ import { LandingContent } from '../core/models/landing.model';
 export class WhyChooseSectionComponent {
   content = input<LandingContent | null>(null);
   i18n = inject(I18nService);
-  ds = inject(DesignSystemService);
 
   get benefits() { return this.content()?.benefits ?? this.defaultBenefits; }
 

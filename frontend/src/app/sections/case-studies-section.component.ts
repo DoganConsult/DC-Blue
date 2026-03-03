@@ -1,5 +1,4 @@
 import { Component, inject, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { I18nService } from '../core/services/i18n.service';
 import { Router } from '@angular/router';
 import { LandingContent } from '../core/models/landing.model';
@@ -7,7 +6,7 @@ import { LandingContent } from '../core/models/landing.model';
 @Component({
   selector: 'app-case-studies-section',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <section class="py-24 lg:py-32 px-6 lg:px-8 bg-th-bg-alt" id="case-studies">
       <div class="container mx-auto max-w-6xl">

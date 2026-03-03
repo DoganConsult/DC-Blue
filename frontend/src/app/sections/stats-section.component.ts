@@ -26,9 +26,9 @@ export class StatsSectionComponent {
 
   defaultStats = [
     { value: 15, suffix: '+', label: { en: 'Years Experience', ar: 'سنوات خبرة' } },
-    { value: 200, suffix: '+', label: { en: 'Projects Delivered', ar: 'مشروع تم تسليمه' } },
-    { value: 50, suffix: '+', label: { en: 'Enterprise Clients', ar: 'عميل مؤسسي' } },
-    { value: 98, suffix: '%', label: { en: 'Client Satisfaction', ar: 'رضا العملاء' } },
+    { value: 120, suffix: '+', label: { en: 'Projects Delivered', ar: 'مشاريع منجزة' } },
+    { value: 99, suffix: '%', label: { en: 'SLAs Met', ar: 'التزام ب SLA' } },
+    { value: 6, suffix: '', label: { en: 'Regions', ar: 'مناطق' } },
   ];
 
   get stats() {

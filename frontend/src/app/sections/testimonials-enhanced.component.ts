@@ -1,5 +1,4 @@
-import { Component, inject, input, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, input, OnInit, OnDestroy, signal } from '@angular/core';
 import { I18nService } from '../core/services/i18n.service';
 import { LandingContent } from '../core/models/landing.model';
 
@@ -18,7 +17,7 @@ interface Testimonial {
 @Component({
   selector: 'app-testimonials-enhanced',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <section class="py-24 px-4 bg-gradient-to-b from-th-bg-alt to-th-card" id="testimonials">
       <div class="container mx-auto max-w-7xl">
@@ -149,7 +148,7 @@ interface Testimonial {
         </div>
 
         <div class="text-center mt-10">
-          <a href="https://www.linkedin.com/in/yourprofile/details/recommendations/" target="_blank" rel="noopener"
+          <a href="https://www.linkedin.com/company/doganconsult" target="_blank" rel="noopener"
              class="inline-flex items-center gap-2.5 px-8 py-3.5 bg-th-card border border-th-border rounded-xl font-medium text-th-text-2 hover:border-blue-300 hover:text-blue-600 hover:shadow-md transition-all duration-300">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
             {{ i18n.t('View All Recommendations on LinkedIn', 'عرض جميع التوصيات على LinkedIn') }}
@@ -159,10 +158,11 @@ interface Testimonial {
     </section>
   `,
 })
-export class TestimonialsEnhancedComponent implements OnInit {
+export class TestimonialsEnhancedComponent implements OnInit, OnDestroy {
   content = input<LandingContent | null>(null);
   i18n = inject(I18nService);
   currentSlide = signal(0);
+  private autoRotateId: ReturnType<typeof setInterval> | null = null;
 
   get featuredTestimonials(): Testimonial[] { return (this.content()?.testimonials?.featured as any) ?? this.defaultFeatured; }
   get additionalTestimonials(): Testimonial[] { return (this.content()?.testimonials?.additional as any) ?? this.defaultAdditional; }
@@ -261,10 +261,15 @@ export class TestimonialsEnhancedComponent implements OnInit {
   ];
 
   ngOnInit() {
-    // Auto-rotate testimonials every 10 seconds
-    setInterval(() => {
+    this.autoRotateId = setInterval(() => {
       this.nextSlide();
     }, 10000);
+  }
+
+  ngOnDestroy() {
+    if (this.autoRotateId !== null) {
+      clearInterval(this.autoRotateId);
+    }
   }
 
   nextSlide() {

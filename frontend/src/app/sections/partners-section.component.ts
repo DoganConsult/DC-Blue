@@ -1,5 +1,4 @@
 import { Component, inject, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { I18nService } from '../core/services/i18n.service';
 import { LandingContent } from '../core/models/landing.model';
 
@@ -15,7 +14,6 @@ interface Partner {
 @Component({
   selector: 'app-partners-section',
   standalone: true,
-  imports: [CommonModule],
   template: `
     <section class="py-20 px-4 bg-th-card">
       <div class="container mx-auto max-w-7xl">
@@ -49,16 +47,17 @@ interface Partner {
           >
             {{ i18n.t('All Partners', 'جميع الشركاء') }}
           </button>
-          <button
-            *ngFor="let cat of categories"
-            (click)="selectedCategory = cat.id"
-            [class.bg-primary]="selectedCategory === cat.id"
-            [class.text-white]="selectedCategory === cat.id"
-            [class.bg-th-bg-tert]="selectedCategory !== cat.id"
-            class="px-4 py-2 rounded-lg font-medium transition-all"
-          >
-            {{ i18n.t(cat.name.en, cat.name.ar) }}
-          </button>
+          @for (cat of categories; track cat.id) {
+            <button
+              (click)="selectedCategory = cat.id"
+              [class.bg-primary]="selectedCategory === cat.id"
+              [class.text-white]="selectedCategory === cat.id"
+              [class.bg-th-bg-tert]="selectedCategory !== cat.id"
+              class="px-4 py-2 rounded-lg font-medium transition-all"
+            >
+              {{ i18n.t(cat.name.en, cat.name.ar) }}
+            </button>
+          }
         </div>
 
         <!-- Platinum Partners -->
@@ -67,34 +66,30 @@ interface Partner {
             {{ i18n.t('Platinum Partners', 'شركاء البلاتين') }}
           </h3>
           <div class="grid md:grid-cols-4 gap-8">
-            <div
-              *ngFor="let partner of getPlatinumPartners()"
-              class="group relative"
-            >
-              <div class="bg-gradient-to-br from-th-bg-alt to-th-bg-tert rounded-2xl p-8 hover:shadow-xl transition-all border-2 border-th-border hover:border-primary">
-                <!-- Partner Level Badge -->
-                <div class="absolute -top-3 -right-3 w-12 h-12 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-full flex items-center justify-center shadow-lg">
-                  <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                  </svg>
-                </div>
-
-                <!-- Logo -->
-                <div class="h-16 flex items-center justify-center mb-4">
-                  <div class="text-2xl font-bold text-th-text-2">{{ partner.name }}</div>
-                </div>
-
-                <!-- Certifications -->
-                <div class="space-y-2">
-                  <div *ngFor="let cert of partner.certifications?.slice(0, 3)" class="flex items-center gap-2">
-                    <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            @for (partner of getPlatinumPartners(); track partner.name) {
+              <div class="group relative">
+                <div class="bg-gradient-to-br from-th-bg-alt to-th-bg-tert rounded-2xl p-8 hover:shadow-xl transition-all border-2 border-th-border hover:border-primary">
+                  <div class="absolute -top-3 -right-3 w-12 h-12 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-full flex items-center justify-center shadow-lg">
+                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                     </svg>
-                    <span class="text-xs text-th-text-2">{{ cert }}</span>
+                  </div>
+                  <div class="h-16 flex items-center justify-center mb-4">
+                    <div class="text-2xl font-bold text-th-text-2">{{ partner.name }}</div>
+                  </div>
+                  <div class="space-y-2">
+                    @for (cert of partner.certifications?.slice(0, 3) ?? []; track cert) {
+                      <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-xs text-th-text-2">{{ cert }}</span>
+                      </div>
+                    }
                   </div>
                 </div>
               </div>
-            </div>
+            }
           </div>
         </div>
 
@@ -106,19 +101,20 @@ interface Partner {
               {{ i18n.t('Gold Partners', 'شركاء الذهب') }}
             </h3>
             <div class="grid grid-cols-2 gap-4">
-              <div
-                *ngFor="let partner of getGoldPartners()"
-                class="bg-th-card rounded-xl p-6 border border-th-border hover:border-amber-400 hover:shadow-lg transition-all"
-              >
-                <div class="h-12 flex items-center justify-center mb-3">
-                  <span class="text-lg font-semibold text-th-text-2">{{ partner.name }}</span>
+              @for (partner of getGoldPartners(); track partner.name) {
+                <div class="bg-th-card rounded-xl p-6 border border-th-border hover:border-amber-400 hover:shadow-lg transition-all">
+                  <div class="h-12 flex items-center justify-center mb-3">
+                    <span class="text-lg font-semibold text-th-text-2">{{ partner.name }}</span>
+                  </div>
+                  <div class="flex justify-center gap-1">
+                    @for (star of [1,2,3,4]; track star) {
+                      <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    }
+                  </div>
                 </div>
-                <div class="flex justify-center gap-1">
-                  <svg *ngFor="let star of [1,2,3,4]" class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                  </svg>
-                </div>
-              </div>
+              }
             </div>
           </div>
 
@@ -128,19 +124,20 @@ interface Partner {
               {{ i18n.t('Silver Partners', 'شركاء الفضة') }}
             </h3>
             <div class="grid grid-cols-2 gap-4">
-              <div
-                *ngFor="let partner of getSilverPartners()"
-                class="bg-th-card rounded-xl p-6 border border-th-border hover:border-th-border hover:shadow-lg transition-all"
-              >
-                <div class="h-12 flex items-center justify-center mb-3">
-                  <span class="text-lg font-semibold text-th-text-2">{{ partner.name }}</span>
+              @for (partner of getSilverPartners(); track partner.name) {
+                <div class="bg-th-card rounded-xl p-6 border border-th-border hover:border-th-border hover:shadow-lg transition-all">
+                  <div class="h-12 flex items-center justify-center mb-3">
+                    <span class="text-lg font-semibold text-th-text-2">{{ partner.name }}</span>
+                  </div>
+                  <div class="flex justify-center gap-1">
+                    @for (star of [1,2,3]; track star) {
+                      <svg class="w-4 h-4 text-th-text-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    }
+                  </div>
                 </div>
-                <div class="flex justify-center gap-1">
-                  <svg *ngFor="let star of [1,2,3]" class="w-4 h-4 text-th-text-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                  </svg>
-                </div>
-              </div>
+              }
             </div>
           </div>
         </div>
@@ -151,12 +148,11 @@ interface Partner {
             {{ i18n.t('Certified Partners', 'شركاء معتمدون') }}
           </h3>
           <div class="flex flex-wrap justify-center gap-6">
-            <div
-              *ngFor="let partner of getCertifiedPartners()"
-              class="group px-6 py-3 bg-th-bg-alt rounded-lg hover:bg-primary hover:text-white transition-all"
-            >
-              <span class="text-sm font-medium">{{ partner.name }}</span>
-            </div>
+            @for (partner of getCertifiedPartners(); track partner.name) {
+              <div class="group px-6 py-3 bg-th-bg-alt rounded-lg hover:bg-primary hover:text-white transition-all">
+                <span class="text-sm font-medium">{{ partner.name }}</span>
+              </div>
+            }
           </div>
         </div>
 

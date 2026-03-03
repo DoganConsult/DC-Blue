@@ -167,10 +167,13 @@ export async function tableExists(pool, tableName) {
 export async function verifyCriticalTables(pool) {
   const criticalTables = [
     'users',
-    'portal_users', 
+    'portal_users',
     'leads',
     'password_reset_tokens',
-    'mfa_codes'
+    'mfa_codes',
+    'site_settings',
+    'public_content',
+    'legal_pages',
   ];
   
   const status = {};

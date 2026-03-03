@@ -1,5 +1,6 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ApiConfigService } from './api-config.service';
 
 export interface SiteSettings {
   contact_email: string | null;
@@ -16,6 +17,7 @@ export interface SiteSettings {
 @Injectable({ providedIn: 'root' })
 export class SiteSettingsService {
   private http = inject(HttpClient);
+  private apiConfig = inject(ApiConfigService);
   private loaded = signal(false);
   private data = signal<SiteSettings | null>(null);
 
@@ -35,7 +37,7 @@ export class SiteSettingsService {
   load(): void {
     if (this.loaded()) return;
     this.loaded.set(true);
-    this.http.get<SiteSettings>('/api/public/site-settings').subscribe({
+    this.http.get<SiteSettings>(this.apiConfig.apiUrl('/api/public/site-settings')).subscribe({
       next: (s) => this.data.set(s),
       error: () => this.data.set(null),
     });

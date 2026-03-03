@@ -1,11 +1,10 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { I18nService } from '../core/services/i18n.service';
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
+  imports: [RouterLink],
   selector: 'app-thanks',
   template: `
     <div class="bg-page-dark min-h-screen flex items-center justify-center px-4 py-16">
@@ -36,7 +35,16 @@ import { I18nService } from '../core/services/i18n.service';
             <p class="text-white/40 text-xs mt-3">
               {{ i18n.t('Save this number for future reference', 'احفظ هذا الرقم للرجوع إليه لاحقًا') }}
             </p>
+            <a [routerLink]="['/track']" [queryParams]="{ ticket: ticket() }"
+               class="inline-block mt-3 text-primary text-sm hover:underline">
+              {{ i18n.t('Track your inquiry', 'تتبع استفسارك') }}
+            </a>
           </div>
+        } @else {
+          <p class="text-white/60 text-sm mb-6">
+            {{ i18n.t('Check your email for the reference number.', 'تحقق من بريدك الإلكتروني للحصول على رقم المرجع.') }}
+            <a routerLink="/track" class="text-primary underline hover:no-underline">{{ i18n.t('Track inquiry', 'تتبع الاستفسار') }}</a>
+          </p>
         }
 
         <!-- What's Next -->

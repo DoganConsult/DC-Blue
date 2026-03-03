@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
 @Component({
   selector: 'app-global-reach',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <section class="py-12 sm:py-20 bg-gradient-to-b from-surface-dark to-brand-darker text-white overflow-hidden">
       <div class="container mx-auto px-6">

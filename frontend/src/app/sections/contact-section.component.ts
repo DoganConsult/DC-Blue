@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { I18nService } from '../core/services/i18n.service';
-import { DesignSystemService } from '../core/services/design-system.service';
 
 @Component({
   selector: 'app-contact-section',
@@ -29,6 +28,5 @@ import { DesignSystemService } from '../core/services/design-system.service';
 })
 export class ContactSectionComponent {
   i18n = inject(I18nService);
-  ds = inject(DesignSystemService);
   router = inject(Router);
 }

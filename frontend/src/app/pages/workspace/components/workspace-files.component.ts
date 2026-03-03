@@ -60,7 +60,7 @@ import { I18nService } from '../../../core/services/i18n.service';
                 <th class="px-4 py-3 font-medium text-th-text-2 hidden sm:table-cell">{{ i18n.t('Type', 'النوع') }}</th>
                 <th class="px-4 py-3 font-medium text-th-text-2 hidden md:table-cell">{{ i18n.t('Size', 'الحجم') }}</th>
                 <th class="px-4 py-3 font-medium text-th-text-2 hidden lg:table-cell">{{ i18n.t('Date', 'التاريخ') }}</th>
-                <th class="px-4 py-3 font-medium text-th-text-2 w-24">{{ i18n.t('Actions', 'إجراءات') }}</th>
+                <th class="px-4 py-3 font-medium text-th-text-2 w-24">{{ i18n.t('Download', 'تحميل') }}</th>
               </tr>
             </thead>
             <tbody>
@@ -169,6 +169,11 @@ export class WorkspaceFilesComponent implements OnInit {
     if (bytes < 1024) return bytes + ' B';
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  }
+
+  getLocalizedFileSize(bytes: number | null): string {
+    const size = this.formatSize(bytes);
+    return size === '—' ? '—' : size;
   }
 
   getFileIcon(mimeType: string | null): string {

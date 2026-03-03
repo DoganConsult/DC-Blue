@@ -1,6 +1,7 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClientApiService } from '../../../core/services/client-api.service';
+import { I18nService } from '../../../core/services/i18n.service';
 import { Demo } from '../../../core/models/client.models';
 
 @Component({
@@ -13,11 +14,11 @@ import { Demo } from '../../../core/models/client.models';
         <div class="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full"></div>
       </div>
     } @else {
-      <h2 class="text-lg font-bold mb-6">Demos & POC</h2>
+      <h2 class="text-lg font-bold mb-6">{{ i18n.t('Demos & POC', 'العروض والتجارب') }}</h2>
 
       @if (demos().length === 0) {
         <div class="bg-th-card border border-th-border rounded-xl p-10 text-center">
-          <p class="text-th-text-3 text-sm">No demos or POCs scheduled yet.</p>
+          <p class="text-th-text-3 text-sm">{{ i18n.t('No demos or POCs', 'لا توجد عروض أو تجارب') }}</p>
         </div>
       } @else {
         <div class="grid gap-4">
@@ -40,30 +41,30 @@ import { Demo } from '../../../core/models/client.models';
               </div>
 
               <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-                <div><span class="text-th-text-3 block">Scheduled</span>{{ d.scheduled_date ? (d.scheduled_date | date:'medium') : 'TBD' }}</div>
-                <div><span class="text-th-text-3 block">Duration</span>{{ d.duration_minutes }} min</div>
+                <div><span class="text-th-text-3 block">{{ i18n.t('Scheduled', 'مجدول') }}</span>{{ d.scheduled_date ? (d.scheduled_date | date:'medium') : 'TBD' }}</div>
+                <div><span class="text-th-text-3 block">{{ i18n.t('Duration', 'المدة') }}</span>{{ d.duration_minutes }} {{ i18n.t('minutes', 'دقيقة') }}</div>
                 @if (d.evaluation_score) {
-                  <div><span class="text-th-text-3 block">Score</span>{{ d.evaluation_score }}/10</div>
+                  <div><span class="text-th-text-3 block">{{ i18n.t('Score', 'الدرجة') }}</span>{{ d.evaluation_score }}/10</div>
                 }
                 @if (d.environment_url) {
-                  <div><span class="text-th-text-3 block">Environment</span><a [href]="d.environment_url" target="_blank" class="text-primary hover:underline">Open</a></div>
+                  <div><span class="text-th-text-3 block">{{ i18n.t('Environment', 'البيئة') }}</span><a [href]="d.environment_url" target="_blank" class="text-primary hover:underline">Open</a></div>
                 }
               </div>
 
               @if (d.demo_type === 'poc' && (d.poc_start_date || d.poc_end_date)) {
                 <div class="mt-2 text-xs text-th-text-3">
-                  POC Period: {{ d.poc_start_date ? (d.poc_start_date | date:'mediumDate') : '?' }} - {{ d.poc_end_date ? (d.poc_end_date | date:'mediumDate') : '?' }}
+                  {{ i18n.t('POC', 'إثبات مفهوم') }} {{ i18n.t('Period', 'الفترة') }}: {{ d.poc_start_date ? (d.poc_start_date | date:'mediumDate') : '?' }} - {{ d.poc_end_date ? (d.poc_end_date | date:'mediumDate') : '?' }}
                 </div>
               }
 
               @if (d.outcome) {
                 <div class="mt-2 p-2 bg-th-bg-tert rounded-lg text-xs text-th-text-3">
-                  <span class="font-medium text-th-text">Outcome:</span> {{ d.outcome }}
+                  <span class="font-medium text-th-text">{{ i18n.t('Outcome', 'النتيجة') }}:</span> {{ d.outcome }}
                 </div>
               }
 
               @if (d.next_steps) {
-                <div class="mt-1 text-xs text-th-text-3">Next steps: {{ d.next_steps }}</div>
+                <div class="mt-1 text-xs text-th-text-3">{{ i18n.t('Next Steps', 'الخطوات التالية') }}: {{ d.next_steps }}</div>
               }
             </div>
           }
@@ -74,6 +75,7 @@ import { Demo } from '../../../core/models/client.models';
 })
 export class WorkspaceDemosComponent implements OnInit {
   private api = inject(ClientApiService);
+  i18n = inject(I18nService);
   loading = signal(true);
   demos = signal<Demo[]>([]);
 

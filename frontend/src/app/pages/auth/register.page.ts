@@ -174,7 +174,7 @@ export class RegisterPage {
   }
 
   register() {
-    if (!this.canSubmit()) return;
+    if (this.loading() || !this.canSubmit()) return;
     this.loading.set(true);
     this.error.set(null);
 
@@ -189,9 +189,9 @@ export class RegisterPage {
         this.loading.set(false);
         localStorage.setItem('dc_user_token', r.token);
         localStorage.setItem('dc_user', JSON.stringify(r.user));
-        // Auto-redirect to unified workspace
-        const redirectUrl = r.redirect_url || '/workspace';
-        this.router.navigate([redirectUrl]);
+        const raw = r.redirect_url;
+        const safeRedirect = raw && typeof raw === 'string' && raw.startsWith('/') && !raw.startsWith('//') ? raw : '/workspace';
+        this.router.navigateByUrl(safeRedirect);
       },
       error: (e) => {
         this.loading.set(false);

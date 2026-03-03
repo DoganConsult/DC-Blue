@@ -1,6 +1,5 @@
 import { Component, inject, input } from '@angular/core';
 import { I18nService } from '../core/services/i18n.service';
-import { DesignSystemService } from '../core/services/design-system.service';
 import { LandingContent } from '../core/models/landing.model';
 
 interface MethodologyStep {
@@ -61,7 +60,6 @@ interface MethodologyStep {
 export class ProblemSectionComponent {
   content = input<LandingContent | null>(null);
   i18n = inject(I18nService);
-  ds = inject(DesignSystemService);
 
   get steps(): MethodologyStep[] { return this.content()?.methodology ?? this.defaultSteps; }
 

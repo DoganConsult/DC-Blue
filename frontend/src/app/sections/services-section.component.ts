@@ -1,6 +1,5 @@
 import { Component, input, inject } from '@angular/core';
 import { I18nService } from '../core/services/i18n.service';
-import { DesignSystemService } from '../core/services/design-system.service';
 import { LandingContent } from '../core/models/landing.model';
 
 interface SectorCard {
@@ -61,7 +60,6 @@ interface SectorCard {
 export class ServicesSectionComponent {
   content = input<LandingContent | null>(null);
   i18n = inject(I18nService);
-  ds = inject(DesignSystemService);
 
   get sectors(): SectorCard[] { return this.content()?.sectors ?? this.defaultSectors; }
 

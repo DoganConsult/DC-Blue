@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { I18nService } from '../core/services/i18n.service';
 import { CONTACT_INFO } from '../core/data/site-content';
@@ -8,7 +7,7 @@ import { EXEC_STAT_GRADIENTS, CAREER_DOT_COLORS, CAREER_COMPANY_COLORS } from '.
 @Component({
   selector: 'app-executive-profile',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [RouterModule],
   template: `
     <section class="relative py-12 sm:py-24 bg-gradient-to-br from-surface-dark via-brand-dark to-surface-dark overflow-hidden">
       <div class="absolute inset-0">

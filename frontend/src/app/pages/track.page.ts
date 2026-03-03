@@ -1,8 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { I18nService } from '../core/services/i18n.service';
 import { STATUS_COLORS } from '../core/data/page-styles';
 import { STATUS_LABELS } from '../core/data/status-labels';
@@ -99,9 +99,10 @@ interface TicketInfo {
     </div>
   `,
 })
-export class TrackPage {
+export class TrackPage implements OnInit {
   i18n = inject(I18nService);
   private http = inject(HttpClient);
+  private route = inject(ActivatedRoute);
   router = inject(Router);
 
   ticketInput = '';
@@ -109,13 +110,28 @@ export class TrackPage {
   error = signal<string | null>(null);
   result = signal<TicketInfo | null>(null);
 
+  ngOnInit() {
+    this.route.queryParams.subscribe((p) => {
+      const t = p['ticket'];
+      if (t && typeof t === 'string') {
+        this.ticketInput = t;
+        this.lookup();
+      }
+    });
+  }
+
   lookup() {
     if (!this.ticketInput.trim()) return;
     this.loading.set(true);
     this.error.set(null);
     this.result.set(null);
-    this.http.get<TicketInfo>(`/api/v1/public/track/${encodeURIComponent(this.ticketInput.trim())}`).subscribe({
-      next: (r) => { this.loading.set(false); this.result.set(r); },
+    const ticket = this.ticketInput.trim();
+    this.http.get<TicketInfo>(`/api/v1/public/track/${encodeURIComponent(ticket)}`).subscribe({
+      next: (r) => {
+        this.loading.set(false);
+        this.result.set(r);
+        this.router.navigate([], { relativeTo: this.route, queryParams: { ticket }, queryParamsHandling: 'merge', replaceUrl: true });
+      },
       error: (err) => {
         this.loading.set(false);
         if (err.status === 404) {

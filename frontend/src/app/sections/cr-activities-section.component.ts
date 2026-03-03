@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { I18nService } from '../core/services/i18n.service';
 import { KSA_CR_ACTIVITIES } from '../core/data/ksa-cr-activities';
@@ -7,7 +6,7 @@ import { KSA_CR_ACTIVITIES } from '../core/data/ksa-cr-activities';
 @Component({
   selector: 'app-cr-activities-section',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [RouterLink],
   template: `
     <section class="py-20 px-4 bg-th-bg-alt" id="cr-activities">
       <div class="container mx-auto max-w-6xl">

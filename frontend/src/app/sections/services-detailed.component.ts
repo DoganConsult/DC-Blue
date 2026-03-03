@@ -1,22 +1,29 @@
 import { Component, signal, computed, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { I18nService } from '../core/services/i18n.service';
 import { GUIDANCE_TYPE_COLORS, ARCH_LAYER_COLORS } from '../core/data/page-styles';
 
 @Component({
   selector: 'app-services-detailed',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <section class="py-24 lg:py-32 px-6 lg:px-8 bg-th-card" id="services">
       <div class="container mx-auto max-w-6xl">
-        <div class="max-w-2xl mb-12">
-          <p class="text-[13px] font-semibold text-primary tracking-widest uppercase mb-4">{{ i18n.t('Services', 'الخدمات') }}</p>
-          <h2 class="text-3xl lg:text-4xl font-bold text-th-text tracking-tight mb-4">{{ i18n.t('ICT Solutions Portfolio', 'محفظة حلول تقنية المعلومات والاتصالات') }}</h2>
-          <p class="text-lg text-th-text-3 leading-relaxed">{{ i18n.t('17 licensed services backed by Saudi government registration and technical expertise.', '17 خدمة مرخصة مدعومة بتسجيل حكومي سعودي وخبرة تقنية.') }}</p>
-        </div>
-
         <div class="flex flex-wrap gap-2 mb-10">
+          <button (click)="selectedCategory.set('all')"
+                  class="px-4 py-2 rounded-lg text-[13px] font-medium transition-all border"
+                  [class.bg-primary]="selectedCategory() === 'all'"
+                  [class.text-white]="selectedCategory() === 'all'"
+                  [class.border-primary]="selectedCategory() === 'all'"
+                  [class.shadow-sm]="selectedCategory() === 'all'"
+                  [class.bg-th-card]="selectedCategory() !== 'all'"
+                  [class.text-th-text-3]="selectedCategory() !== 'all'"
+                  [class.border-th-border]="selectedCategory() !== 'all'"
+                  [class.hover:border-primary]="selectedCategory() !== 'all'"
+                  [class.hover:text-th-text]="selectedCategory() !== 'all'">
+                {{ i18n.t('All Services', 'جميع الخدمات') }}
+                <span class="ml-1 text-[11px] opacity-60">(17)</span>
+          </button>
           @for (cat of categories; track cat.id) {
             <button (click)="selectedCategory.set(cat.id)"
                     class="px-4 py-2 rounded-lg text-[13px] font-medium transition-all border"

@@ -37,56 +37,8 @@ app.use('/health', rateLimit({ windowMs: 60 * 1000, max: 30, standardHeaders: tr
 // Database: single canonical resolver
 const pool = new Pool({ connectionString: getConnectionString() });
 
-// Run migrations on startup
-(async () => {
-  try {
-    console.log('[startup] Running database migrations...');
-    const migrationResults = await runMigrations(pool);
-    
-    // Verify critical tables
-    const tableStatus = await verifyCriticalTables(pool);
-    const missingTables = Object.entries(tableStatus)
-      .filter(([_, exists]) => !exists)
-      .map(([name]) => name);
-    
-    if (missingTables.length > 0) {
-      console.warn('[startup] WARNING: Missing critical tables:', missingTables.join(', '));
-    } else {
-      console.log('[startup] ✓ All critical tables verified');
-    }
-  } catch (err) {
-    console.error('[startup] Migration check failed:', err.message);
-  }
-})();
-
+// Route and service imports (must be before app.use that reference them)
 import { startScheduler } from './services/scheduler.js';
-
-// Health for deploy / latency badge
-app.get('/health', (_req, res) => {
-  res.set('Cache-Control', 'no-store');
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
-});
-
-// Landing content (EN/AR) — served by public-content router from DB with fallback
-// Lead capture (legacy — kept for contact form; will unify to lead_intakes in api-unify-leads)
-// Lead capture — unified: write to lead_intakes (source=website_contact) so one table backs contact + inquiry
-app.post('/api/public/leads', async (req, res) => {
-  const { name, email, company, message } = req.body || {};
-  if (!email) return res.status(400).json({ error: 'Email required' });
-  const crypto = await import('crypto');
-  const hash = crypto.createHash('sha256').update(`${String(email).toLowerCase().trim()}|${String(company || '').toLowerCase().trim()}`).digest('hex').slice(0, 64);
-  const d = new Date();
-  const ticket = `DC${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-  pool.query(
-    `INSERT INTO lead_intakes (source, company_name, contact_name, contact_email, message, dedupe_hash, ticket_number, assigned_to, score, consent_pdpl)
-     VALUES ('website_contact',$1,$2,$3,$4,$5,$6,'sales@doganconsult.com',$7,true)`,
-    [String(company || '—').trim(), String(name || '—').trim(), String(email).trim().toLowerCase(), (message && String(message).trim()) || null, hash, ticket, calculateLeadScore({ contact_email: email, company_name: company, contact_name: name, message })]
-  ).then(() => res.status(201).json({ ok: true })).catch((e) => { console.error('Lead insert:', e.message); res.status(500).json({ error: 'Failed to save' }); });
-});
-
-app.use('/api/public', publicContentRouter(pool));
-
-// PLRP + DLI routes (inquiry intake, lead management, partner portal)
 import { calculateLeadScore } from './services/scoring.js';
 import publicContentRouter from './routes/public-content.js';
 import leadsRouter, { portalAuth, adminOnly, optionalAuth } from './routes/leads.js';
@@ -116,6 +68,54 @@ const require = createRequire(import.meta.url);
 const themeRouter = require('./routes/theme.cjs');
 const copilotRouter = require('./routes/copilot.cjs');
 
+// Run migrations on startup
+(async () => {
+  try {
+    console.log('[startup] Running database migrations...');
+    const migrationResults = await runMigrations(pool);
+    
+    // Verify critical tables
+    const tableStatus = await verifyCriticalTables(pool);
+    const missingTables = Object.entries(tableStatus)
+      .filter(([_, exists]) => !exists)
+      .map(([name]) => name);
+    
+    if (missingTables.length > 0) {
+      console.warn('[startup] WARNING: Missing critical tables:', missingTables.join(', '));
+    } else {
+      console.log('[startup] ✓ All critical tables verified');
+    }
+  } catch (err) {
+    console.error('[startup] Migration check failed:', err.message);
+  }
+})();
+
+// Health for deploy / latency badge
+app.get('/health', (_req, res) => {
+  res.set('Cache-Control', 'no-store');
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// Landing content (EN/AR) — served by public-content router from DB with fallback
+// Lead capture (legacy — kept for contact form; will unify to lead_intakes in api-unify-leads)
+// Lead capture — unified: write to lead_intakes (source=website_contact) so one table backs contact + inquiry
+app.post('/api/public/leads', async (req, res) => {
+  const { name, email, company, message } = req.body || {};
+  if (!email) return res.status(400).json({ error: 'Email required' });
+  const crypto = await import('crypto');
+  const hash = crypto.createHash('sha256').update(`${String(email).toLowerCase().trim()}|${String(company || '').toLowerCase().trim()}`).digest('hex').slice(0, 64);
+  const d = new Date();
+  const ticket = `DC${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+  pool.query(
+    `INSERT INTO lead_intakes (source, company_name, contact_name, contact_email, message, dedupe_hash, ticket_number, assigned_to, score, consent_pdpl)
+     VALUES ('website_contact',$1,$2,$3,$4,$5,$6,'sales@doganconsult.com',$7,true)`,
+    [String(company || '—').trim(), String(name || '—').trim(), String(email).trim().toLowerCase(), (message && String(message).trim()) || null, hash, ticket, calculateLeadScore({ contact_email: email, company_name: company, contact_name: name, message })]
+  ).then(() => res.status(201).json({ ok: true })).catch((e) => { console.error('Lead insert:', e.message); res.status(500).json({ error: 'Failed to save' }); });
+});
+
+app.use('/api/public', publicContentRouter(pool));
+
+// PLRP + DLI routes (inquiry intake, lead management, partner portal)
 app.use('/api/v1', leadsRouter(pool));
 app.use('/api/v1/public', authRouter(pool));
 app.use('/api/v1', authRouter(pool));  // Also mount at /api/v1/auth/* for admin dashboard
@@ -153,9 +153,22 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(__dirname, 'public');
 const distDir = path.join(__dirname, '../frontend/dist/dogan-consult-web/browser');
 const staticDir = fs.existsSync(publicDir) ? publicDir : distDir;
-app.use(express.static(staticDir));
+app.use(express.static(staticDir, {
+  maxAge: '1y',
+  immutable: true,
+  setHeaders(res, filePath) {
+    if (filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+    }
+  },
+}));
 app.get('*', (req, res) => {
   if (req.path.startsWith('/api') || req.path.startsWith('/health')) return res.status(404).end();
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   res.sendFile(path.join(staticDir, 'index.html'));
 });
 

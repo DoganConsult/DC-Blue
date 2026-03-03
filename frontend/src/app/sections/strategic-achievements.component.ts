@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
 @Component({
   selector: 'app-strategic-achievements',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <section class="py-20 bg-th-bg-alt">
       <div class="container mx-auto px-6">

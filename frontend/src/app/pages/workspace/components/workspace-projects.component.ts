@@ -1,6 +1,7 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClientApiService } from '../../../core/services/client-api.service';
+import { I18nService } from '../../../core/services/i18n.service';
 import { Project, Milestone, Task } from '../../../core/models/client.models';
 
 @Component({
@@ -13,11 +14,11 @@ import { Project, Milestone, Task } from '../../../core/models/client.models';
         <div class="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full"></div>
       </div>
     } @else {
-      <h2 class="text-lg font-bold mb-6">Projects</h2>
+      <h2 class="text-lg font-bold mb-6">{{ i18n.t('Projects', 'المشاريع') }}</h2>
 
       @if (projects().length === 0) {
         <div class="bg-th-card border border-th-border rounded-xl p-10 text-center">
-          <p class="text-th-text-3 text-sm">No projects yet. Once your opportunity is won and implementation begins, your project will appear here.</p>
+          <p class="text-th-text-3 text-sm">{{ i18n.t('No projects yet', 'لا توجد مشاريع حتى الآن') }}. {{ i18n.t('Once your opportunity is won and implementation begins, your project will appear here.', 'بمجرد كسب فرصتك وبدء التنفيذ، سيظهر مشروعك هنا.') }}</p>
         </div>
       } @else {
         <div class="grid gap-4">
@@ -34,7 +35,7 @@ import { Project, Milestone, Task } from '../../../core/models/client.models';
               <!-- Progress Bar -->
               <div class="mb-3">
                 <div class="flex justify-between text-xs mb-1">
-                  <span class="text-th-text-3">Progress</span>
+                  <span class="text-th-text-3">{{ i18n.t('Progress', 'التقدم') }}</span>
                   <span class="font-medium">{{ p.progress_pct }}%</span>
                 </div>
                 <div class="h-2 bg-th-bg-tert rounded-full overflow-hidden">
@@ -43,10 +44,10 @@ import { Project, Milestone, Task } from '../../../core/models/client.models';
               </div>
 
               <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-                <div><span class="text-th-text-3 block">Phase</span>{{ formatStatus(p.phase) }}</div>
-                <div><span class="text-th-text-3 block">Start</span>{{ p.start_date ? (p.start_date | date:'mediumDate') : 'TBD' }}</div>
-                <div><span class="text-th-text-3 block">End</span>{{ p.end_date ? (p.end_date | date:'mediumDate') : 'TBD' }}</div>
-                <div><span class="text-th-text-3 block">Budget</span>{{ p.budget ? (p.currency + ' ' + (p.budget | number)) : '-' }}</div>
+                <div><span class="text-th-text-3 block">{{ i18n.t('Phase', 'المرحلة') }}</span>{{ formatStatus(p.phase) }}</div>
+                <div><span class="text-th-text-3 block">{{ i18n.t('Start', 'البداية') }}</span>{{ p.start_date ? (p.start_date | date:'mediumDate') : i18n.t('TBD', 'قيد التحديد') }}</div>
+                <div><span class="text-th-text-3 block">{{ i18n.t('End', 'النهاية') }}</span>{{ p.end_date ? (p.end_date | date:'mediumDate') : i18n.t('TBD', 'قيد التحديد') }}</div>
+                <div><span class="text-th-text-3 block">{{ i18n.t('Budget', 'الميزانية') }}</span>{{ p.budget ? (p.currency + ' ' + (p.budget | number)) : '-' }}</div>
               </div>
             </div>
           }
@@ -56,15 +57,15 @@ import { Project, Milestone, Task } from '../../../core/models/client.models';
         @if (selectedProject()) {
           <div class="mt-6 bg-th-card border border-th-border rounded-xl p-5">
             <div class="flex items-center justify-between mb-4">
-              <h3 class="font-semibold">{{ selectedProject()!.title }} — Details</h3>
-              <button (click)="selectedProject.set(null)" class="text-th-text-3 hover:text-th-text text-xs">Close</button>
+              <h3 class="font-semibold">{{ selectedProject()!.title }} — {{ i18n.t('Details', 'التفاصيل') }}</h3>
+              <button (click)="selectedProject.set(null)" class="text-th-text-3 hover:text-th-text text-xs">{{ i18n.t('Close', 'إغلاق') }}</button>
             </div>
 
             @if (detailLoading()) {
               <div class="py-4 text-center text-th-text-3 text-sm">Loading...</div>
             } @else {
               @if (milestones().length > 0) {
-                <h4 class="text-xs font-semibold text-th-text-3 mb-2">Milestones</h4>
+                <h4 class="text-xs font-semibold text-th-text-3 mb-2">{{ i18n.t('Milestones', 'المراحل') }}</h4>
                 <div class="space-y-2 mb-4">
                   @for (m of milestones(); track m.id) {
                     <div class="flex items-center gap-3 p-2 rounded-lg bg-th-bg-tert">
@@ -76,7 +77,7 @@ import { Project, Milestone, Task } from '../../../core/models/client.models';
                       <div class="flex-1">
                         <div class="text-sm font-medium">{{ m.title }}</div>
                         @if (m.due_date) {
-                          <div class="text-xs text-th-text-3">Due: {{ m.due_date | date:'mediumDate' }}</div>
+                          <div class="text-xs text-th-text-3">{{ i18n.t('Due', 'الاستحقاق') }}: {{ m.due_date | date:'mediumDate' }}</div>
                         }
                       </div>
                       <span class="px-2 py-0.5 rounded text-[10px] font-medium" [class]="getStatusClass(m.status)">{{ m.status }}</span>
@@ -86,7 +87,7 @@ import { Project, Milestone, Task } from '../../../core/models/client.models';
               }
 
               @if (tasks().length > 0) {
-                <h4 class="text-xs font-semibold text-th-text-3 mb-2">Tasks</h4>
+                <h4 class="text-xs font-semibold text-th-text-3 mb-2">{{ i18n.t('Tasks', 'المهام') }}</h4>
                 <div class="space-y-1">
                   @for (t of tasks(); track t.id) {
                     <div class="flex items-center gap-2 text-sm py-1">
@@ -101,7 +102,7 @@ import { Project, Milestone, Task } from '../../../core/models/client.models';
                       }
                       <span class="px-1.5 py-0.5 rounded text-[10px]"
                             [class]="t.priority === 'critical' ? 'bg-red-100 text-red-700' : t.priority === 'high' ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-600'">
-                        {{ t.priority }}
+                        {{ formatPriority(t.priority) }}
                       </span>
                     </div>
                   }
@@ -116,6 +117,7 @@ import { Project, Milestone, Task } from '../../../core/models/client.models';
 })
 export class WorkspaceProjectsComponent implements OnInit {
   private api = inject(ClientApiService);
+  i18n = inject(I18nService);
 
   loading = signal(true);
   detailLoading = signal(false);
@@ -146,6 +148,16 @@ export class WorkspaceProjectsComponent implements OnInit {
 
   formatStatus(s: string): string {
     return s?.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) || '-';
+  }
+
+  formatPriority(priority: string): string {
+    const priorityMap: Record<string, string> = {
+      'critical': this.i18n.t('Critical', 'حرج'),
+      'high': this.i18n.t('High', 'عالي'),
+      'medium': this.i18n.t('Medium', 'متوسط'),
+      'low': this.i18n.t('Low', 'منخفض'),
+    };
+    return priorityMap[priority] || priority;
   }
 
   getStatusClass(status: string): string {

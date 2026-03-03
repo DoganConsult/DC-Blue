@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { I18nService } from '../core/services/i18n.service';
 
 interface TeamMember {
@@ -16,7 +16,7 @@ interface TeamMember {
 @Component({
   selector: 'app-leadership-section',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <section class="py-20 px-4 bg-th-bg-alt">
       <div class="container mx-auto max-w-7xl">
@@ -41,10 +41,8 @@ interface TeamMember {
 
         <!-- Leadership Grid -->
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          <div
-            *ngFor="let member of leadershipTeam"
-            class="group relative"
-          >
+          @for (member of leadershipTeam; track member.name.en) {
+          <div class="group relative">
             <div class="bg-th-card rounded-2xl shadow-lg hover:shadow-xl transition-all overflow-hidden">
               <!-- Profile Image -->
               <div class="relative h-64 bg-gradient-to-br from-brand-dark to-primary">
@@ -57,8 +55,8 @@ interface TeamMember {
                 </div>
 
                 <!-- LinkedIn Badge -->
+                @if (member.linkedin) {
                 <a
-                  *ngIf="member.linkedin"
                   [href]="member.linkedin"
                   target="_blank"
                   class="absolute top-4 right-4 w-10 h-10 bg-th-card rounded-lg flex items-center justify-center hover:bg-blue-50 transition-colors"
@@ -67,6 +65,7 @@ interface TeamMember {
                     <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
                   </svg>
                 </a>
+                }
 
                 <!-- Years of Experience Badge -->
                 <div class="absolute bottom-4 left-4 px-3 py-1 bg-th-card/90 backdrop-blur rounded-full">
@@ -95,18 +94,12 @@ interface TeamMember {
                     {{ i18n.t('Specialties', 'التخصصات') }}
                   </h4>
                   <div class="flex flex-wrap gap-1">
-                    <span
-                      *ngFor="let specialty of member.specialties.slice(0, 3)"
-                      class="px-2 py-1 bg-sky-50 text-sky-700 rounded text-xs font-medium"
-                    >
-                      {{ specialty }}
-                    </span>
-                    <span
-                      *ngIf="member.specialties.length > 3"
-                      class="px-2 py-1 bg-th-bg-tert text-th-text-2 rounded text-xs font-medium"
-                    >
-                      +{{ member.specialties.length - 3 }}
-                    </span>
+                    @for (specialty of member.specialties.slice(0, 3); track specialty) {
+                      <span class="px-2 py-1 bg-sky-50 text-sky-700 rounded text-xs font-medium">{{ specialty }}</span>
+                    }
+                    @if (member.specialties.length > 3) {
+                      <span class="px-2 py-1 bg-th-bg-tert text-th-text-2 rounded text-xs font-medium">+{{ member.specialties.length - 3 }}</span>
+                    }
                   </div>
                 </div>
 
@@ -116,24 +109,22 @@ interface TeamMember {
                     {{ i18n.t('Certifications', 'الشهادات') }}
                   </h4>
                   <div class="flex flex-wrap gap-2">
-                    <div
-                      *ngFor="let cert of member.certifications.slice(0, 4)"
-                      class="w-8 h-8 bg-th-bg-tert rounded flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors"
-                      [title]="cert"
-                    >
-                      <span class="text-xs font-bold">{{ getCertAbbreviation(cert) }}</span>
-                    </div>
-                    <div
-                      *ngIf="member.certifications.length > 4"
-                      class="w-8 h-8 bg-th-bg-tert rounded flex items-center justify-center"
-                    >
-                      <span class="text-xs font-bold text-th-text-2">+{{ member.certifications.length - 4 }}</span>
-                    </div>
+                    @for (cert of member.certifications.slice(0, 4); track cert) {
+                      <div class="w-8 h-8 bg-th-bg-tert rounded flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors" [title]="cert">
+                        <span class="text-xs font-bold">{{ getCertAbbreviation(cert) }}</span>
+                      </div>
+                    }
+                    @if (member.certifications.length > 4) {
+                      <div class="w-8 h-8 bg-th-bg-tert rounded flex items-center justify-center">
+                        <span class="text-xs font-bold text-th-text-2">+{{ member.certifications.length - 4 }}</span>
+                      </div>
+                    }
                   </div>
                 </div>
               </div>
             </div>
           </div>
+          }
         </div>
 
         <!-- Technical Team Stats -->
@@ -206,7 +197,7 @@ interface TeamMember {
               'نبحث دائمًا عن محترفين موهوبين لمساعدة عملائنا على تحقيق التميز الرقمي'
             ) }}
           </p>
-          <button class="inline-flex items-center gap-2 px-8 py-4 bg-th-card text-primary rounded-xl font-semibold hover:bg-sky-50 transition-all transform hover:scale-105">
+          <button (click)="router.navigate(['/inquiry'])" class="inline-flex items-center gap-2 px-8 py-4 bg-th-card text-primary rounded-xl font-semibold hover:bg-sky-50 transition-all transform hover:scale-105">
             {{ i18n.t('View Open Positions', 'عرض الوظائف المتاحة') }}
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
@@ -216,17 +207,11 @@ interface TeamMember {
       </div>
     </section>
   `,
-  styles: [`
-    .line-clamp-3 {
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-  `]
+  styles: []
 })
 export class LeadershipSectionComponent {
   i18n = inject(I18nService);
+  router = inject(Router);
 
   leadershipTeam: TeamMember[] = [
     {

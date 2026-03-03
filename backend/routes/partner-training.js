@@ -84,7 +84,7 @@ export default function partnerTrainingRouter(pool, portalAuth, adminOnly) {
   router.get('/partner/resources', portalAuth, async (req, res) => {
     try {
       const result = await pool.query(
-        `SELECT id, title, description, category, file_type, file_url, file_size_bytes, sort_order
+        `SELECT id, title, description, category, file_type, url, sort_order
          FROM partner_resources WHERE is_active = true ORDER BY sort_order, title`
       );
       res.json({ data: result.rows });
@@ -96,13 +96,13 @@ export default function partnerTrainingRouter(pool, portalAuth, adminOnly) {
   /** POST /admin/resources — Create resource (admin) */
   router.post('/admin/resources', portalAuth, adminOnly, async (req, res) => {
     try {
-      const { title, description, category, file_type, file_url, file_size_bytes, sort_order } = req.body || {};
+      const { title, description, category, file_type, url, sort_order } = req.body || {};
       if (!title) return res.status(400).json({ error: 'Title is required' });
 
       const result = await pool.query(
-        `INSERT INTO partner_resources (title, description, category, file_type, file_url, file_size_bytes, sort_order)
-         VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-        [title, description || null, category || 'general', file_type || 'PDF', file_url || null, file_size_bytes || null, sort_order || 0]
+        `INSERT INTO partner_resources (title, description, category, file_type, url, sort_order)
+         VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+        [title, description || null, category || 'general', file_type || 'PDF', url || null, sort_order || 0]
       );
       res.status(201).json({ ok: true, resource: result.rows[0] });
     } catch (e) {
@@ -113,7 +113,7 @@ export default function partnerTrainingRouter(pool, portalAuth, adminOnly) {
   /** PATCH /admin/resources/:id — Update resource (admin) */
   router.patch('/admin/resources/:id', portalAuth, adminOnly, async (req, res) => {
     try {
-      const fields = ['title', 'description', 'category', 'file_type', 'file_url', 'file_size_bytes', 'sort_order', 'is_active'];
+      const fields = ['title', 'description', 'category', 'file_type', 'url', 'sort_order', 'is_active'];
       const updates = [];
       const params = [];
       let idx = 1;

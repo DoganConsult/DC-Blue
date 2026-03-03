@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { I18nService } from '../../core/services/i18n.service';
 import { PageHeroComponent } from '../../sections/page-hero.component';
 
@@ -17,7 +17,7 @@ export interface PartnerRegisterForm {
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, PageHeroComponent],
+  imports: [CommonModule, FormsModule, RouterLink, PageHeroComponent],
   selector: 'app-partner-register',
   template: `
     <app-page-hero
@@ -116,6 +116,13 @@ export interface PartnerRegisterForm {
               </select>
             </div>
 
+            <p class="text-th-text-2 text-xs">
+              {{ i18n.t('By submitting you agree to our', 'بإرسال الطلب فإنك توافق على') }}
+              <a routerLink="/privacy" class="text-primary hover:underline">{{ i18n.t('Privacy Policy', 'سياسة الخصوصية') }}</a>
+              {{ i18n.t('and', 'و') }}
+              <a routerLink="/pdpl" class="text-primary hover:underline">PDPL</a>.
+            </p>
+
             <button type="submit" [disabled]="loading() || !f.valid"
                     class="w-full py-4 rounded-xl font-semibold text-lg transition-all
                            bg-th-btn text-th-btn-text
@@ -155,6 +162,7 @@ export class PartnerRegisterPage {
   goHome() { this.router.navigate(['/']); }
 
   register() {
+    if (this.loading()) return;
     this.loading.set(true);
     this.error.set(null);
     this.resendSuccess.set(false);

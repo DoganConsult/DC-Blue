@@ -1,6 +1,6 @@
 import { Component, inject, input } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { I18nService } from '../core/services/i18n.service';
-import { DesignSystemService } from '../core/services/design-system.service';
 import { LandingContent } from '../core/models/landing.model';
 
 interface ExpertiseCard {
@@ -16,6 +16,7 @@ interface ExpertiseCard {
 @Component({
   selector: 'app-social-proof-section',
   standalone: true,
+  imports: [RouterModule],
   template: `
     <section class="bg-th-bg-alt py-24 lg:py-28" id="expertise">
       <div class="max-w-[1200px] mx-auto px-6 lg:px-8">
@@ -69,7 +70,6 @@ interface ExpertiseCard {
 export class SocialProofSectionComponent {
   content = input<LandingContent | null>(null);
   i18n = inject(I18nService);
-  ds = inject(DesignSystemService);
 
   get expertiseCards(): ExpertiseCard[] { return this.content()?.expertise ?? this.defaultExpertiseCards; }
 

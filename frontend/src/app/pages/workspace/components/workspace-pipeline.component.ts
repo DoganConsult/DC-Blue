@@ -2,6 +2,7 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClientApiService } from '../../../core/services/client-api.service';
 import { ClientOpportunity } from '../../../core/models/client.models';
+import { I18nService } from '../../../core/services/i18n.service';
 
 @Component({
   selector: 'app-workspace-pipeline',
@@ -14,13 +15,13 @@ import { ClientOpportunity } from '../../../core/models/client.models';
       </div>
     } @else {
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-lg font-bold">Pipeline</h2>
-        <button (click)="exportCsv()" class="text-xs text-primary hover:underline">Export CSV</button>
+        <h2 class="text-lg font-bold">{{ i18n.t('Pipeline', 'سير العمليات') }}</h2>
+        <button (click)="exportCsv()" class="text-xs text-primary hover:underline">{{ i18n.t('Export CSV', 'تصدير CSV') }}</button>
       </div>
 
       @if (opportunities().length === 0) {
         <div class="bg-th-card border border-th-border rounded-xl p-10 text-center">
-          <p class="text-th-text-3 text-sm">No opportunities visible yet. Once your inquiry progresses, opportunities will appear here.</p>
+          <p class="text-th-text-3 text-sm">{{ i18n.t('No opportunities visible yet. Once your inquiry progresses, opportunities will appear here.', 'لا توجد فرص مرئية حتى الآن. عندما يتقدم استفسارك، ستظهر الفرص هنا.') }}</p>
         </div>
       } @else {
         <!-- Pipeline Stages Overview -->
@@ -38,11 +39,11 @@ import { ClientOpportunity } from '../../../core/models/client.models';
           <table class="w-full text-sm">
             <thead>
               <tr class="border-b border-th-border bg-th-bg-tert">
-                <th class="text-left px-4 py-3 text-th-text-3 text-xs font-medium">Title</th>
-                <th class="text-left px-4 py-3 text-th-text-3 text-xs font-medium">Stage</th>
-                <th class="text-left px-4 py-3 text-th-text-3 text-xs font-medium hidden md:table-cell">Value</th>
-                <th class="text-left px-4 py-3 text-th-text-3 text-xs font-medium hidden md:table-cell">Probability</th>
-                <th class="text-left px-4 py-3 text-th-text-3 text-xs font-medium hidden lg:table-cell">Next Action</th>
+                <th class="text-left px-4 py-3 text-th-text-3 text-xs font-medium">{{ i18n.t('Title', 'العنوان') }}</th>
+                <th class="text-left px-4 py-3 text-th-text-3 text-xs font-medium">{{ i18n.t('Stage', 'المرحلة') }}</th>
+                <th class="text-left px-4 py-3 text-th-text-3 text-xs font-medium hidden md:table-cell">{{ i18n.t('Value', 'القيمة') }}</th>
+                <th class="text-left px-4 py-3 text-th-text-3 text-xs font-medium hidden md:table-cell">{{ i18n.t('Probability', 'الاحتمالية') }}</th>
+                <th class="text-left px-4 py-3 text-th-text-3 text-xs font-medium hidden lg:table-cell">{{ i18n.t('Next Action', 'الإجراء التالي') }}</th>
               </tr>
             </thead>
             <tbody>
@@ -69,17 +70,17 @@ import { ClientOpportunity } from '../../../core/models/client.models';
           <div class="mt-6 bg-th-card border border-th-border rounded-xl p-5">
             <div class="flex items-center justify-between mb-4">
               <h3 class="font-semibold">{{ selectedOpp()!.title }}</h3>
-              <button (click)="selectedOpp.set(null)" class="text-th-text-3 hover:text-th-text text-xs">Close</button>
+              <button (click)="selectedOpp.set(null)" class="text-th-text-3 hover:text-th-text text-xs">{{ i18n.t('Close', 'إغلاق') }}</button>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-              <div><span class="text-th-text-3 text-xs block">Stage</span><span class="font-medium">{{ formatStage(selectedOpp()!.stage) }}</span></div>
-              <div><span class="text-th-text-3 text-xs block">Value</span><span class="font-medium">{{ selectedOpp()!.currency }} {{ selectedOpp()!.estimated_value | number }}</span></div>
-              <div><span class="text-th-text-3 text-xs block">Product</span><span class="font-medium">{{ selectedOpp()!.product_line || '-' }}</span></div>
-              <div><span class="text-th-text-3 text-xs block">Created</span><span class="font-medium">{{ selectedOpp()!.created_at | date:'mediumDate' }}</span></div>
+              <div><span class="text-th-text-3 text-xs block">{{ i18n.t('Stage', 'المرحلة') }}</span><span class="font-medium">{{ formatStage(selectedOpp()!.stage) }}</span></div>
+              <div><span class="text-th-text-3 text-xs block">{{ i18n.t('Value', 'القيمة') }}</span><span class="font-medium">{{ selectedOpp()!.currency }} {{ selectedOpp()!.estimated_value | number }}</span></div>
+              <div><span class="text-th-text-3 text-xs block">{{ i18n.t('Product', 'المنتج') }}</span><span class="font-medium">{{ selectedOpp()!.product_line || '-' }}</span></div>
+              <div><span class="text-th-text-3 text-xs block">{{ i18n.t('Created', 'تاريخ الإنشاء') }}</span><span class="font-medium">{{ selectedOpp()!.created_at | date:'mediumDate' }}</span></div>
             </div>
 
             @if (detailGates().length) {
-              <h4 class="text-xs font-semibold text-th-text-3 mt-4 mb-2">Gate Checklist</h4>
+              <h4 class="text-xs font-semibold text-th-text-3 mt-4 mb-2">{{ i18n.t('Gate Checklist', 'قائمة التحقق') }}</h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-1">
                 @for (g of detailGates(); track g.id) {
                   <div class="flex items-center gap-2 text-sm">
@@ -101,6 +102,7 @@ import { ClientOpportunity } from '../../../core/models/client.models';
 })
 export class WorkspacePipelineComponent implements OnInit {
   private api = inject(ClientApiService);
+  i18n = inject(I18nService);
 
   loading = signal(true);
   opportunities = signal<ClientOpportunity[]>([]);

@@ -1,6 +1,7 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClientApiService } from '../../../core/services/client-api.service';
+import { I18nService } from '../../../core/services/i18n.service';
 import { Contract, License } from '../../../core/models/client.models';
 
 @Component({
@@ -16,18 +17,18 @@ import { Contract, License } from '../../../core/models/client.models';
       <div class="flex items-center gap-4 mb-6">
         <button (click)="view.set('contracts')" class="text-sm font-medium"
                 [class]="view() === 'contracts' ? 'text-primary border-b-2 border-primary pb-1' : 'text-th-text-3'">
-          Contracts
+          {{ i18n.t('Contracts', 'العقود') }}
         </button>
         <button (click)="view.set('licenses'); loadLicenses()" class="text-sm font-medium"
                 [class]="view() === 'licenses' ? 'text-primary border-b-2 border-primary pb-1' : 'text-th-text-3'">
-          Licenses
+          {{ i18n.t('Licenses', 'التراخيص') }}
         </button>
       </div>
 
       @if (view() === 'contracts') {
         @if (contracts().length === 0) {
           <div class="bg-th-card border border-th-border rounded-xl p-10 text-center">
-            <p class="text-th-text-3 text-sm">No contracts yet.</p>
+            <p class="text-th-text-3 text-sm">{{ i18n.t('No contracts yet', 'لا توجد عقود حتى الآن') }}</p>
           </div>
         } @else {
           <div class="grid gap-4">
@@ -42,13 +43,13 @@ import { Contract, License } from '../../../core/models/client.models';
                 </div>
 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-                  <div><span class="text-th-text-3 block">Value</span>{{ c.value ? (c.currency + ' ' + (c.value | number)) : '-' }}</div>
-                  <div><span class="text-th-text-3 block">Start</span>{{ c.start_date ? (c.start_date | date:'mediumDate') : '-' }}</div>
+                  <div><span class="text-th-text-3 block">{{ i18n.t('Value', 'القيمة') }}</span>{{ c.value ? (c.currency + ' ' + (c.value | number)) : '-' }}</div>
+                  <div><span class="text-th-text-3 block">{{ i18n.t('Start Date', 'تاريخ البدء') }}</span>{{ c.start_date ? (c.start_date | date:'mediumDate') : '-' }}</div>
                   <div>
-                    <span class="text-th-text-3 block">End</span>
+                    <span class="text-th-text-3 block">{{ i18n.t('End Date', 'تاريخ الانتهاء') }}</span>
                     <span [class.text-amber-600]="isExpiringSoon(c)">{{ c.end_date ? (c.end_date | date:'mediumDate') : '-' }}</span>
                   </div>
-                  <div><span class="text-th-text-3 block">Auto-Renew</span>{{ c.auto_renew ? 'Yes' : 'No' }}</div>
+                  <div><span class="text-th-text-3 block">{{ i18n.t('Auto-Renew', 'تجديد تلقائي') }}</span>{{ c.auto_renew ? 'Yes' : 'No' }}</div>
                 </div>
               </div>
             }
@@ -57,21 +58,21 @@ import { Contract, License } from '../../../core/models/client.models';
           @if (selectedContract()) {
             <div class="mt-6 bg-th-card border border-th-border rounded-xl p-5">
               <div class="flex items-center justify-between mb-4">
-                <h3 class="font-semibold">{{ selectedContract()!.title }} — Licenses</h3>
-                <button (click)="selectedContract.set(null)" class="text-th-text-3 hover:text-th-text text-xs">Close</button>
+                <h3 class="font-semibold">{{ selectedContract()!.title }} — {{ i18n.t('Licenses', 'التراخيص') }}</h3>
+                <button (click)="selectedContract.set(null)" class="text-th-text-3 hover:text-th-text text-xs">{{ i18n.t('Close', 'إغلاق') }}</button>
               </div>
               @if (contractLicenses().length === 0) {
-                <p class="text-th-text-3 text-sm">No licenses attached to this contract.</p>
+                <p class="text-th-text-3 text-sm">{{ i18n.t('No licenses yet', 'لا توجد تراخيص حتى الآن') }}</p>
               } @else {
                 <div class="overflow-x-auto">
                   <table class="w-full text-sm">
                     <thead>
                       <tr class="border-b border-th-border">
-                        <th class="text-left px-3 py-2 text-xs text-th-text-3">Product</th>
-                        <th class="text-left px-3 py-2 text-xs text-th-text-3">Type</th>
-                        <th class="text-left px-3 py-2 text-xs text-th-text-3">Qty</th>
-                        <th class="text-left px-3 py-2 text-xs text-th-text-3">Expiry</th>
-                        <th class="text-left px-3 py-2 text-xs text-th-text-3">Status</th>
+                        <th class="text-left px-3 py-2 text-xs text-th-text-3">{{ i18n.t('Product', 'المنتج') }}</th>
+                        <th class="text-left px-3 py-2 text-xs text-th-text-3">{{ i18n.t('Type', 'النوع') }}</th>
+                        <th class="text-left px-3 py-2 text-xs text-th-text-3">{{ i18n.t('Quantity', 'الكمية') }}</th>
+                        <th class="text-left px-3 py-2 text-xs text-th-text-3">{{ i18n.t('Expiry', 'الانتهاء') }}</th>
+                        <th class="text-left px-3 py-2 text-xs text-th-text-3">{{ i18n.t('Status', 'الحالة') }}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -96,19 +97,19 @@ import { Contract, License } from '../../../core/models/client.models';
           <div class="py-10 text-center text-th-text-3 text-sm">Loading licenses...</div>
         } @else if (allLicenses().length === 0) {
           <div class="bg-th-card border border-th-border rounded-xl p-10 text-center">
-            <p class="text-th-text-3 text-sm">No licenses yet.</p>
+            <p class="text-th-text-3 text-sm">{{ i18n.t('No licenses yet', 'لا توجد تراخيص حتى الآن') }}</p>
           </div>
         } @else {
           <div class="bg-th-card border border-th-border rounded-xl overflow-hidden">
             <table class="w-full text-sm">
               <thead>
                 <tr class="border-b border-th-border bg-th-bg-tert">
-                  <th class="text-left px-4 py-3 text-xs text-th-text-3">Product</th>
-                  <th class="text-left px-4 py-3 text-xs text-th-text-3">Contract</th>
-                  <th class="text-left px-4 py-3 text-xs text-th-text-3 hidden md:table-cell">Type</th>
-                  <th class="text-left px-4 py-3 text-xs text-th-text-3">Qty</th>
-                  <th class="text-left px-4 py-3 text-xs text-th-text-3">Expiry</th>
-                  <th class="text-left px-4 py-3 text-xs text-th-text-3">Status</th>
+                  <th class="text-left px-4 py-3 text-xs text-th-text-3">{{ i18n.t('Product', 'المنتج') }}</th>
+                  <th class="text-left px-4 py-3 text-xs text-th-text-3">{{ i18n.t('Contract', 'العقد') }}</th>
+                  <th class="text-left px-4 py-3 text-xs text-th-text-3 hidden md:table-cell">{{ i18n.t('Type', 'النوع') }}</th>
+                  <th class="text-left px-4 py-3 text-xs text-th-text-3">{{ i18n.t('Quantity', 'الكمية') }}</th>
+                  <th class="text-left px-4 py-3 text-xs text-th-text-3">{{ i18n.t('Expiry', 'الانتهاء') }}</th>
+                  <th class="text-left px-4 py-3 text-xs text-th-text-3">{{ i18n.t('Status', 'الحالة') }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -132,6 +133,7 @@ import { Contract, License } from '../../../core/models/client.models';
 })
 export class WorkspaceContractsComponent implements OnInit {
   private api = inject(ClientApiService);
+  i18n = inject(I18nService);
 
   loading = signal(true);
   licensesLoading = signal(false);

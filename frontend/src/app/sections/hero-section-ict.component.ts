@@ -1,7 +1,5 @@
 import { Component, inject, input, signal, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { I18nService } from '../core/services/i18n.service';
-import { DesignSystemService } from '../core/services/design-system.service';
 import { Router } from '@angular/router';
 import { LandingContent } from '../core/models/landing.model';
 
@@ -9,13 +7,13 @@ interface Stat {
   value: number;
   suffix: string;
   label: { en: string; ar: string };
-  icon: string;
+  icon?: string;
 }
 
 @Component({
   selector: 'app-hero-section-ict',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <section class="hero-ict relative overflow-hidden -mt-[72px]" style="background: var(--agrc-hero-bg, #0B1220)">
       <!-- Subtle gradient overlay (enterprise: restrained) -->
@@ -72,7 +70,7 @@ interface Stat {
                 </div>
                 <div>
                   <div class="text-xl lg:text-2xl font-bold text-white tracking-tight stat-counter">
-                    <span>{{ displayValues()[i] }}</span>{{ stat.suffix }}
+                    <span>{{ displayValues()[i] ?? stat.value }}</span>{{ stat.suffix }}
                   </div>
                   <div class="text-[12px] text-white/55 font-medium">{{ i18n.t(stat.label.en, stat.label.ar) }}</div>
                 </div>
@@ -102,30 +100,57 @@ interface Stat {
 export class HeroSectionIctComponent implements OnInit, OnDestroy {
   content = input<LandingContent | null>(null);
   i18n = inject(I18nService);
-  ds = inject(DesignSystemService);
   router = inject(Router);
   private counterAnimated = false;
+  private animationFrameId: number | null = null;
+  private initTimerId: ReturnType<typeof setTimeout> | null = null;
 
-  displayValues = signal<number[]>([0, 0, 0]);
+  displayValues = signal<number[]>([]);
 
-  get stats(): Stat[] { return (this.content()?.stats as any) ?? this.defaultStats; }
+  private readonly fallbackIcons: Record<string, string> = {
+    'Years Experience': 'M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z',
+    'Projects Delivered': 'M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
+    'SLAs Met': 'M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z',
+    'Regions': 'M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418',
+    'Enterprise Clients': 'M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z',
+    'Client Satisfaction': 'M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z',
+  };
+
+  private readonly defaultIcon = 'M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z';
+
+  get stats(): Stat[] {
+    const raw: Stat[] = (this.content()?.stats as any) ?? this.defaultStats;
+    return raw.map(s => ({
+      ...s,
+      icon: s.icon || this.fallbackIcons[s.label.en] || this.defaultIcon,
+    }));
+  }
 
   private defaultStats: Stat[] = [
-    { value: 100, suffix: '+', label: { en: 'Successful Projects', ar: 'مشروع ناجح' }, icon: 'M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418' },
-    { value: 50, suffix: '+', label: { en: 'Engineering Experts', ar: 'خبير هندسي' }, icon: 'M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z' },
-    { value: 20, suffix: '+', label: { en: 'Years of Experience', ar: 'سنوات الخبرة' }, icon: 'M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M18.75 4.236c.982.143 1.954.317 2.916.52A6.003 6.003 0 0116.27 9.728M18.75 4.236V4.5c0 2.108-.966 3.99-2.48 5.228m0 0a6.023 6.023 0 01-2.27.308m4.27-5.154V2.721' },
+    { value: 15, suffix: '+', label: { en: 'Years Experience', ar: 'سنوات خبرة' } },
+    { value: 120, suffix: '+', label: { en: 'Projects Delivered', ar: 'مشاريع منجزة' } },
+    { value: 99, suffix: '%', label: { en: 'SLAs Met', ar: 'التزام ب SLA' } },
+    { value: 6, suffix: '', label: { en: 'Regions', ar: 'مناطق' } },
   ];
 
   ngOnInit() {
-    setTimeout(() => this.animateCounters(), 500);
+    this.initTimerId = setTimeout(() => this.animateCounters(), 500);
   }
 
-  ngOnDestroy() {}
+  ngOnDestroy() {
+    if (this.initTimerId !== null) {
+      clearTimeout(this.initTimerId);
+    }
+    if (this.animationFrameId !== null) {
+      cancelAnimationFrame(this.animationFrameId);
+    }
+  }
 
   private animateCounters() {
     if (this.counterAnimated) return;
     this.counterAnimated = true;
     const targets = this.stats.map(s => s.value);
+    this.displayValues.set(targets.map(() => 0));
     const duration = 2000;
     const startTime = performance.now();
 
@@ -136,11 +161,11 @@ export class HeroSectionIctComponent implements OnInit, OnDestroy {
       const vals = targets.map(t => Math.floor(t * eased));
       this.displayValues.set(vals);
       if (progress < 1) {
-        requestAnimationFrame(animate);
+        this.animationFrameId = requestAnimationFrame(animate);
       } else {
         this.displayValues.set(targets);
       }
     };
-    requestAnimationFrame(animate);
+    this.animationFrameId = requestAnimationFrame(animate);
   }
 }

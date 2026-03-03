@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { I18nService } from '../core/services/i18n.service';
 
 interface Education {
@@ -21,7 +20,7 @@ interface Education {
 @Component({
   selector: 'app-education-section',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <section class="py-20 px-4 bg-gradient-to-b from-th-bg-alt via-th-card to-th-bg-alt">
       <div class="container mx-auto max-w-7xl">

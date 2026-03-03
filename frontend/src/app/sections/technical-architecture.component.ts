@@ -1,11 +1,10 @@
 import { Component, signal, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { I18nService } from '../core/services/i18n.service';
 
 @Component({
   selector: 'app-technical-architecture',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <section class="py-24 lg:py-32 px-6 lg:px-8 bg-surface-dark" id="architecture">
       <div class="container mx-auto max-w-6xl">
@@ -17,7 +16,13 @@ import { I18nService } from '../core/services/i18n.service';
 
         <div class="flex flex-wrap gap-2 mb-10">
           @for (arch of architectures; track arch.id) {
-            <button (click)="selectedArchitecture.set(arch.id)" class="px-5 py-2.5 rounded-lg text-[13px] font-medium transition-colors" [class.bg-th-card]="selectedArchitecture() === arch.id" [class.text-th-text]="selectedArchitecture() === arch.id" [ngClass]="{'bg-th-card/5': selectedArchitecture() !== arch.id, 'text-white/60': selectedArchitecture() !== arch.id, 'hover:text-white': selectedArchitecture() !== arch.id}">
+            <button (click)="selectedArchitecture.set(arch.id)"
+                    class="px-5 py-2.5 rounded-lg text-[13px] font-medium transition-colors"
+                    [class.bg-th-card]="selectedArchitecture() === arch.id"
+                    [class.text-th-text]="selectedArchitecture() === arch.id"
+                    [style.background]="selectedArchitecture() !== arch.id ? 'rgba(var(--card-rgb, 30,41,59), 0.05)' : ''"
+                    [style.color]="selectedArchitecture() !== arch.id ? 'rgba(255,255,255,0.6)' : ''"
+                    [class.hover:text-white]="selectedArchitecture() !== arch.id">
               {{ arch.name }}
             </button>
           }

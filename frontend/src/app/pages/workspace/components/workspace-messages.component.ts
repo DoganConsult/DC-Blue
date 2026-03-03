@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClientApiService } from '../../../core/services/client-api.service';
 import { ClientMessage } from '../../../core/models/client.models';
+import { I18nService } from '../../../core/services/i18n.service';
 
 @Component({
   selector: 'app-workspace-messages',
@@ -10,7 +11,7 @@ import { ClientMessage } from '../../../core/models/client.models';
   imports: [CommonModule, FormsModule],
   template: `
     <div class="flex items-center justify-between mb-6">
-      <h2 class="text-lg font-bold">Messages</h2>
+      <h2 class="text-lg font-bold">{{ i18n.t('Messages', 'الرسائل') }}</h2>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -22,7 +23,7 @@ import { ClientMessage } from '../../../core/models/client.models';
               <div class="animate-spin w-6 h-6 border-2 border-primary border-t-transparent rounded-full"></div>
             </div>
           } @else if (messages().length === 0) {
-            <div class="py-10 text-center text-th-text-3 text-sm">No messages yet. Start a conversation with the team.</div>
+            <div class="py-10 text-center text-th-text-3 text-sm">{{ i18n.t('No messages yet. Start a conversation with the team.', 'لا توجد رسائل حتى الآن. ابدأ محادثة مع الفريق.') }}</div>
           } @else {
             @for (msg of messages(); track msg.id) {
               <div class="flex" [class.justify-end]="msg.sender === 'client'">
@@ -42,12 +43,12 @@ import { ClientMessage } from '../../../core/models/client.models';
         <!-- Compose -->
         <div class="border-t border-th-border p-4">
           <div class="flex gap-2">
-            <input [(ngModel)]="newMessage" name="newMessage" placeholder="Type a message..."
+            <input [(ngModel)]="newMessage" name="newMessage" [placeholder]="i18n.t('Type a message...', 'اكتب رسالة...')"
                    (keyup.enter)="send()"
                    class="flex-1 bg-th-bg-tert border border-th-border-dk text-th-text placeholder-th-text-3 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50" />
             <button (click)="send()" [disabled]="!newMessage.trim() || sending()"
                     class="px-5 py-2.5 bg-primary text-white text-sm rounded-xl hover:opacity-90 transition disabled:opacity-40">
-              {{ sending() ? '...' : 'Send' }}
+              {{ sending() ? '...' : i18n.t('Send', 'إرسال') }}
             </button>
           </div>
         </div>
@@ -55,24 +56,24 @@ import { ClientMessage } from '../../../core/models/client.models';
 
       <!-- Info Sidebar -->
       <div class="bg-th-card border border-th-border rounded-xl p-5">
-        <h3 class="text-sm font-semibold mb-3">About Messages</h3>
+        <h3 class="text-sm font-semibold mb-3">{{ i18n.t('About Messages', 'حول الرسائل') }}</h3>
         <div class="space-y-3 text-xs text-th-text-3">
-          <p>Messages go directly to the Dogan Consult team. They can see your messages in the admin portal.</p>
-          <p>Use messages to ask questions about your pipeline, request updates on tenders, or discuss project details.</p>
+          <p>{{ i18n.t('Messages go directly to the Dogan Consult team. They can see your messages in the admin portal.', 'الرسائل ترسل مباشرة إلى فريق دوغان للاستشارات. يمكنهم رؤية رسائلك في لوحة الإدارة.') }}</p>
+          <p>{{ i18n.t('Use messages to ask questions about your pipeline, request updates on tenders, or discuss project details.', 'استخدم الرسائل للاستفسار عن سير العمليات أو طلب تحديثات المناقصات أو مناقشة تفاصيل المشاريع.') }}</p>
           <hr class="border-th-border" />
           <div>
-            <span class="font-medium text-th-text block mb-1">Quick Actions</span>
-            <button (click)="quickMessage('Can I get an update on my current pipeline?')"
+            <span class="font-medium text-th-text block mb-1">{{ i18n.t('Quick Actions', 'إجراءات سريعة') }}</span>
+            <button (click)="quickMessage(i18n.t('Can I get an update on my current pipeline?', 'هل يمكنني الحصول على تحديث عن سير عملياتي الحالي؟'))"
                     class="block w-full text-left px-3 py-2 rounded-lg bg-th-bg-tert hover:bg-th-bg-alt text-th-text transition mb-1">
-              Request pipeline update
+              {{ i18n.t('Request pipeline update', 'طلب تحديث العمليات') }}
             </button>
-            <button (click)="quickMessage('I would like to schedule a demo for my inquiry.')"
+            <button (click)="quickMessage(i18n.t('I would like to schedule a demo for my inquiry.', 'أرغب في جدولة عرض توضيحي لاستفساري.'))"
                     class="block w-full text-left px-3 py-2 rounded-lg bg-th-bg-tert hover:bg-th-bg-alt text-th-text transition mb-1">
-              Schedule a demo
+              {{ i18n.t('Schedule a demo', 'جدولة عرض') }}
             </button>
-            <button (click)="quickMessage('I have questions about my contract renewal.')"
+            <button (click)="quickMessage(i18n.t('I have questions about my contract renewal.', 'لدي أسئلة حول تجديد عقدي.'))"
                     class="block w-full text-left px-3 py-2 rounded-lg bg-th-bg-tert hover:bg-th-bg-alt text-th-text transition">
-              Contract question
+              {{ i18n.t('Contract question', 'سؤال عن العقد') }}
             </button>
           </div>
         </div>
@@ -82,6 +83,7 @@ import { ClientMessage } from '../../../core/models/client.models';
 })
 export class WorkspaceMessagesComponent implements OnInit {
   private api = inject(ClientApiService);
+  i18n = inject(I18nService);
 
   loading = signal(true);
   sending = signal(false);

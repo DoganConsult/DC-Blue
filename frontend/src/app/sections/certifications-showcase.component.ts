@@ -1,5 +1,4 @@
 import { Component, inject, input, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { I18nService } from '../core/services/i18n.service';
 import { LandingContent } from '../core/models/landing.model';
 
@@ -19,7 +18,6 @@ interface Certification {
 @Component({
   selector: 'app-certifications-showcase',
   standalone: true,
-  imports: [CommonModule],
   template: `
     <section class="py-12 sm:py-20 px-4 bg-gradient-to-b from-th-card via-th-bg-alt to-th-card">
       <div class="container mx-auto max-w-7xl">
@@ -216,20 +214,23 @@ interface Certification {
             {{ i18n.t('Information Security & Risk Management', 'أمن المعلومات وإدارة المخاطر') }}
           </h3>
           <div class="grid md:grid-cols-4 gap-4">
-            <div *ngFor="let cert of securityCertifications"
-                 class="bg-th-card rounded-xl border border-th-border hover:border-emerald-400 hover:shadow-lg transition-all p-6">
-              <div class="flex items-start justify-between mb-3">
-                <div class="w-12 h-12 bg-emerald-50 rounded-lg flex items-center justify-center">
-                  <span class="text-sm font-bold text-emerald-600">{{ cert.acronym }}</span>
+            @for (cert of securityCertifications; track cert.acronym) {
+              <div class="bg-th-card rounded-xl border border-th-border hover:border-emerald-400 hover:shadow-lg transition-all p-6">
+                <div class="flex items-start justify-between mb-3">
+                  <div class="w-12 h-12 bg-emerald-50 rounded-lg flex items-center justify-center">
+                    <span class="text-sm font-bold text-emerald-600">{{ cert.acronym }}</span>
+                  </div>
+                  @if (cert.active) {
+                    <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                  }
                 </div>
-                <svg *ngIf="cert.active" class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                </svg>
+                <h4 class="font-semibold text-brand-dark mb-1">{{ cert.name }}</h4>
+                <p class="text-xs text-th-text-3 mb-2">{{ cert.issuer }}</p>
+                <p class="text-xs text-th-text-3">{{ cert.date }}</p>
               </div>
-              <h4 class="font-semibold text-brand-dark mb-1">{{ cert.name }}</h4>
-              <p class="text-xs text-th-text-3 mb-2">{{ cert.issuer }}</p>
-              <p class="text-xs text-th-text-3">{{ cert.date }}</p>
-            </div>
+            }
           </div>
         </div>
 
@@ -239,56 +240,59 @@ interface Certification {
             {{ i18n.t('Technical & Infrastructure Excellence', 'التميز التقني والبنية التحتية') }}
           </h3>
           <div class="grid md:grid-cols-5 gap-4">
-            <div *ngFor="let cert of technicalCertifications"
-                 class="bg-th-card rounded-xl border border-th-border hover:border-sky-400 hover:shadow-lg transition-all p-6">
-              <div class="flex items-start justify-between mb-3">
-                <div class="w-12 h-12 bg-sky-50 rounded-lg flex items-center justify-center">
-                  <span class="text-xs font-bold text-sky-600">{{ cert.acronym }}</span>
+            @for (cert of technicalCertifications; track cert.acronym) {
+              <div class="bg-th-card rounded-xl border border-th-border hover:border-sky-400 hover:shadow-lg transition-all p-6">
+                <div class="flex items-start justify-between mb-3">
+                  <div class="w-12 h-12 bg-sky-50 rounded-lg flex items-center justify-center">
+                    <span class="text-xs font-bold text-sky-600">{{ cert.acronym }}</span>
+                  </div>
+                  @if (cert.priority === 1) {
+                    <svg class="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                  }
                 </div>
-                <svg *ngIf="cert.priority === 1" class="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                </svg>
+                <h4 class="font-semibold text-brand-dark mb-1 text-sm">{{ cert.name }}</h4>
+                <p class="text-xs text-th-text-3 mb-2">{{ cert.issuer }}</p>
+                <p class="text-xs text-th-text-3">{{ cert.date }}</p>
               </div>
-              <h4 class="font-semibold text-brand-dark mb-1 text-sm">{{ cert.name }}</h4>
-              <p class="text-xs text-th-text-3 mb-2">{{ cert.issuer }}</p>
-              <p class="text-xs text-th-text-3">{{ cert.date }}</p>
-            </div>
+            }
           </div>
         </div>
 
         <!-- Certification Timeline -->
-        <div class="bg-gradient-to-br from-th-bg-alt to-th-card rounded-3xl p-8 md:p-12">
+        <div class="bg-gradient-to-br from-th-bg-alt to-th-card rounded-3xl p-8 md:p-12 overflow-hidden">
           <h3 class="text-2xl font-bold text-center mb-8 text-brand-dark">
             {{ i18n.t('Continuous Professional Development', 'التطوير المهني المستمر') }}
           </h3>
 
-          <div class="relative">
+          <div class="relative max-w-4xl mx-auto">
             <!-- Timeline Line -->
-            <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-emerald-400 to-purple-400"></div>
+            <div class="absolute left-4 md:left-1/2 md:-translate-x-px top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-emerald-400 to-purple-400"></div>
 
             <!-- Timeline Items -->
             <div class="space-y-8">
-              <div *ngFor="let year of timelineYears; let i = index"
-                   class="relative flex items-center md:justify-start"
-                   [class.md:justify-start]="i % 2 === 0"
-                   [class.md:justify-end]="i % 2 === 1">
-                <!-- Content -->
-                <div class="ml-10 md:ml-0 md:w-5/12 md:px-6"
-                     [class.md:text-right]="i % 2 === 0"
-                     [class.md:text-left]="i % 2 === 1">
-                  <div class="bg-th-card rounded-xl shadow-lg p-4 sm:p-6 hover:shadow-xl transition-all">
-                    <div class="text-lg font-bold text-primary mb-2">{{ year.year }}</div>
-                    <div class="space-y-1">
-                      <div *ngFor="let cert of year.certifications" class="text-sm text-th-text-2">
-                        • {{ cert }}
+              @for (year of timelineYears; track year.year; let i = $index) {
+                <div class="relative flex items-center"
+                     [class.md:justify-start]="i % 2 === 0"
+                     [class.md:justify-end]="i % 2 === 1">
+                  <div class="ml-10 md:ml-0 md:w-5/12"
+                       [class.md:pr-8]="i % 2 === 0"
+                       [class.md:pl-8]="i % 2 === 1"
+                       [class.md:text-right]="i % 2 === 0"
+                       [class.md:text-left]="i % 2 === 1">
+                    <div class="bg-th-card rounded-xl shadow-sm border border-th-border-lt p-4 sm:p-6 hover:shadow-md transition-shadow">
+                      <div class="text-lg font-bold text-primary mb-2">{{ year.year }}</div>
+                      <div class="space-y-1">
+                        @for (cert of year.certifications; track cert) {
+                          <div class="text-sm text-th-text-2">• {{ cert }}</div>
+                        }
                       </div>
                     </div>
                   </div>
+                  <div class="absolute left-4 md:left-1/2 -translate-x-1/2 w-4 h-4 bg-th-card border-4 border-primary rounded-full z-10"></div>
                 </div>
-
-                <!-- Timeline Dot -->
-                <div class="absolute left-4 md:left-1/2 -translate-x-1/2 w-4 h-4 bg-th-card border-4 border-primary rounded-full z-10"></div>
-              </div>
+              }
             </div>
           </div>
         </div>

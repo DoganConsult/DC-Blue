@@ -1,6 +1,7 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClientApiService } from '../../../core/services/client-api.service';
+import { I18nService } from '../../../core/services/i18n.service';
 import { Tender } from '../../../core/models/client.models';
 
 @Component({
@@ -13,11 +14,11 @@ import { Tender } from '../../../core/models/client.models';
         <div class="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full"></div>
       </div>
     } @else {
-      <h2 class="text-lg font-bold mb-6">Tenders & Bids</h2>
+      <h2 class="text-lg font-bold mb-6">{{ i18n.t('Tenders', 'المناقصات') }} & Bids</h2>
 
       @if (tenders().length === 0) {
         <div class="bg-th-card border border-th-border rounded-xl p-10 text-center">
-          <p class="text-th-text-3 text-sm">No tenders yet. When an RFP or bid is created for your opportunity, it will appear here.</p>
+          <p class="text-th-text-3 text-sm">{{ i18n.t('No tenders yet', 'لا توجد مناقصات حتى الآن') }}. When an RFP or bid is created for your opportunity, it will appear here.</p>
         </div>
       } @else {
         <div class="grid gap-4">
@@ -31,17 +32,17 @@ import { Tender } from '../../../core/models/client.models';
                 <span class="px-2 py-0.5 rounded text-xs font-medium" [class]="getTenderStatusClass(t.status)">{{ formatStatus(t.status) }}</span>
               </div>
               <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-                <div><span class="text-th-text-3 block">Type</span>{{ formatStatus(t.tender_type) }}</div>
-                <div><span class="text-th-text-3 block">Budget Estimate</span>{{ t.budget_estimate ? (t.currency + ' ' + t.budget_estimate) : '-' }}</div>
-                <div><span class="text-th-text-3 block">Deadline</span>{{ t.submission_deadline ? (t.submission_deadline | date:'mediumDate') : '-' }}</div>
+                <div><span class="text-th-text-3 block">{{ i18n.t('Type', 'النوع') }}</span>{{ formatStatus(t.tender_type) }}</div>
+                <div><span class="text-th-text-3 block">{{ i18n.t('Budget Estimate', 'تقدير الميزانية') }}</span>{{ t.budget_estimate ? (t.currency + ' ' + t.budget_estimate) : '-' }}</div>
+                <div><span class="text-th-text-3 block">{{ i18n.t('Deadline', 'الموعد النهائي') }}</span>{{ t.submission_deadline ? (t.submission_deadline | date:'mediumDate') : '-' }}</div>
                 <div>
-                  <span class="text-th-text-3 block">Scores</span>
-                  {{ t.technical_score ? 'T: ' + t.technical_score : '-' }}
-                  {{ t.financial_score ? ' / F: ' + t.financial_score : '' }}
+                  <span class="text-th-text-3 block">{{ i18n.t('Scores', 'الدرجات') }}</span>
+                  {{ t.technical_score ? i18n.t('T', 'ت') + ': ' + t.technical_score : '-' }}
+                  {{ t.financial_score ? ' / ' + i18n.t('F', 'م') + ': ' + t.financial_score : '' }}
                 </div>
               </div>
               @if (t.opportunity_name) {
-                <div class="mt-2 text-xs text-th-text-3">Opportunity: {{ t.opportunity_name }}</div>
+                <div class="mt-2 text-xs text-th-text-3">{{ i18n.t('Opportunity', 'الفرصة') }}: {{ t.opportunity_name }}</div>
               }
             </div>
           }
@@ -52,6 +53,7 @@ import { Tender } from '../../../core/models/client.models';
 })
 export class WorkspaceTendersComponent implements OnInit {
   private api = inject(ClientApiService);
+  i18n = inject(I18nService);
   loading = signal(true);
   tenders = signal<Tender[]>([]);
 

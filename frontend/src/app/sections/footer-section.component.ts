@@ -1,7 +1,6 @@
 import { Component, inject, computed, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { I18nService } from '../core/services/i18n.service';
-import { DesignSystemService } from '../core/services/design-system.service';
 import { TranslatePipe } from '../core/pipes/translate.pipe';
 import { SiteSettingsService } from '../core/services/site-settings.service';
 import { CONTACT_INFO } from '../core/data/site-content';
@@ -81,7 +80,7 @@ import { CONTACT_INFO } from '../core/data/site-content';
         <!-- Bottom bar -->
         <div class="flex flex-col md:flex-row items-center justify-between gap-4 pt-8 border-t border-white/10">
           <p class="text-white/40 text-xs">
-            {{ i18n.t('© 2026 Dogan Consult. All rights reserved.', '© 2026 دوغان للاستشارات. جميع الحقوق محفوظة.') }}
+            © {{ currentYear }} {{ i18n.t('Dogan Consult. All rights reserved.', 'دوغان للاستشارات. جميع الحقوق محفوظة.') }}
           </p>
           <div class="flex items-center gap-5 text-xs text-white/40">
             <a routerLink="/privacy" class="hover:text-white/70 transition-colors">{{ i18n.t('Privacy Policy', 'سياسة الخصوصية') }}</a>
@@ -100,8 +99,8 @@ import { CONTACT_INFO } from '../core/data/site-content';
 })
 export class FooterSectionComponent implements OnInit {
   i18n = inject(I18nService);
-  ds = inject(DesignSystemService);
   private siteSettings = inject(SiteSettingsService);
+  currentYear = new Date().getFullYear();
 
   contactInfo = computed(() => {
     const s = this.siteSettings.settings();

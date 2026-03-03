@@ -1,5 +1,6 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -34,7 +35,7 @@ export interface InquiryForm {
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule],
   selector: 'app-inquiry',
   template: `
     <div class="bg-page-dark min-h-screen">
@@ -264,9 +265,10 @@ export interface InquiryForm {
                    class="mt-1 w-5 h-5 rounded border-white/20 bg-th-card/10 text-primary focus:ring-primary" />
             <span class="text-white/70 text-sm leading-relaxed">
               {{ i18n.t(
-                'I consent to Dogan Consult processing my data in accordance with Saudi Arabia\\'s Personal Data Protection Law (PDPL) to respond to this inquiry.',
+                'I consent to Dogan Consult processing my data in accordance with Saudi Arabia\'s Personal Data Protection Law (PDPL) to respond to this inquiry.',
                 'أوافق على معالجة بياناتي من قبل دوقان للاستشارات وفقًا لنظام حماية البيانات الشخصية (PDPL) للرد على هذا الاستفسار.'
-              ) }} *
+              ) }}
+              <a routerLink="/pdpl" class="text-primary underline hover:no-underline" target="_blank" rel="noopener">{{ i18n.t('PDPL', 'PDPL') }}</a> *
             </span>
           </label>
 
@@ -338,6 +340,7 @@ export class InquiryPage implements OnInit {
   }
 
   submit() {
+    if (this.loading()) return;
     this.loading.set(true);
     this.error.set(null);
 
@@ -361,8 +364,12 @@ export class InquiryPage implements OnInit {
             `A similar inquiry already exists (${body.existing_ticket}). We'll be in touch soon.`,
             `يوجد استفسار مماثل بالفعل (${body.existing_ticket}). سنتواصل معك قريبًا.`
           ));
+        } else if (body.error && typeof body.error === 'string') {
+          this.error.set(body.error);
+        } else if (err.status >= 400 && err.status < 500) {
+          this.error.set(this.i18n.t('Please check your input and try again.', 'يرجى التحقق من المدخلات والمحاولة مرة أخرى.'));
         } else {
-          this.error.set(body.error || this.i18n.t('Something went wrong. Please try again.', 'حدث خطأ. يرجى المحاولة مرة أخرى.'));
+          this.error.set(this.i18n.t('Server error. Please try again later.', 'خطأ في الخادم. يرجى المحاولة لاحقًا.'));
         }
       },
     });

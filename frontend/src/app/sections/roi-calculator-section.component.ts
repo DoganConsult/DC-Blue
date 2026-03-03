@@ -1,12 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { I18nService } from '../core/services/i18n.service';
 
 @Component({
   selector: 'app-roi-calculator-section',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   template: `
     <section class="py-20 px-4 bg-gradient-to-b from-th-card to-th-bg-alt">
       <div class="container mx-auto max-w-7xl">
@@ -85,19 +85,20 @@ import { I18nService } from '../core/services/i18n.service';
                     {{ i18n.t('Services Needed', 'الخدمات المطلوبة') }}
                   </label>
                   <div class="space-y-2">
-                    <label *ngFor="let service of services" class="flex items-center gap-3 p-3 rounded-lg border border-th-border hover:bg-th-bg-alt cursor-pointer">
-                      <input
-                        type="checkbox"
-                        [(ngModel)]="service.selected"
-                        (ngModelChange)="calculate()"
-                        class="w-4 h-4 text-primary rounded"
-                      >
-                      <div class="flex-1">
-                        <span class="font-medium text-th-text">{{ i18n.t(service.name.en, service.name.ar) }}</span>
-                        <span class="block text-xs text-th-text-3">{{ i18n.t(service.impact.en, service.impact.ar) }}</span>
-                      </div>
-                      <span class="text-sm font-medium text-emerald-600">{{ service.savings }}%</span>
-                    </label>
+                    @for (service of services; track service.name.en) {
+                      <label class="flex items-center gap-3 p-3 rounded-lg border border-th-border hover:bg-th-bg-alt cursor-pointer">
+                        <input
+                          type="checkbox"
+                          [(ngModel)]="service.selected"
+                          class="w-4 h-4 text-primary rounded"
+                        >
+                        <div class="flex-1">
+                          <span class="font-medium text-th-text">{{ i18n.t(service.name.en, service.name.ar) }}</span>
+                          <span class="block text-xs text-th-text-3">{{ i18n.t(service.impact.en, service.impact.ar) }}</span>
+                        </div>
+                        <span class="text-sm font-medium text-emerald-600">{{ service.savings }}%</span>
+                      </label>
+                    }
                   </div>
                 </div>
 
@@ -108,7 +109,6 @@ import { I18nService } from '../core/services/i18n.service';
                   </label>
                   <select
                     [(ngModel)]="timeline"
-                    (ngModelChange)="calculate()"
                     class="w-full px-4 py-2 border border-th-border rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                   >
                     <option value="3">{{ i18n.t('3 Months', '3 أشهر') }}</option>
@@ -151,10 +151,12 @@ import { I18nService } from '../core/services/i18n.service';
                 <h4 class="text-sm font-semibold text-sky-200 uppercase tracking-wider">
                   {{ i18n.t('Savings Breakdown', 'تفصيل المدخرات') }}
                 </h4>
-                <div *ngFor="let item of savingsBreakdown()" class="flex items-center justify-between">
-                  <span class="text-sm text-sky-100">{{ i18n.t(item.category.en, item.category.ar) }}</span>
-                  <span class="font-bold">SAR {{ item.amount.toLocaleString() }}</span>
-                </div>
+                @for (item of savingsBreakdown(); track item.category.en) {
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-sky-100">{{ i18n.t(item.category.en, item.category.ar) }}</span>
+                    <span class="font-bold">SAR {{ item.amount.toLocaleString() }}</span>
+                  </div>
+                }
               </div>
 
               <!-- Additional Benefits -->
@@ -183,7 +185,7 @@ import { I18nService } from '../core/services/i18n.service';
               </div>
 
               <!-- CTA -->
-              <button class="w-full py-4 bg-th-card text-primary rounded-xl font-semibold hover:bg-sky-50 transition-all transform hover:scale-105">
+              <button (click)="router.navigate(['/inquiry'])" class="w-full py-4 bg-th-card text-primary rounded-xl font-semibold hover:bg-sky-50 transition-all transform hover:scale-105">
                 {{ i18n.t('Get Detailed Assessment', 'احصل على تقييم مفصل') }}
               </button>
             </div>
@@ -204,6 +206,7 @@ import { I18nService } from '../core/services/i18n.service';
 })
 export class RoiCalculatorSectionComponent {
   i18n = inject(I18nService);
+  router = inject(Router);
 
   employees = signal(1000);
   itBudget = signal(5000000);
@@ -235,10 +238,6 @@ export class RoiCalculatorSectionComponent {
       selected: false
     }
   ];
-
-  calculate() {
-    // Trigger recalculation
-  }
 
   annualSavings(): number {
     const selectedServices = this.services.filter(s => s.selected);

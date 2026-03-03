@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { I18nService } from '../core/services/i18n.service';
 import { Router } from '@angular/router';
 
@@ -19,7 +18,7 @@ interface Insight {
 @Component({
   selector: 'app-insights-section',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <section class="py-20 px-4 bg-gradient-to-b from-th-card to-th-bg-alt">
       <div class="container mx-auto max-w-7xl">
@@ -79,13 +78,13 @@ interface Insight {
                 </div>
 
                 <div class="flex flex-wrap gap-3">
-                  <button class="inline-flex items-center gap-2 px-6 py-3 bg-th-card text-brand-dark rounded-xl font-semibold hover:bg-sky-50 transition-all">
+                  <button (click)="router.navigate(['/inquiry'])" class="inline-flex items-center gap-2 px-6 py-3 bg-th-card text-brand-dark rounded-xl font-semibold hover:bg-sky-50 transition-all">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
                     {{ i18n.t('Download Report', 'تحميل التقرير') }}
                   </button>
-                  <button class="inline-flex items-center gap-2 px-6 py-3 border-2 border-white/50 text-white rounded-xl font-semibold hover:bg-th-card/10 transition-all">
+                  <button (click)="router.navigate(['/inquiry'])" class="inline-flex items-center gap-2 px-6 py-3 border-2 border-white/50 text-white rounded-xl font-semibold hover:bg-th-card/10 transition-all">
                     {{ i18n.t('View Summary', 'عرض الملخص') }}
                   </button>
                 </div>
@@ -148,22 +147,25 @@ interface Insight {
 
         <!-- Latest Insights Grid -->
         <div class="grid md:grid-cols-3 gap-8 mb-12">
+          @for (insight of latestInsights; track insight.id) {
           <article
-            *ngFor="let insight of latestInsights"
             class="group bg-th-card rounded-2xl shadow-lg hover:shadow-xl transition-all overflow-hidden"
           >
-            <!-- Image/Type Header -->
-            <div class="relative h-48 bg-gradient-to-br" [ngClass]="getTypeGradient(insight.type)">
+            <div class="relative h-48 bg-gradient-to-br" [class]="getTypeGradient(insight.type)">
               <div class="absolute inset-0 flex items-center justify-center">
-                <svg *ngIf="insight.type === 'article'" class="w-16 h-16 text-white/50" fill="currentColor" viewBox="0 0 20 20">
+                @if (insight.type === 'article') {
+                <svg class="w-16 h-16 text-white/50" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/>
                 </svg>
-                <svg *ngIf="insight.type === 'whitepaper'" class="w-16 h-16 text-white/50" fill="currentColor" viewBox="0 0 20 20">
+                } @else if (insight.type === 'whitepaper') {
+                <svg class="w-16 h-16 text-white/50" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/>
                 </svg>
-                <svg *ngIf="insight.type === 'video'" class="w-16 h-16 text-white/50" fill="currentColor" viewBox="0 0 20 20">
+                } @else if (insight.type === 'video') {
+                <svg class="w-16 h-16 text-white/50" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
                 </svg>
+                }
               </div>
 
               <!-- Type Badge -->
@@ -201,12 +203,13 @@ interface Insight {
                   <span>•</span>
                   <span>{{ insight.readTime }}</span>
                 </div>
-                <button class="text-primary font-medium hover:text-sky-600 transition-colors">
+                <button (click)="router.navigate(['/inquiry'])" class="text-primary font-medium hover:text-sky-600 transition-colors">
                   {{ i18n.t('Read →', 'اقرأ ←') }}
                 </button>
               </div>
             </div>
           </article>
+          }
         </div>
 
         <!-- Newsletter Signup -->
@@ -246,7 +249,7 @@ interface Insight {
 
         <!-- View All Button -->
         <div class="text-center mt-12">
-          <button class="inline-flex items-center gap-2 px-8 py-3 bg-th-card border-2 border-th-border rounded-xl font-medium text-th-text-2 hover:border-primary hover:text-primary transition-all">
+          <button (click)="router.navigate(['/insights'])" class="inline-flex items-center gap-2 px-8 py-3 bg-th-card border-2 border-th-border rounded-xl font-medium text-th-text-2 hover:border-primary hover:text-primary transition-all">
             {{ i18n.t('View All Insights', 'عرض جميع الرؤى') }}
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -256,20 +259,7 @@ interface Insight {
       </div>
     </section>
   `,
-  styles: [`
-    .line-clamp-2 {
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .line-clamp-3 {
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-  `]
+  styles: []
 })
 export class InsightsSectionComponent {
   i18n = inject(I18nService);

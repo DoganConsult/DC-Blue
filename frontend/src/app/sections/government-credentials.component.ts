@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { I18nService } from '../core/services/i18n.service';
 
 interface CommercialActivity {
@@ -13,7 +12,7 @@ interface CommercialActivity {
 @Component({
   selector: 'app-government-credentials',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <section class="py-20 px-4 bg-gradient-to-b from-th-card via-th-bg-alt to-th-card">
       <div class="container mx-auto max-w-7xl">
@@ -290,10 +289,11 @@ interface CommercialActivity {
               {{ i18n.t('Official ISIC Activity Codes', 'رموز الأنشطة الرسمية ISIC') }}
             </p>
             <div class="flex flex-wrap justify-center gap-2">
-              <span *ngFor="let code of activityCodes"
-                class="px-3 py-1 bg-th-card rounded-lg text-xs font-mono font-semibold text-th-text-2 shadow-sm">
-                {{ code }}
-              </span>
+              @for (code of activityCodes; track code) {
+                <span class="px-3 py-1 bg-th-card rounded-lg text-xs font-mono font-semibold text-th-text-2 shadow-sm">
+                  {{ code }}
+                </span>
+              }
             </div>
           </div>
         </div>
