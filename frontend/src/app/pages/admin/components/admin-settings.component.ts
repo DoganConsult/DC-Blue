@@ -1,7 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ThemeSwitcherComponent } from '../../../components/theme-switcher.component';
+import { AdminApiService } from '../../../core/services/admin-api.service';
 
 @Component({
   selector: 'admin-settings',
@@ -66,10 +67,15 @@ import { ThemeSwitcherComponent } from '../../../components/theme-switcher.compo
       @if (saveSuccess()) {
         <div class="lg:col-span-2 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 text-emerald-700 text-sm">Settings saved successfully.</div>
       }
+      @if (saveError()) {
+        <div class="lg:col-span-2 bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-red-700 text-sm">{{ saveError() }}</div>
+      }
     </div>
   `,
 })
-export class AdminSettingsComponent {
+export class AdminSettingsComponent implements OnInit {
+  private adminApi = inject(AdminApiService);
+
   language = 'en';
   timezone = 'AST';
   notifyNewLeads = true;
@@ -78,15 +84,47 @@ export class AdminSettingsComponent {
 
   saving = signal(false);
   saveSuccess = signal(false);
+  saveError = signal<string | null>(null);
+
+  ngOnInit() {
+    this.loadSettings();
+  }
+
+  private loadSettings() {
+    this.adminApi.getSettings().subscribe({
+      next: (res) => {
+        const s = res.settings || {};
+        if (s['platform_language']) this.language = s['platform_language'];
+        if (s['platform_timezone']) this.timezone = s['platform_timezone'];
+        if (s['platform_notify_new_leads'] !== undefined) this.notifyNewLeads = s['platform_notify_new_leads'];
+        if (s['platform_notify_pipeline'] !== undefined) this.notifyPipeline = s['platform_notify_pipeline'];
+        if (s['platform_notify_partner_activity'] !== undefined) this.notifyPartnerActivity = s['platform_notify_partner_activity'];
+      },
+    });
+  }
 
   saveSettings() {
     this.saving.set(true);
     this.saveSuccess.set(false);
-    // TODO: Wire to backend when /api/v1/admin/settings is created
-    setTimeout(() => {
-      this.saving.set(false);
-      this.saveSuccess.set(true);
-      setTimeout(() => this.saveSuccess.set(false), 3000);
-    }, 500);
+    this.saveError.set(null);
+
+    this.adminApi.saveSettings({
+      language: this.language,
+      timezone: this.timezone,
+      notify_new_leads: this.notifyNewLeads,
+      notify_pipeline: this.notifyPipeline,
+      notify_partner_activity: this.notifyPartnerActivity,
+    }).subscribe({
+      next: () => {
+        this.saving.set(false);
+        this.saveSuccess.set(true);
+        setTimeout(() => this.saveSuccess.set(false), 3000);
+      },
+      error: (err) => {
+        this.saving.set(false);
+        this.saveError.set(err.error?.error || 'Failed to save settings');
+        setTimeout(() => this.saveError.set(null), 5000);
+      },
+    });
   }
 }

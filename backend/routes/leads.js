@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import { calculateLeadScore } from '../services/scoring.js';
 import { sendEmail, sendInternalAlert } from '../services/email.js';
 import { notifyPartner } from '../services/notifications.js';
+import { logAudit } from './admin-audit.js';
 import { getJwtSecret } from '../config/jwt.js';
 
 /** Used only for legacy password-only login and setup token validation (not for JWT). */
@@ -99,7 +100,7 @@ export default function leadsRouter(pool) {
       const hash = dedupeHash(email.trim(), companyName);
       const ticket = genTicket();
       const assignTo = 'sales@doganconsult.com';
-      const score = 50;
+      const score = calculateLeadScore({ contact_email: email, company_name: companyName, contact_name: contactName, message: msg });
 
       const result = await pool.query(
         `INSERT INTO lead_intakes (
@@ -523,6 +524,8 @@ export default function leadsRouter(pool) {
         [req.params.id, changes, b.updated_by || 'admin']
       );
 
+      logAudit(pool, { userEmail: req.user?.email, action: 'lead_update', entityType: 'lead', entityId: req.params.id, newValues: b, ipAddress: req.ip });
+
       // Notify associated partner about status change
       const pr = await pool.query(
         `SELECT pl.partner_id, li.company_name, li.ticket_number
@@ -664,6 +667,24 @@ export default function leadsRouter(pool) {
     }
   });
 
+  /* ── INTERNAL: get single opportunity detail ──────── */
+  router.get('/opportunities/:id', portalAuth, async (req, res) => {
+    try {
+      const r = await pool.query(
+        `SELECT o.*, li.company_name, li.contact_name, li.contact_email, li.ticket_number, li.product_line AS lead_source
+         FROM opportunities o
+         LEFT JOIN lead_intakes li ON li.id = o.lead_intake_id
+         WHERE o.id = $1`,
+        [req.params.id]
+      );
+      if (!r.rows.length) return res.status(404).json({ error: 'Opportunity not found' });
+      res.json({ opportunity: r.rows[0] });
+    } catch (e) {
+      console.error('Opportunity detail error:', e.message);
+      res.status(500).json({ error: 'Failed to fetch opportunity' });
+    }
+  });
+
   /* ── INTERNAL: update opportunity (stage, next_action, closed_at) ── */
   router.patch('/opportunities/:id', portalAuth, async (req, res) => {
     try {
@@ -696,6 +717,7 @@ export default function leadsRouter(pool) {
           `INSERT INTO lead_activities (lead_intake_id, type, body, created_by) VALUES ($1, 'status_change', $2, $3)`,
           [opp.rows[0].lead_intake_id, `Opportunity stage: ${oldStage} → ${newStage}`, b.updated_by || 'admin']
         );
+        logAudit(pool, { userEmail: req.user?.email, action: 'opportunity_stage_change', entityType: 'opportunity', entityId: oppId, oldValues: { stage: oldStage }, newValues: { stage: newStage }, ipAddress: req.ip });
       }
 
       if (newStage === 'closed_won') {
@@ -1045,6 +1067,34 @@ export default function leadsRouter(pool) {
     }
   });
 
+  /* ── ADMIN: get single partner detail ────────────────── */
+  router.get('/admin/partners/:id', portalAuth, adminOnly, async (req, res) => {
+    try {
+      const p = await pool.query(
+        `SELECT p.*,
+                (SELECT count(*) FROM partner_leads pl WHERE pl.partner_id = p.id) AS leads_count,
+                (SELECT count(*) FROM partner_leads pl WHERE pl.partner_id = p.id AND pl.status = 'approved') AS approved_count,
+                COALESCE((SELECT sum(c.commission_amount) FROM commissions c WHERE c.partner_id = p.id AND c.status IN ('approved','paid')), 0) AS total_commission,
+                COALESCE((SELECT sum(c.commission_amount) FROM commissions c WHERE c.partner_id = p.id AND c.status = 'approved' AND c.payout_requested = true), 0) AS pending_payout
+         FROM partners p WHERE p.id = $1`,
+        [req.params.id]
+      );
+      if (!p.rows.length) return res.status(404).json({ error: 'Partner not found' });
+      // Also fetch their leads
+      const leads = await pool.query(
+        `SELECT pl.id, pl.status, pl.created_at, li.id AS lead_id, li.company_name, li.ticket_number
+         FROM partner_leads pl
+         LEFT JOIN lead_intakes li ON li.id = pl.lead_intake_id
+         WHERE pl.partner_id = $1 ORDER BY pl.created_at DESC LIMIT 50`,
+        [req.params.id]
+      );
+      res.json({ partner: p.rows[0], leads: leads.rows });
+    } catch (e) {
+      console.error('Admin partner detail:', e.message);
+      res.status(500).json({ error: 'Failed to fetch partner' });
+    }
+  });
+
   /* ── ADMIN: update partner status (approve / reject / suspend) ─ */
   router.patch('/admin/partners/:id', portalAuth, adminOnly, async (req, res) => {
     try {
@@ -1071,6 +1121,8 @@ export default function leadsRouter(pool) {
           }, row.contact_email, 'en');
         } catch (_) {}
       }
+
+      logAudit(pool, { userEmail: req.user?.email, action: 'partner_status_change', entityType: 'partner', entityId: req.params.id, newValues: { status }, ipAddress: req.ip });
 
       res.json({
         ok: true,

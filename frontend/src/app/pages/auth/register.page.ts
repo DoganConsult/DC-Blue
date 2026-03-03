@@ -76,7 +76,7 @@ import { I18nService } from '../../core/services/i18n.service';
                   <input [(ngModel)]="form.password" name="password" [type]="showPw() ? 'text' : 'password'" placeholder="Min. 8 characters" required autocomplete="new-password"
                          class="w-full bg-th-bg-tert border border-th-border-dk text-th-text placeholder-th-text-3 rounded-xl px-4 py-3 pr-14 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition" />
                   <button type="button" (click)="showPw.set(!showPw())" class="absolute right-3 top-3 text-th-text-3 hover:text-th-text-3 transition text-xs px-1 py-0.5">
-                    {{ showPw() ? 'Hide' : 'Show' }}
+                    {{ showPw() ? i18n.t('Hide', 'إخفاء') : i18n.t('Show', 'عرض') }}
                   </button>
                 </div>
                 <div class="flex gap-1 mt-2">
@@ -138,15 +138,17 @@ export class RegisterPage {
   success = signal(false);
   showPw = signal(false);
 
-  categories = [
-    { value: 'customer', label: 'Customer' },
-    { value: 'partner', label: 'Partner' },
-    { value: 'freelancer', label: 'Freelancer' },
-    { value: 'vendor', label: 'Vendor' },
-    { value: 'technology-partner', label: 'Technology Partner' },
-    { value: 'service-partner', label: 'Service Partner' },
-    { value: 'design-partner', label: 'Design Partner' },
-  ];
+  get categories() {
+    return [
+      { value: 'customer', label: this.i18n.t('Customer', 'عميل') },
+      { value: 'partner', label: this.i18n.t('Partner', 'شريك') },
+      { value: 'freelancer', label: this.i18n.t('Freelancer', 'مستقل') },
+      { value: 'vendor', label: this.i18n.t('Vendor', 'مورّد') },
+      { value: 'technology-partner', label: this.i18n.t('Technology Partner', 'شريك تقني') },
+      { value: 'service-partner', label: this.i18n.t('Service Partner', 'شريك خدمات') },
+      { value: 'design-partner', label: this.i18n.t('Design Partner', 'شريك تصميم') },
+    ];
+  }
 
   form = { name: '', email: '', company: '', password: '', confirm: '', category: 'customer' };
 

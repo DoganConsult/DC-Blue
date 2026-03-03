@@ -1,6 +1,7 @@
 import { Component, input, inject } from '@angular/core';
 import { I18nService } from '../core/services/i18n.service';
 import { DesignSystemService } from '../core/services/design-system.service';
+import { LandingContent } from '../core/models/landing.model';
 
 interface SectorCard {
   titleEn: string;
@@ -14,17 +15,17 @@ interface SectorCard {
   selector: 'app-services-section',
   standalone: true,
   template: `
-    <section class="bg-section-gray py-24 lg:py-28" id="services">
+    <section class="bg-th-bg-alt py-24 lg:py-28" id="services">
       <div class="max-w-[1200px] mx-auto px-6 lg:px-8">
         <!-- Section header: overline + H2 + intro (enterprise pattern) -->
         <div class="mb-14">
-          <p class="text-[11px] font-semibold tracking-[0.15em] uppercase text-[#7A8090] mb-3">
+          <p class="text-[11px] font-semibold tracking-[0.15em] uppercase text-th-text-3 mb-3">
             {{ i18n.t('Sectors', 'القطاعات') }}
           </p>
-          <h2 class="text-[clamp(1.75rem,4vw,2.25rem)] font-bold text-[#1D2433] tracking-tight mb-4">
+          <h2 class="text-[clamp(1.75rem,4vw,2.25rem)] font-bold text-th-text tracking-tight mb-4">
             {{ i18n.t('Sectors We Serve', 'القطاعات التي نخدمها') }}
           </h2>
-          <p class="text-[15px] text-[#7A8090] max-w-2xl leading-[1.6]">
+          <p class="text-[15px] text-th-text-3 max-w-2xl leading-[1.6]">
             {{ i18n.t(
               'Deep experience in government, telecommunications, critical infrastructure, and major enterprises.',
               'خبرة عميقة في القطاعات الحكومية والاتصالات والبنية التحتية الحيوية والمؤسسات المتقدمة.'
@@ -35,18 +36,18 @@ interface SectorCard {
         <!-- 2x2 Sector grid: cleaner cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">
           @for (sector of sectors; track sector.titleEn) {
-            <div class="bg-white rounded-xl p-6 lg:p-7 border border-[#e8eaef] hover:border-[#d1d5dc] hover:shadow-md transition-all duration-200 flex items-start gap-4">
+            <div class="bg-th-card rounded-xl p-6 lg:p-7 border border-th-border-lt hover:border-th-border hover:shadow-md transition-all duration-200 flex items-start gap-4">
               <!-- Icon -->
-              <div class="w-11 h-11 rounded-lg bg-gold-soft flex items-center justify-center shrink-0">
+              <div class="w-11 h-11 min-w-[2.75rem] max-w-[2.75rem] rounded-lg bg-gold-soft flex items-center justify-center flex-none">
                 <svg class="w-5 h-5 text-gold-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path [attr.d]="sector.iconPath" /></svg>
               </div>
 
               <!-- Content -->
               <div>
-                <h3 class="text-[17px] font-bold text-[#1D2433] mb-1.5">
+                <h3 class="text-[17px] font-bold text-th-text mb-1.5">
                   {{ i18n.t(sector.titleEn, sector.titleAr) }}
                 </h3>
-                <p class="text-[14px] text-[#7A8090] leading-[1.55]">
+                <p class="text-[14px] text-th-text-3 leading-[1.55]">
                   {{ i18n.t(sector.descEn, sector.descAr) }}
                 </p>
               </div>
@@ -58,11 +59,13 @@ interface SectorCard {
   `,
 })
 export class ServicesSectionComponent {
-  content = input<any>(null);
+  content = input<LandingContent | null>(null);
   i18n = inject(I18nService);
   ds = inject(DesignSystemService);
 
-  sectors: SectorCard[] = [
+  get sectors(): SectorCard[] { return this.content()?.sectors ?? this.defaultSectors; }
+
+  private defaultSectors: SectorCard[] = [
     {
       titleEn: 'Government & Public Sector',
       titleAr: 'الحكومة والقطاع العام',

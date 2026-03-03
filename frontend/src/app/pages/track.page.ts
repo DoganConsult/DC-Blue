@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { I18nService } from '../core/services/i18n.service';
 import { STATUS_COLORS } from '../core/data/page-styles';
+import { STATUS_LABELS } from '../core/data/status-labels';
 
 interface TicketInfo {
   ticket_number: string;
@@ -21,7 +22,7 @@ interface TicketInfo {
   imports: [CommonModule, FormsModule],
   selector: 'app-track',
   template: `
-    <div class="bg-[#0B1220] min-h-screen">
+    <div class="bg-page-dark min-h-screen">
       <div class="max-w-lg mx-auto px-4 py-16">
         <div class="text-center mb-10">
           <div class="w-14 h-14 bg-primary/20 rounded-xl flex items-center justify-center mx-auto mb-4">
@@ -131,14 +132,7 @@ export class TrackPage {
   }
 
   statusLabel(s: string): string {
-    const en: Record<string, string> = {
-      new: 'Received', qualified: 'Under Review', contacted: 'In Contact',
-      proposal: 'Proposal Sent', won: 'Completed', lost: 'Closed',
-    };
-    const ar: Record<string, string> = {
-      new: 'تم الاستلام', qualified: 'قيد المراجعة', contacted: 'قيد التواصل',
-      proposal: 'تم إرسال العرض', won: 'مكتمل', lost: 'مغلق',
-    };
-    return this.i18n.t(en[s] || s, ar[s] || s);
+    const label = STATUS_LABELS[s];
+    return label ? this.i18n.t(label.en, label.ar) : s;
   }
 }

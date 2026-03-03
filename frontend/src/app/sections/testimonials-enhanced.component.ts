@@ -1,6 +1,7 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { I18nService } from '../core/services/i18n.service';
+import { LandingContent } from '../core/models/landing.model';
 
 interface Testimonial {
   name: string;
@@ -159,10 +160,14 @@ interface Testimonial {
   `,
 })
 export class TestimonialsEnhancedComponent implements OnInit {
+  content = input<LandingContent | null>(null);
   i18n = inject(I18nService);
   currentSlide = signal(0);
 
-  featuredTestimonials: Testimonial[] = [
+  get featuredTestimonials(): Testimonial[] { return (this.content()?.testimonials?.featured as any) ?? this.defaultFeatured; }
+  get additionalTestimonials(): Testimonial[] { return (this.content()?.testimonials?.additional as any) ?? this.defaultAdditional; }
+
+  private defaultFeatured: Testimonial[] = [
     {
       name: 'Iman Radwan',
       role: 'Project Manager',
@@ -198,7 +203,7 @@ export class TestimonialsEnhancedComponent implements OnInit {
     }
   ];
 
-  additionalTestimonials: Testimonial[] = [
+  private defaultAdditional: Testimonial[] = [
     {
       name: 'Fadi Al-Farra',
       role: 'Divisional General Manager',

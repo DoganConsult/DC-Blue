@@ -138,4 +138,20 @@ On push to `main`, GitHub Actions can run the deploy script on a self-hosted run
 
 ---
 
+## 8. Why production deploy fails (troubleshooting)
+
+| What goes wrong | Cause | Fix |
+|-----------------|--------|-----|
+| **Nothing deploys / workflow doesn’t run** | Deploy runs on `self-hosted` runner only | Either: add a self-hosted runner in repo Settings → Actions → Runners and point it at the server, **or** run deploy manually on the server: `cd /root/DoganConsultHup && git pull origin main && bash scripts/deploy.sh` |
+| **`npm ci` fails (backend or frontend)** | Missing or wrong `package-lock.json`, or Node version | On server: `node -v` (use Node 18+). Run `npm install` in repo, commit updated `package-lock.json`, pull on server and retry. |
+| **`ng build` fails** | Compile error, or low memory | Fix errors (e.g. template syntax, missing deps). On small VPS, add swap or build elsewhere and copy `frontend/dist` to server. |
+| **Backend won’t start / health check fails** | Database not reachable or env missing | On server set `DATABASE_URL` (or `DB_HOST`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`). Test: `cd backend && node -e "require('dotenv').config({path:'.env.production'}); require('./config/database.js').getConnectionString();"` — must not throw. Ensure Postgres is running and DB exists. |
+| **PM2 not found / restart fails** | PM2 not installed or wrong user | On server: `npm i -g pm2`. Run deploy (or start) as the same user that owns the app (e.g. root): `PORT=5500 pm2 start backend/server.js --name dogan-consult-api`. |
+| **Log directory error** | No write to `/var/log/dogan-consult` | `sudo mkdir -p /var/log/dogan-consult && sudo chown $USER /var/log/dogan-consult` (or run deploy as root). |
+| **Site is 502 / blank** | Nginx proxies to wrong port or app not listening | Nginx must `proxy_pass http://127.0.0.1:5500` (or 4000 if you use Option B). App must listen on that port: `PORT=5500` in env or `backend/.env.production`. |
+
+**Quick manual deploy (no PM2, no CI):** On the server: clone or pull repo → `cd frontend && npm ci --legacy-peer-deps && npx ng build --configuration production` → `cp -r dist/dogan-consult-web/browser/* ../backend/public/` → `cd ../backend && PORT=5500 node server.js` (or run with pm2). Ensure `DATABASE_URL` (or DB_*) is set so the backend starts.
+
+---
+
 **Summary:** Build with `./scripts/build-and-deploy-production.sh`, deploy with `scripts/deploy.sh` on the server, enable nginx with `docs/nginx-doganconsult.conf`, add SSL and DNS. End users then see the site at **https://www.doganconsult.com**.

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { sendEmail } from '../services/email.js';
+import { logAudit } from './admin-audit.js';
 
 export default function commissionsRouter(pool, portalAuth, adminOnly) {
   const router = Router();
@@ -30,6 +31,24 @@ export default function commissionsRouter(pool, portalAuth, adminOnly) {
       res.json({ total: +countQ.rows[0].count, page: +page, data: rows.rows });
     } catch (e) {
       res.status(500).json({ error: 'Failed to fetch commissions' });
+    }
+  });
+
+  router.get('/commissions/:id', portalAuth, async (req, res) => {
+    try {
+      const r = await pool.query(
+        `SELECT c.*, p.company_name AS partner_company_name, p.contact_name AS partner_name, p.contact_email AS partner_email,
+                o.title AS opportunity_title
+         FROM commissions c
+         JOIN partners p ON p.id = c.partner_id
+         LEFT JOIN opportunities o ON o.id = c.opportunity_id
+         WHERE c.id = $1`,
+        [req.params.id]
+      );
+      if (!r.rows.length) return res.status(404).json({ error: 'Commission not found' });
+      res.json({ commission: r.rows[0] });
+    } catch (e) {
+      res.status(500).json({ error: 'Failed to fetch commission' });
     }
   });
 
@@ -69,9 +88,51 @@ export default function commissionsRouter(pool, portalAuth, adminOnly) {
         } catch (_) {}
       }
 
+      logAudit(pool, { userEmail: req.user?.email, action: 'commission_status_change', entityType: 'commission', entityId: req.params.id, newValues: { status }, ipAddress: req.ip });
+
       res.json({ ok: true, commission: r.rows[0] });
     } catch (e) {
       res.status(500).json({ error: 'Failed to update commission' });
+    }
+  });
+
+  /** POST /commissions/:id/request-payout — Partner requests payout for an approved commission */
+  router.post('/commissions/:id/request-payout', portalAuth, async (req, res) => {
+    try {
+      const commRes = await pool.query(
+        'SELECT * FROM commissions WHERE id = $1', [req.params.id]
+      );
+      if (!commRes.rows.length) return res.status(404).json({ error: 'Commission not found' });
+
+      const comm = commRes.rows[0];
+      if (comm.status !== 'approved') {
+        return res.status(400).json({ error: 'Only approved commissions can request payout' });
+      }
+
+      // Mark as payout_requested
+      await pool.query(
+        `UPDATE commissions SET payout_requested = true, payout_requested_at = NOW(), updated_at = NOW() WHERE id = $1`,
+        [req.params.id]
+      );
+
+      // Notify admin
+      try {
+        const partner = await pool.query('SELECT company_name FROM partners WHERE id = $1', [comm.partner_id]);
+        await pool.query(
+          `INSERT INTO admin_notifications (user_id, type, title, body, link)
+           SELECT id, 'commission', $1, $2, '/admin?tab=commissions'
+           FROM users WHERE role = 'admin'`,
+          [
+            `Payout requested: ${comm.amount} ${comm.currency}`,
+            `${partner.rows[0]?.company_name || 'Partner'} requested payout for commission #${req.params.id}`,
+          ]
+        );
+      } catch (_) {}
+
+      res.json({ ok: true, message: 'Payout request submitted' });
+    } catch (e) {
+      console.error('Payout request error:', e.message);
+      res.status(500).json({ error: 'Failed to request payout' });
     }
   });
 

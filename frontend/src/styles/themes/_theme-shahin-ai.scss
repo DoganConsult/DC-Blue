@@ -1,90 +1,497 @@
-// Shahin-AI Theme (shahin-ai.com design)
-// KSA GRC Platform — primary blue #3B82F6, page bg #f4f4f4, IBM Plex + Arabic
+// ═══════════════════════════════════════════════════════════════════════════
+// AGRC-OS Design Token System — Shahin AI Theme
+// IBM Carbon v11 palette · GRC semantics · Glassmorphism · Carbon motion
+// Source: shahin-ai.com · KSA GRC Platform
+// ═══════════════════════════════════════════════════════════════════════════
 
 [data-theme="shahin-ai"],
 [data-theme-preview="shahin-ai"] {
-  // Primary — matches live site --primary-color
-  --theme-primary: #3B82F6;
-  --theme-primary-dark: #2563EB;
-  --theme-primary-light: #60A5FA;
 
-  // Secondary — slate for headings
-  --theme-secondary: #0f172a;
-  --theme-secondary-dark: #020617;
-  --theme-secondary-light: #1e293b;
+  // ─── IBM Carbon v11 — Full Color Palette ──────────────────────────────
 
-  // Accent — success/CTA green
-  --theme-accent: #10B981;
-  --theme-accent-dark: #059669;
-  --theme-accent-light: #34D399;
+  // Blue (Primary)
+  --blue-10: #edf5ff;
+  --blue-20: #d0e2ff;
+  --blue-30: #a6c8ff;
+  --blue-40: #78a9ff;
+  --blue-50: #4589ff;
+  --blue-60: #0f62fe;
+  --blue-70: #0043ce;
+  --blue-80: #002d9c;
+  --blue-90: #001d6c;
+  --blue-100: #001141;
 
-  // Foundation
-  --theme-foundation-dark: #161616;
+  // Gray (Neutral)
+  --gray-10: #f4f4f4;
+  --gray-20: #e0e0e0;
+  --gray-30: #c6c6c6;
+  --gray-40: #a8a8a8;
+  --gray-50: #8d8d8d;
+  --gray-60: #6f6f6f;
+  --gray-70: #525252;
+  --gray-80: #393939;
+  --gray-90: #262626;
+  --gray-100: #161616;
+
+  // Green
+  --green-10: #defbe6;
+  --green-20: #a7f0ba;
+  --green-30: #6fdc8c;
+  --green-40: #42be65;
+  --green-50: #24a148;
+  --green-60: #198038;
+  --green-70: #0e6027;
+  --green-80: #044317;
+
+  // Red
+  --red-10: #fff1f1;
+  --red-20: #ffd7d9;
+  --red-30: #ffb3b8;
+  --red-40: #ff8389;
+  --red-50: #fa4d56;
+  --red-60: #da1e28;
+  --red-70: #a2191f;
+  --red-80: #750e13;
+
+  // Yellow
+  --yellow-10: #fcf4d6;
+  --yellow-20: #fddc69;
+  --yellow-30: #f1c21b;
+  --yellow-40: #d2a106;
+  --yellow-50: #b28600;
+  --yellow-60: #8e6a00;
+
+  // Purple
+  --purple-10: #f6f2ff;
+  --purple-20: #e8daff;
+  --purple-30: #d4bbff;
+  --purple-40: #be95ff;
+  --purple-50: #a56eff;
+  --purple-60: #8a3ffc;
+  --purple-70: #6929c4;
+  --purple-80: #491d8b;
+
+  // Teal
+  --teal-10: #d9fbfb;
+  --teal-20: #9ef0f0;
+  --teal-30: #3ddbd9;
+  --teal-40: #08bdba;
+  --teal-50: #009d9a;
+  --teal-60: #007d79;
+  --teal-70: #005d5d;
+
+  // Cyan
+  --cyan-10: #e5f6ff;
+  --cyan-20: #bae6ff;
+  --cyan-30: #82cfff;
+  --cyan-40: #33b1ff;
+  --cyan-50: #1192e8;
+  --cyan-60: #0072c3;
+  --cyan-70: #00539a;
+
+  // Magenta
+  --magenta-10: #fff0f7;
+  --magenta-20: #ffd6e8;
+  --magenta-30: #ffafd2;
+  --magenta-40: #ff7eb6;
+  --magenta-50: #ee5396;
+  --magenta-60: #d02670;
+  --magenta-70: #9f1853;
+
+  // Orange
+  --orange-10: #fff2e8;
+  --orange-20: #ffd8a8;
+  --orange-30: #ffb784;
+  --orange-40: #ff832b;
+  --orange-50: #eb6200;
+  --orange-60: #ba4e00;
+
+  // ─── Theme Interface (consumed by _theme-variables.scss) ──────────────
+
+  --theme-primary: var(--blue-60);
+  --theme-primary-dark: var(--blue-70);
+  --theme-primary-light: var(--blue-50);
+  --theme-primary-rgb: 15, 98, 254;
+
+  --theme-secondary: var(--teal-50);
+  --theme-secondary-dark: var(--teal-60);
+  --theme-secondary-light: var(--teal-40);
+
+  --theme-accent: var(--purple-60);
+  --theme-accent-dark: var(--purple-70);
+  --theme-accent-light: var(--purple-50);
+
+  --theme-foundation-dark: var(--gray-100);
   --theme-foundation-light: #ffffff;
 
-  // Gray scale (PrimeNG/Tailwind from live site)
-  --theme-gray-50: #f9fafb;
-  --theme-gray-100: #f3f4f6;
-  --theme-gray-200: #e5e7eb;
-  --theme-gray-300: #d1d5db;
-  --theme-gray-400: #9ca3af;
-  --theme-gray-500: #6b7280;
-  --theme-gray-600: #4b5563;
-  --theme-gray-700: #374151;
-  --theme-gray-800: #1f2937;
-  --theme-gray-900: #111827;
+  // Gray scale (mapped to --theme-gray-* slots)
+  --theme-gray-50: var(--gray-10);
+  --theme-gray-100: var(--gray-20);
+  --theme-gray-200: var(--gray-30);
+  --theme-gray-300: var(--gray-40);
+  --theme-gray-400: var(--gray-50);
+  --theme-gray-500: var(--gray-60);
+  --theme-gray-600: var(--gray-70);
+  --theme-gray-700: var(--gray-80);
+  --theme-gray-800: var(--gray-90);
+  --theme-gray-900: var(--gray-100);
 
   // Semantic
-  --theme-success: #10B981;
-  --theme-warning: #F59E0B;
-  --theme-error: #EF4444;
-  --theme-info: #3B82F6;
+  --theme-success: var(--green-50);
+  --theme-warning: var(--yellow-30);
+  --theme-error: var(--red-60);
+  --theme-info: var(--blue-50);
 
-  // Page background (body from live: rgb(244,244,244))
-  --theme-page-bg: #f4f4f4;
+  // ─── Surface System ───────────────────────────────────────────────────
 
-  // Gradients
-  --theme-gradient-hero: linear-gradient(180deg, #2563EB 0%, #1d4ed8 100%);
-  --theme-gradient-primary: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
+  --surface: #ffffff;
+  --surface-ice: #f2f4f8;
+  --surface-sunken: var(--gray-10);
+  --surface-elevated: #ffffff;
+  --surface-lavender: var(--purple-10);
+  --surface-mint: var(--green-10);
+  --surface-amber: var(--yellow-10);
 
-  // Component
-  --theme-hero-bg: var(--theme-gradient-hero);
-  --theme-card-hover-border: var(--theme-primary);
-  --theme-button-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
-  --theme-input-focus-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  // ─── Text Hierarchy ───────────────────────────────────────────────────
+
+  --text-heading: var(--gray-100);
+  --text-body: var(--gray-70);
+  --text-caption: var(--gray-60);
+  --text-on-primary: #ffffff;
+
+  // ─── Semantic Background/Text/Border Overrides ────────────────────────
+
+  --bg-primary: var(--surface);
+  --bg-secondary: var(--surface-sunken);
+  --bg-tertiary: var(--gray-20);
+  --bg-inverse: var(--gray-100);
+  --bg-accent: var(--blue-10);
+
+  --text-primary: var(--text-heading);
+  --text-secondary: var(--text-body);
+  --text-muted: var(--gray-60);
+  --text-inverse: #ffffff;
+  --text-accent: var(--blue-60);
+  --text-on-secondary: #ffffff;
+
+  --border-light: var(--gray-20);
+  --border-default: var(--gray-30);
+  --border-dark: var(--gray-50);
+  --border-primary: var(--blue-60);
+  --border-accent: var(--purple-60);
+
+  // ─── Glassmorphism ────────────────────────────────────────────────────
+
+  --glass-subtle: rgba(255, 255, 255, 0.06);
+  --glass-medium: rgba(255, 255, 255, 0.10);
+  --glass-bg: rgba(255, 255, 255, 0.82);
+  --glass-blur: blur(16px);
+  --glass-navbar: rgba(22, 22, 22, 0.97);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+
+  --glass-widget-bg: rgba(255, 255, 255, 0.80);
+  --glass-widget-blur: 16px;
+  --glass-widget-saturation: 1.4;
+
+  --glass-icon-bg: rgba(15, 98, 254, 0.06);
+  --glass-icon-border: rgba(15, 98, 254, 0.10);
+  --glass-icon-blur: blur(12px);
+  --glass-icon-shadow: 0 2px 8px rgba(15, 98, 254, 0.08);
+
+  --theme-glass-bg: var(--glass-bg);
+  --theme-glass-border: var(--glass-border);
+  --theme-glass-shadow: var(--glass-shadow);
+
+  // ─── Gradient System ──────────────────────────────────────────────────
+
+  --gradient-primary: linear-gradient(135deg, var(--blue-60), var(--blue-50));
+  --gradient-hero: linear-gradient(135deg, var(--blue-90) 0%, var(--blue-80) 30%, var(--blue-60) 60%, var(--blue-50) 100%);
+  --gradient-surface: linear-gradient(180deg, #ffffff 0%, var(--gray-10) 100%);
+  --gradient-sidebar: linear-gradient(180deg, var(--gray-100) 0%, var(--gray-90) 100%);
+  --gradient-sky: linear-gradient(135deg, var(--blue-10) 0%, var(--blue-20) 50%, var(--blue-30) 100%);
+  --gradient-shimmer: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.5) 50%, transparent 60%);
+
+  --theme-gradient-primary: var(--gradient-primary);
+  --theme-gradient-hero: var(--gradient-hero);
+  --theme-gradient-accent: linear-gradient(135deg, var(--purple-60), var(--purple-50));
+
+  // ─── Shadow System (8 levels + glows) ─────────────────────────────────
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 2px 6px rgba(0, 0, 0, 0.08);
+  --shadow-card-hover: 0 6px 14px rgba(0, 0, 0, 0.12);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.10);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.14);
+  --shadow-xl: 0 16px 40px -8px rgba(0, 0, 0, 0.18);
+  --shadow-2xl: 0 32px 64px -12px rgba(0, 0, 0, 0.22);
+  --shadow-glow: 0 0 0 3px rgba(15, 98, 254, 0.16);
+  --shadow-blue-glow: 0 0 16px rgba(15, 98, 254, 0.12);
+
+  --shadow-premium-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.02);
+  --shadow-premium-md: 0 2px 4px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-premium-lg: 0 4px 8px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.08), 0 16px 48px rgba(0, 0, 0, 0.04);
+  --shadow-premium-glow: 0 0 20px rgba(15, 98, 254, 0.14);
+
+  // ─── Carbon Productive Motion ─────────────────────────────────────────
+
+  --ease-productive-standard: cubic-bezier(0.2, 0, 0.38, 0.9);
+  --ease-productive-entrance: cubic-bezier(0, 0, 0.38, 0.9);
+  --ease-productive-exit: cubic-bezier(0.2, 0, 1, 0.9);
+  --ease-expressive-standard: cubic-bezier(0.4, 0.14, 0.3, 1);
+
+  --duration-fast-01: 70ms;
+  --duration-fast-02: 110ms;
+  --duration-moderate-01: 150ms;
+  --duration-moderate-02: 240ms;
+  --duration-slow-01: 400ms;
+  --duration-slow-02: 700ms;
+
+  // ─── Typography (Carbon Productive) ───────────────────────────────────
+
+  --font-family: 'Inter Variable', 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-base: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 20px;
+  --font-size-xl: 28px;
+  --font-size-2xl: 36px;
+  --font-size-3xl: 42px;
+  --font-size-display-01: 54px;
+  --font-size-display-02: 68px;
+
+  --font-light: 300;
+  --font-regular: 400;
+  --font-medium: 600;
+  --font-bold: 700;
+  --font-black: 800;
+
+  --line-height-tight: 1.125;
+  --line-height-compact: 1.29;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.7;
+
+  // ─── Spacing (2px Base Grid) ──────────────────────────────────────────
+
+  --space-01: 2px;
+  --space-02: 4px;
+  --space-03: 8px;
+  --space-04: 12px;
+  --space-05: 16px;
+  --space-06: 24px;
+  --space-07: 32px;
+  --space-08: 40px;
+  --space-09: 48px;
+  --space-10: 64px;
+  --space-11: 80px;
+  --space-12: 96px;
+  --space-13: 160px;
+
+  // ─── Layout ───────────────────────────────────────────────────────────
+
+  --sidebar-width: 256px;
+  --sidebar-collapsed: 48px;
+  --navbar-height: 48px;
+  --tab-bar-height: 60px;
+  --content-max-width: 1584px;
+
+  --breakpoint-sm: 320px;
+  --breakpoint-md: 672px;
+  --breakpoint-lg: 1056px;
+  --breakpoint-xlg: 1312px;
+
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 99px;
+
+  // ─── Component Tokens ─────────────────────────────────────────────────
+
+  // Hero
+  --agrc-hero-bg: #0d1b2a;
+  --agrc-hero-overlay: linear-gradient(180deg, rgba(13, 27, 42, 0.4) 0%, transparent 50%, rgba(13, 27, 42, 0.6) 100%);
+
+  // Navigation
+  --agrc-nav-bg-scrolled: rgba(13, 27, 42, 0.95);
+
+  // Page
+  --theme-page-bg: var(--surface);
+  --theme-hero-bg: var(--gradient-hero);
+
+  // Cards
+  --card-bg: var(--surface-elevated);
+  --card-border: var(--gray-20);
+  --card-shadow: var(--shadow-sm);
+  --card-hover-shadow: var(--shadow-lg);
+  --theme-card-hover-border: var(--blue-60);
+
+  // Buttons
+  --button-primary-bg: var(--blue-60);
+  --button-primary-hover: #0353e9;
+  --button-primary-active: var(--blue-80);
+  --button-primary-text: #ffffff;
+  --button-secondary-bg: transparent;
+  --button-secondary-border: var(--blue-60);
+  --button-secondary-hover: rgba(15, 98, 254, 0.08);
+  --button-secondary-text: var(--blue-60);
+  --button-accent-bg: var(--purple-60);
+  --button-accent-hover: var(--purple-70);
+  --button-accent-text: #ffffff;
+  --theme-button-shadow: 0 1px 2px rgba(0, 0, 0, 0.16);
+  --theme-input-focus-shadow: 0 0 0 2px var(--blue-60);
+
+  // Navigation
+  --nav-bg: #ffffff;
+  --nav-text: var(--gray-100);
+  --nav-hover: var(--blue-60);
+  --nav-active: var(--blue-60);
+  --nav-border: var(--gray-20);
+
+  // Forms
+  --input-bg: var(--gray-10);
+  --input-border: var(--gray-50);
+  --input-text: var(--gray-100);
+  --input-placeholder: var(--gray-60);
+  --input-focus-border: var(--blue-60);
 
   // Charts
-  --theme-chart-1: #3B82F6;
-  --theme-chart-2: #10B981;
-  --theme-chart-3: #F59E0B;
-  --theme-chart-4: #8B5CF6;
-  --theme-chart-5: #EC4899;
-  --theme-chart-6: #06B6D4;
+  --theme-chart-1: var(--blue-60);
+  --theme-chart-2: var(--teal-50);
+  --theme-chart-3: var(--purple-60);
+  --theme-chart-4: var(--cyan-50);
+  --theme-chart-5: var(--magenta-50);
+  --theme-chart-6: var(--orange-40);
+
+  // State
+  --theme-hover-opacity: 0.82;
+  --theme-active-opacity: 0.70;
+  --theme-disabled-opacity: 0.25;
 }
 
-// Override body background when this theme is active
-[data-theme="shahin-ai"] {
-  --bg-primary: var(--theme-page-bg);
-  --bg-secondary: #ffffff;
-}
+// ─── Dark Mode ────────────────────────────────────────────────────────────
 
 [data-theme="shahin-ai"][data-mode="dark"] {
-  --theme-primary: #60A5FA;
-  --theme-primary-dark: #3B82F6;
-  --theme-primary-light: #93C5FD;
-  --theme-page-bg: #111827;
-  --bg-primary: var(--theme-page-bg);
+  --theme-primary: var(--blue-40);
+  --theme-primary-dark: var(--blue-50);
+  --theme-primary-light: var(--blue-30);
+  --theme-primary-rgb: 120, 169, 255;
+
+  --surface: var(--gray-100);
+  --surface-ice: var(--gray-90);
+  --surface-sunken: #000000;
+  --surface-elevated: var(--gray-90);
+  --surface-lavender: #1a1a2e;
+  --surface-mint: #0d2818;
+  --surface-amber: #2a1f00;
+
+  --text-heading: var(--gray-10);
+  --text-body: var(--gray-30);
+  --text-caption: var(--gray-50);
+
+  --bg-primary: var(--gray-100);
+  --bg-secondary: var(--gray-90);
+  --bg-tertiary: var(--gray-80);
+  --bg-inverse: var(--gray-10);
+  --bg-accent: var(--blue-90);
+
+  --text-primary: var(--gray-10);
+  --text-secondary: var(--gray-30);
+  --text-muted: var(--gray-50);
+  --text-inverse: var(--gray-100);
+  --text-accent: var(--blue-40);
+
+  --border-light: var(--gray-70);
+  --border-default: var(--gray-60);
+  --border-dark: var(--gray-50);
+
+  --card-bg: var(--gray-90);
+  --card-border: var(--gray-70);
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --card-hover-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+
+  --nav-bg: var(--gray-100);
+  --nav-text: var(--gray-10);
+  --nav-border: var(--gray-70);
+
+  --input-bg: var(--gray-80);
+  --input-border: var(--gray-60);
+  --input-text: var(--gray-10);
+
+  --button-primary-bg: var(--blue-60);
+  --button-secondary-hover: rgba(120, 169, 255, 0.12);
+
+  // Glass (dark)
+  --glass-subtle: rgba(22, 22, 22, 0.4);
+  --glass-medium: rgba(22, 22, 22, 0.6);
+  --glass-bg: rgba(38, 38, 38, 0.85);
+  --glass-navbar: rgba(22, 22, 22, 0.97);
+  --glass-border: rgba(255, 255, 255, 0.08);
+
+  // Shadows (dark)
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.20);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.30);
+  --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.40);
+  --shadow-glow: 0 0 20px rgba(120, 169, 255, 0.20);
+
+  // Gradients (dark)
+  --gradient-hero: linear-gradient(135deg, #000000 0%, var(--gray-100) 50%, var(--blue-90) 100%);
+  --gradient-surface: linear-gradient(180deg, var(--gray-100) 0%, #000000 100%);
 }
+
+// ─── Theme-Specific Utility Classes ───────────────────────────────────────
 
 .theme-shahin-ai {
   .hero-bg {
-    background: var(--theme-gradient-hero);
+    background: var(--agrc-hero-bg);
   }
-  .btn-cta-success {
-    background: var(--theme-accent);
-    color: #fff;
-    &:hover {
-      background: var(--theme-accent-dark);
-    }
+
+  .hero-overlay {
+    background: var(--agrc-hero-overlay);
   }
+
+  .glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+  }
+
+  .glass-navbar {
+    background: var(--glass-navbar);
+    backdrop-filter: blur(24px);
+  }
+
+  .btn-carbon-primary {
+    background: var(--blue-60);
+    color: #ffffff;
+    border: none;
+    box-shadow: var(--theme-button-shadow);
+    transition: background var(--duration-fast-02) var(--ease-productive-standard);
+
+    &:hover { background: #0353e9; }
+    &:active { background: var(--blue-80); }
+  }
+
+  .btn-carbon-ghost {
+    background: transparent;
+    color: var(--blue-60);
+    transition: background var(--duration-fast-02) var(--ease-productive-standard);
+
+    &:hover { background: var(--gray-10); }
+  }
+
+  .risk-low { color: var(--risk-low); background: rgba(36, 161, 72, 0.1); }
+  .risk-medium { color: var(--risk-medium); background: rgba(241, 194, 27, 0.1); }
+  .risk-high { color: var(--risk-high); background: rgba(250, 77, 86, 0.1); }
+  .risk-critical { color: var(--risk-critical); background: rgba(218, 30, 40, 0.1); }
+
+  .control-pass { color: var(--control-pass); }
+  .control-fail { color: var(--control-fail); }
+
+  .evidence-fresh { color: var(--evidence-fresh); }
+  .evidence-stale { color: var(--evidence-stale); }
+  .evidence-missing { color: var(--evidence-missing); }
 }

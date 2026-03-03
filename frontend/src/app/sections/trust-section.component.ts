@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { I18nService } from '../core/services/i18n.service';
 import { TRUST_BADGES } from '../core/data/site-content';
+import { LandingContent } from '../core/models/landing.model';
 
 @Component({
   selector: 'app-trust-section',
@@ -24,6 +25,10 @@ import { TRUST_BADGES } from '../core/data/site-content';
   `,
 })
 export class TrustSectionComponent {
+  content = input<LandingContent | null>(null);
   i18n = inject(I18nService);
-  badges = TRUST_BADGES;
+
+  get badges() { return this.content()?.trustBadges ?? this.defaultBadges; }
+
+  private defaultBadges = TRUST_BADGES;
 }

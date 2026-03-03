@@ -1,5 +1,6 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { I18nService } from '../core/services/i18n.service';
+import { LandingContent } from '../core/models/landing.model';
 
 const FAQ_ITEMS = [
   { qEn: 'What are your typical delivery timelines?', qAr: 'ما هي المدد النموذجية للتسليم؟', aEn: 'Depends on scope; we provide a clear timeline after discovery.', aAr: 'تعتمد على النطاق؛ نقدم جدولاً واضحاً بعد مرحلة الاكتشاف.' },
@@ -46,9 +47,13 @@ const FAQ_ITEMS = [
   `,
 })
 export class FaqSectionComponent {
+  content = input<LandingContent | null>(null);
   i18n = inject(I18nService);
   open = signal<string | null>(null);
-  faqItems = FAQ_ITEMS;
+
+  get faqItems() { return this.content()?.faq ?? this.defaultFaqItems; }
+
+  private defaultFaqItems = FAQ_ITEMS;
   toggle(key: string): void {
     this.open.set(this.open() === key ? null : key);
   }

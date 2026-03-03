@@ -19,7 +19,7 @@ export interface LegalPageContent {
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <section class="pt-20 pb-12 px-6 lg:px-8 min-h-screen bg-[#0B1220] overflow-x-hidden">
+    <section class="pt-20 pb-12 px-6 lg:px-8 min-h-screen bg-page-dark overflow-x-hidden">
         <div class="container mx-auto max-w-3xl">
           @if (loading()) {
             <p class="text-white/70 text-center py-12">{{ i18n.t('Loading...', 'جاري التحميل...') }}</p>

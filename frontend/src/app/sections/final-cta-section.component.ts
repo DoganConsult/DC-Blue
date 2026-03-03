@@ -18,7 +18,7 @@ import { GRADIENTS } from '../core/data/page-styles';
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <a
             (click)="router.navigate(['/inquiry'])"
-            class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-th-card text-primary font-semibold hover:bg-sky-50 transition cursor-pointer"
+            class="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-white text-[#0f62fe] font-semibold hover:bg-sky-50 transition cursor-pointer"
           >
             {{ i18n.t('Request proposal', 'طلب عرض') }}
           </a>

@@ -25,7 +25,7 @@ INSERT INTO site_settings (id, contact_email, whatsapp_number, address_en, addre
 VALUES (
   1,
   'info@doganconsult.com',
-  '966500000000',
+  '966500666084',
   'Riyadh, Kingdom of Saudi Arabia',
   'الرياض، المملكة العربية السعودية',
   '7008903317',

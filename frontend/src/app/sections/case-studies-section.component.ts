@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { I18nService } from '../core/services/i18n.service';
 import { Router } from '@angular/router';
+import { LandingContent } from '../core/models/landing.model';
 
 @Component({
   selector: 'app-case-studies-section',
@@ -82,6 +83,7 @@ import { Router } from '@angular/router';
   `]
 })
 export class CaseStudiesSectionComponent {
+  content = input<LandingContent | null>(null);
   i18n = inject(I18nService);
   router = inject(Router);
   selectedIndustry = 'all';
@@ -94,7 +96,9 @@ export class CaseStudiesSectionComponent {
     { id: 'telecom', name: { en: 'Telecom', ar: 'الاتصالات' } },
   ];
 
-  caseStudies = [
+  get caseStudies() { return (this.content()?.caseStudies as any) ?? this.defaultCaseStudies; }
+
+  private defaultCaseStudies = [
     {
       id: 'healthcare-01', industryId: 'healthcare',
       client: { name: { en: 'Major Healthcare Provider', ar: 'مزود رعاية صحية رئيسي' }, industry: { en: 'Healthcare', ar: 'الرعاية الصحية' } },
@@ -159,6 +163,6 @@ export class CaseStudiesSectionComponent {
 
   getFilteredCaseStudies() {
     if (this.selectedIndustry === 'all') return this.caseStudies;
-    return this.caseStudies.filter(cs => cs.industryId === this.selectedIndustry);
+    return this.caseStudies.filter((cs: any) => cs.industryId === this.selectedIndustry);
   }
 }

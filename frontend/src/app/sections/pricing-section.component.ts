@@ -1,5 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { I18nService } from '../core/services/i18n.service';
+import { LandingContent } from '../core/models/landing.model';
 
 const TIERS = [
   { id: 'advisory', titleEn: 'Advisory', titleAr: 'استشاري', descEn: 'Design & assessment', descAr: 'التصميم والتقييم', popular: false },
@@ -55,6 +56,10 @@ const TIERS = [
   `,
 })
 export class PricingSectionComponent {
+  content = input<LandingContent | null>(null);
   i18n = inject(I18nService);
-  tiers = TIERS;
+
+  get tiers() { return this.content()?.pricingTiers ?? this.defaultTiers; }
+
+  private defaultTiers = TIERS;
 }

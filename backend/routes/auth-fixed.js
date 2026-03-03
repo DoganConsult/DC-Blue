@@ -3,8 +3,9 @@ import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { sendEmail } from '../services/email.js';
+import { getJwtSecret } from '../config/jwt.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-jwt-secret-key-change-this-in-production';
+const JWT_SECRET = getJwtSecret();
 const RESET_TOKEN_EXPIRY_MS = 24 * 60 * 60 * 1000; // 24 hours
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://doganconsult.com';
 

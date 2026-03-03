@@ -93,6 +93,10 @@ export class AdminApiService {
     return this.http.get<{ data: PartnerRow[] }>('/api/v1/admin/partners', { headers: this.headers() });
   }
 
+  getPartner(id: string): Observable<any> {
+    return this.http.get<any>(`/api/v1/admin/partners/${id}`, { headers: this.headers() });
+  }
+
   setPartnerStatus(id: string, status: string): Observable<{ ok: boolean; status: string; api_key?: string }> {
     return this.http.patch<{ ok: boolean; status: string; api_key?: string }>(`/api/v1/admin/partners/${id}`, { status }, { headers: this.headers() });
   }
@@ -144,6 +148,10 @@ export class AdminApiService {
     return this.http.get<CommissionsListResponse>('/api/v1/commissions', { headers: this.headers(), params });
   }
 
+  getCommission(id: string): Observable<any> {
+    return this.http.get<any>(`/api/v1/commissions/${id}`, { headers: this.headers() });
+  }
+
   updateCommission(id: string, data: { status: string }): Observable<{ ok: boolean }> {
     return this.http.patch<{ ok: boolean }>(`/api/v1/commissions/${id}`, data, { headers: this.headers() });
   }
@@ -155,6 +163,10 @@ export class AdminApiService {
   /* ── Opportunities ───────────────────────────────── */
   getOpportunities(params?: Record<string, string>): Observable<{ data: Opportunity[]; total: number }> {
     return this.http.get<{ data: Opportunity[]; total: number }>('/api/v1/opportunities', { headers: this.headers(), params });
+  }
+
+  getOpportunity(id: string): Observable<any> {
+    return this.http.get<any>(`/api/v1/opportunities/${id}`, { headers: this.headers() });
   }
 
   updateOpportunity(id: string, data: Partial<Opportunity>): Observable<{ ok: boolean }> {
@@ -240,6 +252,15 @@ export class AdminApiService {
 
   getAuditFilters(): Observable<{ entity_types: string[]; actions: string[] }> {
     return this.http.get<{ entity_types: string[]; actions: string[] }>('/api/v1/admin/audit-logs/filters', { headers: this.headers() });
+  }
+
+  /* ── Settings ──────────────────────────────────────── */
+  getSettings(): Observable<{ ok: boolean; settings: Record<string, any> }> {
+    return this.http.get<{ ok: boolean; settings: Record<string, any> }>('/api/v1/admin/settings', { headers: this.headers() });
+  }
+
+  saveSettings(data: Record<string, any>): Observable<{ ok: boolean }> {
+    return this.http.put<{ ok: boolean }>('/api/v1/admin/settings', data, { headers: this.headers() });
   }
 
   /* ── Export ────────────────────────────────────────── */

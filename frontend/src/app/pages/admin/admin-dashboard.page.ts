@@ -1,7 +1,7 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AdminApiService } from '../../core/services/admin-api.service';
 import { DashboardStats } from '../../core/models/admin.models';
 import { AdminLeadsTableComponent } from './components/admin-leads-table.component';
@@ -184,6 +184,7 @@ type AdminTab = 'leads' | 'partners' | 'pipeline' | 'engagements' | 'commissions
 export class AdminDashboardPage implements OnInit {
   api = inject(AdminApiService);
   router = inject(Router);
+  private route = inject(ActivatedRoute);
   widgetRegistry = inject(WidgetRegistryService);
 
   loadingAuth = signal(false);
@@ -221,6 +222,12 @@ export class AdminDashboardPage implements OnInit {
   ];
 
   ngOnInit() {
+    // Read tab from query params for deep-linking
+    const tabParam = this.route.snapshot.queryParamMap.get('tab') as AdminTab | null;
+    if (tabParam && this.tabs.some(t => t.key === tabParam)) {
+      this.activeTab.set(tabParam);
+    }
+
     if (this.api.isAuthenticated()) {
       if (!this.api.isAdmin()) this.activeTab.set('leads');
       this.loadStats();
@@ -316,5 +323,6 @@ export class AdminDashboardPage implements OnInit {
 
   setTab(tab: AdminTab) {
     this.activeTab.set(tab);
+    this.router.navigate([], { queryParams: { tab }, queryParamsHandling: 'merge', replaceUrl: true });
   }
 }

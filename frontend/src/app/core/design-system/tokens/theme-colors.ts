@@ -61,4 +61,36 @@ export const THEME_CSS_VARS = {
   borderDefault: 'var(--border-default)',
   buttonPrimaryBg: 'var(--button-primary-bg)',
   buttonPrimaryText: 'var(--button-primary-text)',
+
+  // AGRC-OS Surface & Text
+  surface: 'var(--surface)',
+  surfaceIce: 'var(--surface-ice)',
+  surfaceSunken: 'var(--surface-sunken)',
+  surfaceElevated: 'var(--surface-elevated)',
+  textHeading: 'var(--text-heading)',
+  textBody: 'var(--text-body)',
+  heroBackground: 'var(--agrc-hero-bg)',
+  gradientPrimary: 'var(--gradient-primary)',
+  gradientHero: 'var(--gradient-hero)',
+
+  // GRC
+  riskLow: 'var(--risk-low)',
+  riskMedium: 'var(--risk-medium)',
+  riskHigh: 'var(--risk-high)',
+  riskCritical: 'var(--risk-critical)',
+  controlPass: 'var(--control-pass)',
+  controlFail: 'var(--control-fail)',
+} as const;
+
+/** Tailwind class names for GRC semantic colors */
+export const THEME_GRC = {
+  riskLow: 'text-risk-low',
+  riskMedium: 'text-risk-medium',
+  riskHigh: 'text-risk-high',
+  riskCritical: 'text-risk-critical',
+  controlPass: 'text-control-pass',
+  controlFail: 'text-control-fail',
+  evidenceFresh: 'text-evidence-fresh',
+  evidenceStale: 'text-evidence-stale',
+  evidenceMissing: 'text-evidence-missing',
 } as const;

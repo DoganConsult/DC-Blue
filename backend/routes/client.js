@@ -585,18 +585,33 @@ export default function clientRouter(pool, portalAuth) {
   router.get('/client/files', portalAuth, clientOnly, async (req, res) => {
     try {
       const userId = req.portalUser.id;
-      // Get files from lead_intakes owned by user
+      // Get files from lead_intakes and user uploads
       const result = await pool.query(
-        `SELECT f.id, f.entity_type, f.entity_id, f.filename, f.original_name, f.mime_type, f.size_bytes, f.created_at
-         FROM file_uploads f
-         JOIN lead_intakes li ON f.entity_type = 'lead_intakes' AND f.entity_id = li.id
-         WHERE li.user_id = $1
-         ORDER BY f.created_at DESC LIMIT 100`,
+        `(SELECT f.id, f.entity_type, f.entity_id, f.filename, f.original_name, f.mime_type, f.size_bytes, f.created_at
+          FROM file_uploads f
+          JOIN lead_intakes li ON f.entity_type = 'lead_intakes' AND f.entity_id = li.id::text
+          WHERE li.user_id = $1)
+         UNION ALL
+         (SELECT f.id, f.entity_type, f.entity_id, f.filename, f.original_name, f.mime_type, f.size_bytes, f.created_at
+          FROM file_uploads f
+          WHERE f.entity_type = 'client_upload' AND f.uploaded_by = $1::text)
+         ORDER BY created_at DESC LIMIT 100`,
         [userId]
       );
       res.json({ data: result.rows });
     } catch (e) {
       res.status(500).json({ error: 'Failed to load files' });
+    }
+  });
+
+  /** POST /client/files — Upload a file to the client workspace */
+  router.post('/client/files', portalAuth, clientOnly, async (req, res) => {
+    try {
+      // Use multer from the files route (file should already be handled by multipart middleware)
+      // This endpoint is wired via the existing /api/v1/files/upload with entity_type=client_upload
+      res.status(400).json({ error: 'Use /api/v1/files/upload with entity_type=client_upload and entity_id=your_user_id' });
+    } catch (e) {
+      res.status(500).json({ error: 'Failed to upload file' });
     }
   });
 

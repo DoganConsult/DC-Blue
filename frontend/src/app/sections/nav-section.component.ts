@@ -47,7 +47,7 @@ import { Subscription, filter } from 'rxjs';
 
           <!-- CTA: enterprise wording -->
           <a routerLink="/inquiry"
-             class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gold-accent text-[#1D2433] text-[13px] font-semibold hover:bg-[#e5a61f] transition-colors duration-200">
+             class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gold-accent text-[#1D2433] text-[13px] font-semibold hover:brightness-90 transition-colors duration-200">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
             {{ i18n.t('Request Consultation', 'طلب استشارة') }}
           </a>
@@ -78,7 +78,7 @@ import { Subscription, filter } from 'rxjs';
             }
             <!-- Mobile CTA -->
             <a routerLink="/inquiry" (click)="closeMobile()"
-               class="flex items-center justify-center gap-2 mt-4 px-4 py-3 rounded-lg bg-gold-accent text-[#1D2433] text-sm font-semibold hover:bg-[#e5a61f] transition-colors">
+               class="flex items-center justify-center gap-2 mt-4 px-4 py-3 rounded-lg bg-gold-accent text-[#1D2433] text-sm font-semibold hover:brightness-90 transition-colors">
               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
               {{ i18n.t('Request Consultation', 'طلب استشارة') }}
             </a>

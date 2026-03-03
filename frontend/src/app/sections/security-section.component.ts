@@ -1,5 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { I18nService } from '../core/services/i18n.service';
+import { LandingContent } from '../core/models/landing.model';
 
 const PILLARS = [
   { titleEn: 'Identity & access', titleAr: 'الهوية والوصول', icon: 'pi-user' },
@@ -35,6 +36,10 @@ const PILLARS = [
   `,
 })
 export class SecuritySectionComponent {
+  content = input<LandingContent | null>(null);
   i18n = inject(I18nService);
-  pillars = PILLARS;
+
+  get pillars() { return this.content()?.securityPillars ?? this.defaultPillars; }
+
+  private defaultPillars = PILLARS;
 }

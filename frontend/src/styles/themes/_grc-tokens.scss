@@ -1,0 +1,58 @@
+// ═══════════════════════════════════════════════════════════════════════════
+// GRC Domain-Specific Tokens
+// Risk, Control, Evidence, and Compliance semantic colors
+// Layered on top of the active theme — cross-theme compatible
+// ═══════════════════════════════════════════════════════════════════════════
+
+:root {
+  // Risk severity (NIST/ISO color conventions)
+  --risk-low: #24a148;
+  --risk-medium: #f1c21b;
+  --risk-high: #ff832b;
+  --risk-critical: #750e13;
+
+  // Control status
+  --control-pass: #24a148;
+  --control-fail: #da1e28;
+  --control-partial: #f1c21b;
+  --control-not-tested: #8d8d8d;
+
+  // Evidence freshness
+  --evidence-fresh: #24a148;
+  --evidence-stale: #f1c21b;
+  --evidence-missing: #da1e28;
+  --evidence-na: #8d8d8d;
+
+  // Compliance status
+  --compliance-compliant: #24a148;
+  --compliance-non-compliant: #da1e28;
+  --compliance-in-progress: #0f62fe;
+  --compliance-pending: #f1c21b;
+
+  // Risk heat-map gradients
+  --risk-gradient-low: linear-gradient(135deg, #defbe6, #a7f0ba);
+  --risk-gradient-medium: linear-gradient(135deg, #fcf4d6, #fddc69);
+  --risk-gradient-high: linear-gradient(135deg, #fff2e8, #ffd8a8);
+  --risk-gradient-critical: linear-gradient(135deg, #fff1f1, #ffd7d9);
+}
+
+// Dark mode — lighter tones for readability on dark surfaces
+[data-mode="dark"] {
+  --risk-low: #42be65;
+  --risk-medium: #fddc69;
+  --risk-high: #ffb784;
+  --risk-critical: #fa4d56;
+
+  --control-pass: #42be65;
+  --control-fail: #ff8389;
+  --control-partial: #fddc69;
+
+  --evidence-fresh: #42be65;
+  --evidence-stale: #fddc69;
+  --evidence-missing: #ff8389;
+
+  --compliance-compliant: #42be65;
+  --compliance-non-compliant: #ff8389;
+  --compliance-in-progress: #78a9ff;
+  --compliance-pending: #fddc69;
+}

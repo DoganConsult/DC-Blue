@@ -1,5 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { I18nService } from '../core/services/i18n.service';
+import { LandingContent } from '../core/models/landing.model';
 
 const STEPS = [
   { titleEn: 'Discovery & site survey', titleAr: 'الاكتشاف والمسح الميداني', icon: 'pi-search' },
@@ -37,6 +38,10 @@ const STEPS = [
   `,
 })
 export class EngagementFlowSectionComponent {
+  content = input<LandingContent | null>(null);
   i18n = inject(I18nService);
-  steps = STEPS;
+
+  get steps() { return this.content()?.engagementSteps ?? this.defaultSteps; }
+
+  private defaultSteps = STEPS;
 }

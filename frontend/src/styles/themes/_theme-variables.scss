@@ -154,6 +154,39 @@
   --z-popover: 1400;
   --z-tooltip: 1500;
   --z-toast: 1600;
+
+  // AGRC-OS Surface Aliases (fallback to existing bg tokens if theme doesn't define them)
+  --surface: var(--bg-primary);
+  --surface-ice: var(--bg-secondary);
+  --surface-sunken: var(--bg-secondary);
+  --surface-elevated: var(--card-bg);
+  --surface-lavender: #f0f0ff;
+  --surface-mint: #f0fdf4;
+  --surface-amber: #fffbeb;
+
+  // Text aliases
+  --text-heading: var(--text-primary);
+  --text-body: var(--text-secondary);
+
+  // Glass defaults (override per-theme)
+  --glass-subtle: rgba(255, 255, 255, 0.4);
+  --glass-medium: rgba(255, 255, 255, 0.75);
+  --glass-bg: rgba(255, 255, 255, 0.82);
+  --glass-blur: blur(16px);
+  --glass-navbar: rgba(255, 255, 255, 0.92);
+  --glass-border: rgba(0, 0, 0, 0.08);
+
+  // Gradient defaults
+  --gradient-primary: var(--theme-gradient-primary, linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%));
+  --gradient-hero: var(--theme-gradient-hero, linear-gradient(180deg, #161616 0%, #262626 100%));
+
+  // Hero component defaults
+  --agrc-hero-bg: var(--bg-inverse, #161616);
+  --agrc-hero-overlay: linear-gradient(180deg, rgba(0, 0, 0, 0.4), transparent, rgba(0, 0, 0, 0.6));
+  --agrc-nav-bg-scrolled: rgba(0, 0, 0, 0.95);
+
+  // Page-level dark background (used by inquiry, track, legal, thanks, 404)
+  --color-page-dark: #0B1220;
 }
 
 // Dark mode adjustments (applies to all themes)

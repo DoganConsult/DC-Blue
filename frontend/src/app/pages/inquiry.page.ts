@@ -7,6 +7,7 @@ import { I18nService } from '../core/services/i18n.service';
 import { KSA_CR_ACTIVITIES, KsaCrActivity } from '../core/data/ksa-cr-activities';
 import { KSA_CITIES } from '../core/data/ksa-cities';
 import { COMPANY_SIZE_OPTIONS, EXPECTED_VALUE_OPTIONS } from '../core/data/lead-options';
+import { INDUSTRY_OPTIONS } from '../core/data/industry-options';
 
 export interface InquiryForm {
   product_line: string;
@@ -36,7 +37,7 @@ export interface InquiryForm {
   imports: [CommonModule, FormsModule],
   selector: 'app-inquiry',
   template: `
-    <div class="bg-[#0B1220] min-h-screen">
+    <div class="bg-page-dark min-h-screen">
       <div class="max-w-3xl mx-auto px-4 py-12">
         <!-- Header (enterprise style: overline + H1 + description) -->
         <div class="text-center mb-10">
@@ -82,14 +83,9 @@ export interface InquiryForm {
             <select name="vertical" [(ngModel)]="form.vertical"
                     class="w-full bg-th-card/10 text-white border border-white/20 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary">
               <option value="" class="text-th-text">{{ i18n.t('Select...', 'اختر...') }}</option>
-              <option value="government" class="text-th-text">{{ i18n.t('Government', 'الحكومة') }}</option>
-              <option value="banking" class="text-th-text">{{ i18n.t('Banking & Finance', 'البنوك والمالية') }}</option>
-              <option value="healthcare" class="text-th-text">{{ i18n.t('Healthcare', 'الرعاية الصحية') }}</option>
-              <option value="energy" class="text-th-text">{{ i18n.t('Energy & Utilities', 'الطاقة والمرافق') }}</option>
-              <option value="telecom" class="text-th-text">{{ i18n.t('Telecom', 'الاتصالات') }}</option>
-              <option value="retail" class="text-th-text">{{ i18n.t('Retail & E-Commerce', 'التجزئة والتجارة الإلكترونية') }}</option>
-              <option value="education" class="text-th-text">{{ i18n.t('Education', 'التعليم') }}</option>
-              <option value="other" class="text-th-text">{{ i18n.t('Other', 'أخرى') }}</option>
+              @for (ind of industryOptions; track ind.value) {
+                <option [value]="ind.value" class="text-th-text">{{ i18n.lang() === 'ar' ? ind.labelAr : ind.labelEn }}</option>
+              }
             </select>
           </div>
 
@@ -305,6 +301,7 @@ export class InquiryPage implements OnInit {
 
   crActivities = signal<KsaCrActivity[]>(KSA_CR_ACTIVITIES);
   ksaCities = KSA_CITIES;
+  industryOptions = INDUSTRY_OPTIONS;
   companySizeOptions = COMPANY_SIZE_OPTIONS;
   expectedValueOptions = EXPECTED_VALUE_OPTIONS;
   loading = signal(false);

@@ -1,12 +1,25 @@
 import { Component, inject, signal, HostListener } from '@angular/core';
 import { I18nService } from '../core/services/i18n.service';
 import { SiteSettingsService } from '../core/services/site-settings.service';
+import { LandingContentService } from '../core/services/landing-content.service';
 import { HeroSectionIctComponent } from '../sections/hero-section-ict.component';
 import { SocialProofSectionComponent } from '../sections/social-proof-section.component';
 import { ProblemSectionComponent } from '../sections/problem-section.component';
 import { ServicesSectionComponent } from '../sections/services-section.component';
 import { WhyChooseSectionComponent } from '../sections/why-choose-section.component';
 import { ContactSectionComponent } from '../sections/contact-section.component';
+import { StatsSectionComponent } from '../sections/stats-section.component';
+import { TrustSectionComponent } from '../sections/trust-section.component';
+import { IndustriesSectionComponent } from '../sections/industries-section.component';
+import { CaseStudiesSectionComponent } from '../sections/case-studies-section.component';
+import { TestimonialsEnhancedComponent } from '../sections/testimonials-enhanced.component';
+import { PartnersSectionComponent } from '../sections/partners-section.component';
+import { CertificationsShowcaseComponent } from '../sections/certifications-showcase.component';
+import { SecuritySectionComponent } from '../sections/security-section.component';
+import { EngagementFlowSectionComponent } from '../sections/engagement-flow-section.component';
+import { FaqSectionComponent } from '../sections/faq-section.component';
+import { FinalCtaSectionComponent } from '../sections/final-cta-section.component';
+import { FooterSectionComponent } from '../sections/footer-section.component';
 
 @Component({
   selector: 'app-landing-page',
@@ -14,18 +27,42 @@ import { ContactSectionComponent } from '../sections/contact-section.component';
   imports: [
     HeroSectionIctComponent,
     SocialProofSectionComponent,
+    StatsSectionComponent,
     ProblemSectionComponent,
     ServicesSectionComponent,
+    IndustriesSectionComponent,
     WhyChooseSectionComponent,
+    SecuritySectionComponent,
+    CertificationsShowcaseComponent,
+    TrustSectionComponent,
+    EngagementFlowSectionComponent,
+    CaseStudiesSectionComponent,
+    TestimonialsEnhancedComponent,
+    PartnersSectionComponent,
+    FaqSectionComponent,
     ContactSectionComponent,
+    FinalCtaSectionComponent,
+    FooterSectionComponent,
   ],
   template: `
-    <app-hero-section-ict />
-    <app-social-proof-section />
-    <app-problem-section />
-    <app-services-section />
-    <app-why-choose-section />
+    <app-hero-section-ict [content]="landingContent.content()" />
+    <app-social-proof-section [content]="landingContent.content()" />
+    <app-stats-section [content]="landingContent.content()" />
+    <app-problem-section [content]="landingContent.content()" />
+    <app-services-section [content]="landingContent.content()" />
+    <app-industries-section [content]="landingContent.content()" />
+    <app-why-choose-section [content]="landingContent.content()" />
+    <app-security-section [content]="landingContent.content()" />
+    <app-certifications-showcase [content]="landingContent.content()" />
+    <app-trust-section [content]="landingContent.content()" />
+    <app-engagement-flow-section [content]="landingContent.content()" />
+    <app-case-studies-section [content]="landingContent.content()" />
+    <app-testimonials-enhanced [content]="landingContent.content()" />
+    <app-partners-section [content]="landingContent.content()" />
+    <app-faq-section [content]="landingContent.content()" />
     <app-contact-section />
+    <app-final-cta-section />
+    <app-footer-section />
 
     <!-- WhatsApp Floating Button -->
     <a [href]="siteSettings.whatsappUrl()"
@@ -39,7 +76,7 @@ import { ContactSectionComponent } from '../sections/contact-section.component';
     @if (showScrollTop()) {
       <button (click)="scrollToTop()"
               aria-label="Scroll to top"
-              class="fixed bottom-20 sm:bottom-6 right-24 z-toast w-12 h-12 rounded-full bg-[#061224]/80 hover:bg-[#061224] text-white flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300 backdrop-blur-sm">
+              class="fixed bottom-20 sm:bottom-6 right-24 z-toast w-12 h-12 rounded-full bg-brand-dark/80 hover:bg-brand-dark text-white flex items-center justify-center shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300 backdrop-blur-sm">
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
       </button>
     }
@@ -48,6 +85,7 @@ import { ContactSectionComponent } from '../sections/contact-section.component';
 export class LandingPage {
   i18n = inject(I18nService);
   siteSettings = inject(SiteSettingsService);
+  landingContent = inject(LandingContentService);
   showScrollTop = signal(false);
 
   @HostListener('window:scroll')
@@ -61,5 +99,6 @@ export class LandingPage {
 
   ngOnInit(): void {
     this.siteSettings.load();
+    this.landingContent.load();
   }
 }

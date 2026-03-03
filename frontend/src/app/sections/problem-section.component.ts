@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { I18nService } from '../core/services/i18n.service';
 import { DesignSystemService } from '../core/services/design-system.service';
+import { LandingContent } from '../core/models/landing.model';
 
 interface MethodologyStep {
   number: string;
@@ -14,17 +15,17 @@ interface MethodologyStep {
   selector: 'app-problem-section',
   standalone: true,
   template: `
-    <section class="bg-white py-24 lg:py-28" id="methodology">
+    <section class="bg-th-bg py-24 lg:py-28" id="methodology">
       <div class="max-w-[1200px] mx-auto px-6 lg:px-8">
         <!-- Section header -->
         <div class="text-center mb-16">
           <span class="inline-block px-4 py-1.5 rounded-full bg-gold-soft text-gold-accent text-[13px] font-semibold mb-4">
             {{ i18n.t('Methodology', 'منهجية') }}
           </span>
-          <h2 class="text-[clamp(1.75rem,4vw,2.5rem)] font-bold text-[#1D2433] mb-4">
+          <h2 class="text-[clamp(1.75rem,4vw,2.5rem)] font-bold text-th-text mb-4">
             {{ i18n.t('Consulting Methodology', 'منهجية الاستشارات') }}
           </h2>
-          <p class="text-[15px] text-[#7A8090] max-w-2xl mx-auto leading-relaxed">
+          <p class="text-[15px] text-th-text-3 max-w-2xl mx-auto leading-relaxed">
             {{ i18n.t(
               'Professional consultants with deep knowledge and expertise, relying on analysis, experience, and comprehensive planning methodology.',
               'مستشارون أكفاء يعتمدون على التحليل والخبرة والمنهجية الاستشارية التخطيطية الشاملة للعمل.'
@@ -38,16 +39,16 @@ interface MethodologyStep {
             <div class="text-center">
               <!-- Number badge -->
               <div class="w-16 h-16 rounded-2xl bg-gold-accent flex items-center justify-center mx-auto mb-5">
-                <span class="text-[22px] font-bold text-[#1D2433]">{{ step.number }}</span>
+                <span class="text-[22px] font-bold text-th-text">{{ step.number }}</span>
               </div>
 
               <!-- Title -->
-              <h3 class="text-lg font-bold text-[#1D2433] mb-2">
+              <h3 class="text-lg font-bold text-th-text mb-2">
                 {{ i18n.t(step.titleEn, step.titleAr) }}
               </h3>
 
               <!-- Description -->
-              <p class="text-[14px] text-[#7A8090] leading-relaxed">
+              <p class="text-[14px] text-th-text-3 leading-relaxed">
                 {{ i18n.t(step.descEn, step.descAr) }}
               </p>
             </div>
@@ -58,10 +59,13 @@ interface MethodologyStep {
   `,
 })
 export class ProblemSectionComponent {
+  content = input<LandingContent | null>(null);
   i18n = inject(I18nService);
   ds = inject(DesignSystemService);
 
-  steps: MethodologyStep[] = [
+  get steps(): MethodologyStep[] { return this.content()?.methodology ?? this.defaultSteps; }
+
+  private defaultSteps: MethodologyStep[] = [
     {
       number: '01',
       titleEn: 'Assessment',

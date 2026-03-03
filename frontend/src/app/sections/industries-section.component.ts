@@ -1,5 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { I18nService } from '../core/services/i18n.service';
+import { LandingContent } from '../core/models/landing.model';
 
 const INDUSTRIES = [
   { id: 'gov', icon: 'pi-building', color: '#006C35', titleEn: 'Government & semi-government', titleAr: 'القطاع الحكومي وشبه الحكومي' },
@@ -39,6 +40,10 @@ const INDUSTRIES = [
   `,
 })
 export class IndustriesSectionComponent {
+  content = input<LandingContent | null>(null);
   i18n = inject(I18nService);
-  industries = INDUSTRIES;
+
+  get industries() { return this.content()?.industries ?? this.defaultIndustries; }
+
+  private defaultIndustries = INDUSTRIES;
 }

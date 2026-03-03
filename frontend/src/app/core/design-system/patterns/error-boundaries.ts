@@ -500,7 +500,7 @@ export class ErrorBoundaryComponent {
   @Input() showSupport: boolean = true;
   @Input() allowReporting: boolean = true;
   @Input() supportEmail: string = 'support@doganconsult.com';
-  @Input() supportPhone: string = '+966-XXX-XXXXX';
+  @Input() supportPhone: string = '+966-50-0666-084';
   @Input() errorTimestamp: Date = new Date();
 
   @Output() retryClick = new EventEmitter<void>();
@@ -637,7 +637,18 @@ export class GlobalErrorHandler implements ErrorHandler {
   }
 
   private getCurrentUserId(): string | undefined {
-    // Get from auth service
+    try {
+      const adminUser = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('dc_portal_user') : null;
+      if (adminUser) {
+        const user = JSON.parse(adminUser);
+        return user.id || user.email;
+      }
+      const userStr = typeof localStorage !== 'undefined' ? localStorage.getItem('dc_user') : null;
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        return user.id || user.email;
+      }
+    } catch {}
     return undefined;
   }
 

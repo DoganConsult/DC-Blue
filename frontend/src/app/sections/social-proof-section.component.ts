@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { I18nService } from '../core/services/i18n.service';
 import { DesignSystemService } from '../core/services/design-system.service';
+import { LandingContent } from '../core/models/landing.model';
 
 interface ExpertiseCard {
   titleEn: string;
@@ -16,17 +17,17 @@ interface ExpertiseCard {
   selector: 'app-social-proof-section',
   standalone: true,
   template: `
-    <section class="bg-section-gray py-24 lg:py-28" id="expertise">
+    <section class="bg-th-bg-alt py-24 lg:py-28" id="expertise">
       <div class="max-w-[1200px] mx-auto px-6 lg:px-8">
         <!-- Section header -->
         <div class="text-center mb-16">
           <span class="inline-block px-4 py-1.5 rounded-full bg-gold-soft text-gold-accent text-[13px] font-semibold mb-4">
             {{ i18n.t('Our Services', 'خدماتنا') }}
           </span>
-          <h2 class="text-[clamp(1.75rem,4vw,2.5rem)] font-bold text-[#1D2433] mb-4">
+          <h2 class="text-[clamp(1.75rem,4vw,2.5rem)] font-bold text-th-text mb-4">
             {{ i18n.t('Our Core Expertise', 'خبراتنا الأساسية') }}
           </h2>
-          <p class="text-[15px] text-[#7A8090] max-w-2xl mx-auto leading-relaxed">
+          <p class="text-[15px] text-th-text-3 max-w-2xl mx-auto leading-relaxed">
             {{ i18n.t(
               'Engineering consulting powered by deep specialists in telecommunications, data centers, cybersecurity, and IT governance.',
               'استشارات هندسية يقودها خبراء متخصصون في مجالات الاتصالات ومراكز البيانات والأمن السيبراني وبرامج حوكمة تقنية المعلومات الحيوية.'
@@ -37,24 +38,24 @@ interface ExpertiseCard {
         <!-- 2x2 Card grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
           @for (card of expertiseCards; track card.titleEn) {
-            <div class="bg-white rounded-[24px] p-7 lg:p-8 shadow-card-soft hover:shadow-lg transition-shadow duration-300 group">
+            <div class="bg-th-card rounded-[24px] p-7 lg:p-8 shadow-card-soft hover:shadow-lg transition-shadow duration-300 group">
               <!-- Icon -->
               <div class="w-14 h-14 rounded-[14px] flex items-center justify-center mb-5" [style.background]="card.iconBg">
                 <svg class="w-7 h-7" [style.color]="card.iconColor" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path [attr.d]="card.iconPath" /></svg>
               </div>
 
               <!-- Title -->
-              <h3 class="text-xl font-bold text-[#1D2433] mb-3">
+              <h3 class="text-xl font-bold text-th-text mb-3">
                 {{ i18n.t(card.titleEn, card.titleAr) }}
               </h3>
 
               <!-- Description -->
-              <p class="text-[14px] text-[#7A8090] leading-relaxed mb-5">
+              <p class="text-[14px] text-th-text-3 leading-relaxed mb-5">
                 {{ i18n.t(card.descEn, card.descAr) }}
               </p>
 
               <!-- Learn more link -->
-              <a routerLink="/services" class="inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#2454E6] group-hover:gap-2.5 transition-all duration-300">
+              <a routerLink="/services" class="inline-flex items-center gap-1.5 text-[14px] font-semibold text-primary group-hover:gap-2.5 transition-all duration-300">
                 {{ i18n.t('Learn More', 'اعرف المزيد') }}
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
               </a>
@@ -66,10 +67,13 @@ interface ExpertiseCard {
   `,
 })
 export class SocialProofSectionComponent {
+  content = input<LandingContent | null>(null);
   i18n = inject(I18nService);
   ds = inject(DesignSystemService);
 
-  expertiseCards: ExpertiseCard[] = [
+  get expertiseCards(): ExpertiseCard[] { return this.content()?.expertise ?? this.defaultExpertiseCards; }
+
+  private defaultExpertiseCards: ExpertiseCard[] = [
     {
       titleEn: 'Data Centers & Critical Facilities',
       titleAr: 'مراكز البيانات والمرافق الحيوية',

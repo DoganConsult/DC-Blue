@@ -238,5 +238,57 @@ export function startScheduler(pool) {
     }
   });
 
-  console.log('[SCHEDULER] Cron jobs started (SLA 2h, exclusivity 8am, overdue 9:30am, partner weekly Mon 9am, partner monthly 1st 10am)');
+  // ERP auto-sync — every 4 hours, sync unsynced records
+  cron.schedule('0 */4 * * *', async () => {
+    try {
+      const { ERPNextClient, ENTITY_MAP, pushToERP } = await import('./erp-sync.js');
+
+      // Load ERP config
+      let config = {};
+      try {
+        const r = await pool.query(
+          `SELECT setting_value FROM admin_settings WHERE setting_key = 'erp_config' LIMIT 1`
+        );
+        if (r.rows.length) config = JSON.parse(r.rows[0].setting_value);
+      } catch (_) {}
+
+      const erpUrl = config.url || process.env.ERP_URL;
+      if (!erpUrl) return; // ERP not configured, skip
+
+      const client = new ERPNextClient({
+        url: erpUrl,
+        apiKey: config.api_key || process.env.ERP_API_KEY || '',
+        apiSecret: config.api_secret || process.env.ERP_API_SECRET || '',
+        user: config.user || process.env.ERP_USER || 'Administrator',
+        pass: config.pass || process.env.ERP_PASS || '',
+      });
+
+      let totalPushed = 0;
+      for (const entityType of Object.keys(ENTITY_MAP)) {
+        try {
+          const unsynced = await pool.query(
+            `SELECT id FROM ${entityType} WHERE erp_sync_id IS NULL ORDER BY created_at ASC LIMIT 10`
+          ).catch(() => ({ rows: [] }));
+
+          for (const row of unsynced.rows) {
+            try {
+              await pushToERP(client, pool, entityType, row.id);
+              totalPushed++;
+            } catch (_) {}
+          }
+        } catch (_) {}
+      }
+
+      if (totalPushed > 0) {
+        await pool.query(
+          `INSERT INTO scheduled_tasks_log (task_name, status, details) VALUES ('erp_auto_sync', 'completed', $1)`,
+          [`Pushed ${totalPushed} records to ERPNext`]
+        ).catch(() => {});
+      }
+    } catch (e) {
+      console.error('ERP auto-sync error:', e.message);
+    }
+  });
+
+  console.log('[SCHEDULER] Cron jobs started (SLA 2h, exclusivity 8am, overdue 9:30am, partner weekly Mon 9am, partner monthly 1st 10am, ERP sync 4h)');
 }

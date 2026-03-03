@@ -13,6 +13,9 @@ module.exports = {
         'brand-dark': 'var(--color-foundation-dark, #061224)',
         'brand-darker': 'var(--color-gray-900, #061224)',
 
+        // Page-level dark background
+        'page-dark': 'var(--color-page-dark, #0B1220)',
+
         // Gold accent system
         'gold-accent': '#F4B223',
         'gold-soft': '#FFF1CC',
@@ -63,6 +66,35 @@ module.exports = {
         'on-dark': 'var(--text-inverse, #ffffff)',
         gold: 'var(--color-accent, #F4B223)',
         'saudi-green': 'var(--color-primary, #006C35)',
+
+        // AGRC-OS Surface tokens
+        'surface': 'var(--surface, #ffffff)',
+        'surface-ice': 'var(--surface-ice, #f2f4f8)',
+        'surface-sunken': 'var(--surface-sunken, #f4f4f4)',
+        'surface-elevated': 'var(--surface-elevated, #ffffff)',
+        'surface-lavender': 'var(--surface-lavender, #f0f0ff)',
+        'surface-mint': 'var(--surface-mint, #f0fdf4)',
+        'surface-amber': 'var(--surface-amber, #fffbeb)',
+
+        // AGRC-OS Text aliases
+        'th-heading': 'var(--text-heading, #161616)',
+        'th-body': 'var(--text-body, #525252)',
+
+        // GRC semantic colors
+        'risk-low': 'var(--risk-low, #24a148)',
+        'risk-medium': 'var(--risk-medium, #f1c21b)',
+        'risk-high': 'var(--risk-high, #ff832b)',
+        'risk-critical': 'var(--risk-critical, #750e13)',
+        'control-pass': 'var(--control-pass, #24a148)',
+        'control-fail': 'var(--control-fail, #da1e28)',
+        'evidence-fresh': 'var(--evidence-fresh, #24a148)',
+        'evidence-stale': 'var(--evidence-stale, #f1c21b)',
+        'evidence-missing': 'var(--evidence-missing, #da1e28)',
+
+        // Carbon v11 direct access
+        'carbon-blue-10': 'var(--blue-10, #edf5ff)',
+        'carbon-blue-60': 'var(--blue-60, #0f62fe)',
+        'carbon-blue-70': 'var(--blue-70, #0043ce)',
       },
       fontFamily: {
         sans: ['var(--font-primary)', 'IBM Plex Sans', 'Inter', 'system-ui', 'sans-serif'],
@@ -82,6 +114,19 @@ module.exports = {
         'th-md': 'var(--shadow-md, 0 4px 6px rgba(0,0,0,0.07))',
         'th-lg': 'var(--shadow-lg, 0 10px 15px rgba(0,0,0,0.1))',
         'card-soft': '0 10px 30px rgba(18, 38, 63, 0.06)',
+        'agrc-xs': 'var(--shadow-xs, 0 1px 2px rgba(0,0,0,0.04))',
+        'agrc-sm': 'var(--shadow-sm, 0 1px 3px rgba(0,0,0,0.06))',
+        'agrc-md': 'var(--shadow-md, 0 4px 8px rgba(0,0,0,0.06))',
+        'agrc-lg': 'var(--shadow-lg, 0 12px 24px rgba(0,0,0,0.08))',
+        'agrc-xl': 'var(--shadow-xl, 0 20px 40px rgba(0,0,0,0.10))',
+        'glow': 'var(--shadow-glow, 0 0 20px rgba(15,98,254,0.15))',
+        'blue-glow': 'var(--shadow-blue-glow, 0 0 30px rgba(15,98,254,0.25))',
+      },
+      backdropBlur: {
+        'glass-sm': '8px',
+        'glass-md': '16px',
+        'glass-lg': '24px',
+        'glass-xl': '40px',
       },
       zIndex: {
         dropdown: 'var(--z-dropdown, 1000)',

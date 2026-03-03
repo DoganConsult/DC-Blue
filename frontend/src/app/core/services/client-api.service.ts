@@ -113,6 +113,23 @@ export class ClientApiService {
     return this.http.get<any>('/api/v1/client/files', { headers: this.headers() });
   }
 
+  uploadFile(file: File): Observable<{ ok: boolean; file: any }> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('entity_type', 'client_upload');
+    formData.append('entity_id', 'workspace');
+    return this.http.post<any>('/api/v1/files/upload', formData, { headers: this.headers() });
+  }
+
+  downloadFile(fileId: string): Observable<Blob> {
+    return this.http.get(`/api/v1/files/download/${fileId}`, { headers: this.headers(), responseType: 'blob' });
+  }
+
+  // Auth / Security
+  toggleMfa(enable: boolean): Observable<{ ok: boolean; mfa_enabled: boolean }> {
+    return this.http.post<{ ok: boolean; mfa_enabled: boolean }>('/api/v1/public/auth/toggle-mfa', { enable }, { headers: this.headers() });
+  }
+
   // Export
   exportPipeline(): Observable<Blob> {
     return this.http.get('/api/v1/client/export/pipeline', { headers: this.headers(), responseType: 'blob' });

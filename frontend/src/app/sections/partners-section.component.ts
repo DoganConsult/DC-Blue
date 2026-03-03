@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { I18nService } from '../core/services/i18n.service';
+import { LandingContent } from '../core/models/landing.model';
 
 interface Partner {
   name: string;
@@ -221,6 +222,7 @@ interface Partner {
   styles: []
 })
 export class PartnersSectionComponent {
+  content = input<LandingContent | null>(null);
   i18n = inject(I18nService);
 
   selectedCategory = 'all';
@@ -232,7 +234,9 @@ export class PartnersSectionComponent {
     { id: 'software', name: { en: 'Software', ar: 'البرمجيات' } }
   ];
 
-  partners: Partner[] = [
+  get partners(): Partner[] { return (this.content()?.partners as any) ?? this.defaultPartners; }
+
+  private defaultPartners: Partner[] = [
     // Platinum Partners
     {
       name: 'Microsoft',

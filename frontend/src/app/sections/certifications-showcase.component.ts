@@ -1,6 +1,7 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { I18nService } from '../core/services/i18n.service';
+import { LandingContent } from '../core/models/landing.model';
 
 interface Certification {
   name: string;
@@ -313,9 +314,14 @@ interface Certification {
   styles: []
 })
 export class CertificationsShowcaseComponent {
+  content = input<LandingContent | null>(null);
   i18n = inject(I18nService);
 
-  securityCertifications = [
+  get securityCertifications() { return (this.content()?.certifications?.security as any) ?? this.defaultSecurityCertifications; }
+  get technicalCertifications() { return (this.content()?.certifications?.technical as any) ?? this.defaultTechnicalCertifications; }
+  get timelineYears() { return (this.content()?.certifications?.timeline as any) ?? this.defaultTimelineYears; }
+
+  private defaultSecurityCertifications = [
     {
       acronym: 'CISM',
       name: 'Certified Information Security Manager',
@@ -346,7 +352,7 @@ export class CertificationsShowcaseComponent {
     }
   ];
 
-  technicalCertifications = [
+  private defaultTechnicalCertifications = [
     {
       acronym: 'RCDD',
       name: 'Registered Communications Distribution Designer',
@@ -389,7 +395,7 @@ export class CertificationsShowcaseComponent {
     }
   ];
 
-  timelineYears = [
+  private defaultTimelineYears = [
     {
       year: '2023',
       certifications: ['Program Management Professional (PgMP)®']

@@ -212,14 +212,14 @@ export const CAREER_COMPANY_COLORS = [
 
 // Enterprise marketing pages: single navy background (centralized)
 export const MARKETING_PAGE = {
-  heroBg:    '#0B1220',
-  heroClass: 'bg-[#0B1220]',
+  heroBg:    'var(--color-page-dark, #0B1220)',
+  heroClass: 'bg-page-dark',
 } as const;
 
 export const GRADIENTS = {
   // Page hero backgrounds (prefer MARKETING_PAGE.heroClass for all marketing pages)
-  pageHeroDark:     'bg-[#0B1220]',
-  inquiryBg:        'bg-[#0B1220]',
+  pageHeroDark:     'bg-page-dark',
+  inquiryBg:        'bg-page-dark',
 
   // Hero ICT CSS background (blue gradient)
   heroIctBgCss:     'linear-gradient(135deg, #1f49c7 0%, #2f6df3 100%)',

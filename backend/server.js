@@ -1,4 +1,6 @@
 import 'dotenv/config';
+import { checkEnvironment } from './config/env-check.js';
+checkEnvironment();
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -77,14 +79,15 @@ app.post('/api/public/leads', async (req, res) => {
   const ticket = `DC${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
   pool.query(
     `INSERT INTO lead_intakes (source, company_name, contact_name, contact_email, message, dedupe_hash, ticket_number, assigned_to, score, consent_pdpl)
-     VALUES ('website_contact',$1,$2,$3,$4,$5,$6,'sales@doganconsult.com',50,true)`,
-    [String(company || '—').trim(), String(name || '—').trim(), String(email).trim().toLowerCase(), (message && String(message).trim()) || null, hash, ticket]
+     VALUES ('website_contact',$1,$2,$3,$4,$5,$6,'sales@doganconsult.com',$7,true)`,
+    [String(company || '—').trim(), String(name || '—').trim(), String(email).trim().toLowerCase(), (message && String(message).trim()) || null, hash, ticket, calculateLeadScore({ contact_email: email, company_name: company, contact_name: name, message })]
   ).then(() => res.status(201).json({ ok: true })).catch((e) => { console.error('Lead insert:', e.message); res.status(500).json({ error: 'Failed to save' }); });
 });
 
 app.use('/api/public', publicContentRouter(pool));
 
 // PLRP + DLI routes (inquiry intake, lead management, partner portal)
+import { calculateLeadScore } from './services/scoring.js';
 import publicContentRouter from './routes/public-content.js';
 import leadsRouter, { portalAuth, adminOnly, optionalAuth } from './routes/leads.js';
 import engagementsRouter from './routes/engagements.js';
@@ -106,6 +109,8 @@ import adminContentRouter from './routes/admin-content.js';
 import customerRouter from './routes/customer.js';
 import clientWorkspaceRouter from './routes/client.js';
 import erpBridgeRouter from './routes/erp-bridge.js';
+import adminSettingsRouter from './routes/admin-settings.js';
+import partnerTrainingRouter from './routes/partner-training.js';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const themeRouter = require('./routes/theme.cjs');
@@ -132,6 +137,8 @@ app.use('/api/v1', adminContentRouter(pool, portalAuth, adminOnly));
 app.use('/api/v1', customerRouter(pool, portalAuth));
 app.use('/api/v1', clientWorkspaceRouter(pool, portalAuth));
 app.use('/api/v1', erpBridgeRouter(pool, portalAuth, adminOnly));
+app.use('/api/v1', adminSettingsRouter(pool, portalAuth, adminOnly));
+app.use('/api/v1', partnerTrainingRouter(pool, portalAuth, adminOnly));
 app.use('/api/v1', aiRouter(pool));
 app.use('/api/sbg', sbgRouter(pool));
 

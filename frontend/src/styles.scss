@@ -20,6 +20,9 @@
 @import 'styles/themes/saudi-excellence';
 @import 'styles/themes/theme-shahin-ai';
 
+// GRC Domain Tokens (cross-theme)
+@import 'styles/themes/grc-tokens';
+
 // Force fixed light colors — prevent device dark mode from overriding
 // The platform uses IBM Carbon G10 (light gray) branding regardless of device settings
 @media (prefers-color-scheme: dark) {

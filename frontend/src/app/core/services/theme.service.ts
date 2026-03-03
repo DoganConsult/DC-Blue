@@ -102,19 +102,19 @@ export class ThemeService {
     },
     {
       id: 'shahin-ai',
-      name: 'Shahin-AI',
-      description: 'KSA GRC — shahin-ai.com design (blue #3B82F6)',
+      name: 'AGRC-OS (Shahin AI)',
+      description: 'KSA GRC Platform — IBM Carbon v11, AGRC-OS Design System',
       icon: 'grc',
       preview: {
-        primary: '#3B82F6',
-        secondary: '#f4f4f4',
-        accent: '#10B981'
+        primary: '#0f62fe',
+        secondary: '#009d9a',
+        accent: '#8a3ffc'
       }
     }
   ];
 
-  // Current theme signal — default IBM Carbon Gray 10 (proper gray grading)
-  private currentTheme = signal<string>('carbon-g10');
+  // Current theme signal — default AGRC-OS (Shahin AI)
+  private currentTheme = signal<string>('shahin-ai');
 
   // Dark mode is DISABLED — platform uses fixed light colors regardless of device settings
   private isDarkMode = signal<boolean>(false);
