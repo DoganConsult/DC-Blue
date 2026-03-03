@@ -260,43 +260,6 @@ interface Certification {
           </div>
         </div>
 
-        <!-- Certification Timeline -->
-        <div class="bg-gradient-to-br from-th-bg-alt to-th-card rounded-3xl p-8 md:p-12 overflow-hidden">
-          <h3 class="text-2xl font-bold text-center mb-8 text-brand-dark">
-            {{ i18n.t('Continuous Professional Development', 'التطوير المهني المستمر') }}
-          </h3>
-
-          <div class="relative max-w-4xl mx-auto">
-            <!-- Timeline Line -->
-            <div class="absolute left-4 md:left-1/2 md:-translate-x-px top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-emerald-400 to-purple-400"></div>
-
-            <!-- Timeline Items -->
-            <div class="space-y-8">
-              @for (year of timelineYears; track year.year; let i = $index) {
-                <div class="relative flex items-center"
-                     [class.md:justify-start]="i % 2 === 0"
-                     [class.md:justify-end]="i % 2 === 1">
-                  <div class="ml-10 md:ml-0 md:w-5/12"
-                       [class.md:pr-8]="i % 2 === 0"
-                       [class.md:pl-8]="i % 2 === 1"
-                       [class.md:text-right]="i % 2 === 0"
-                       [class.md:text-left]="i % 2 === 1">
-                    <div class="bg-th-card rounded-xl shadow-sm border border-th-border-lt p-4 sm:p-6 hover:shadow-md transition-shadow">
-                      <div class="text-lg font-bold text-primary mb-2">{{ year.year }}</div>
-                      <div class="space-y-1">
-                        @for (cert of year.certifications; track cert) {
-                          <div class="text-sm text-th-text-2">• {{ cert }}</div>
-                        }
-                      </div>
-                    </div>
-                  </div>
-                  <div class="absolute left-4 md:left-1/2 -translate-x-1/2 w-4 h-4 bg-th-card border-4 border-primary rounded-full z-10"></div>
-                </div>
-              }
-            </div>
-          </div>
-        </div>
-
         <!-- Bottom CTA -->
         <div class="mt-16 text-center">
           <p class="text-lg text-th-text-2 mb-6">
@@ -323,8 +286,6 @@ export class CertificationsShowcaseComponent {
 
   get securityCertifications() { return (this.content()?.certifications?.security as any) ?? this.defaultSecurityCertifications; }
   get technicalCertifications() { return (this.content()?.certifications?.technical as any) ?? this.defaultTechnicalCertifications; }
-  get timelineYears() { return (this.content()?.certifications?.timeline as any) ?? this.defaultTimelineYears; }
-
   private defaultSecurityCertifications = [
     {
       acronym: 'CISM',
@@ -399,30 +360,4 @@ export class CertificationsShowcaseComponent {
     }
   ];
 
-  private defaultTimelineYears = [
-    {
-      year: '2023',
-      certifications: ['Program Management Professional (PgMP)®']
-    },
-    {
-      year: '2022',
-      certifications: ['Chartered Manager (CMI)']
-    },
-    {
-      year: '2021',
-      certifications: ['RCDD - BICSI', 'PRINCE2® Practitioner']
-    },
-    {
-      year: '2020',
-      certifications: ['PMP®', 'PMI-ACP', 'CISM', 'CISA', 'CRISC', 'Saudi Council of Engineers']
-    },
-    {
-      year: '2019',
-      certifications: ['ATD - Uptime Institute', 'Huawei Pre-Sales Specialist']
-    },
-    {
-      year: '2018',
-      certifications: ['HCIP Data Center Facility']
-    }
-  ];
 }
