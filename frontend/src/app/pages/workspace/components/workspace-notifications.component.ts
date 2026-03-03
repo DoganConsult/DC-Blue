@@ -10,7 +10,7 @@ import { I18nService } from '../../../core/services/i18n.service';
   imports: [CommonModule],
   template: `
     <div class="relative">
-      <button type="button" (click)="open.update(v => !v)"
+      <button type="button" (click)="toggleOpen()"
               class="relative p-2 rounded-lg text-th-text-3 hover:text-th-text hover:bg-th-bg-tert transition"
               [attr.aria-expanded]="open()" aria-label="Notifications">
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -41,9 +41,9 @@ import { I18nService } from '../../../core/services/i18n.service';
               <p class="px-4 py-8 text-sm text-th-text-3 text-center">{{ i18n.t('No notifications', 'لا توجد إشعارات') }}</p>
             } @else {
               @for (n of notifications(); track n.id) {
-                <button type="button" (click)="markRead(n); go(n.link)"
-                        class="w-full text-left px-4 py-3 border-b border-th-border last:border-0 transition"
-                        [class.bg-primary/5]="!n.read" [class.hover:bg-th-bg-tert]="true">
+                <button type="button" (click)="onNotificationClick(n)"
+                        class="w-full text-left px-4 py-3 border-b border-th-border last:border-0 transition hover:bg-th-bg-tert"
+                        [ngClass]="!n.read ? 'bg-primary/5' : ''">
                   <p class="text-xs font-medium text-th-text-2">{{ n.title }}</p>
                   @if (n.body) {
                     <p class="text-xs text-th-text-3 mt-0.5 line-clamp-2">{{ n.body }}</p>
@@ -60,7 +60,7 @@ import { I18nService } from '../../../core/services/i18n.service';
 })
 export class WorkspaceNotificationsComponent implements OnInit, OnDestroy {
   private api = inject(ClientApiService);
-  private i18n = inject(I18nService);
+  protected i18n = inject(I18nService);
   private el = inject(ElementRef<HTMLElement>);
 
   open = signal(false);
@@ -68,6 +68,10 @@ export class WorkspaceNotificationsComponent implements OnInit, OnDestroy {
   notifications = signal<ClientNotification[]>([]);
   total = signal(0);
   unreadCount = signal(0);
+
+  toggleOpen() {
+    this.open.update(v => !v);
+  }
 
   private handleClick = (e: MouseEvent) => {
     const host = this.el.nativeElement;
@@ -124,5 +128,10 @@ export class WorkspaceNotificationsComponent implements OnInit, OnDestroy {
       if (link.startsWith('http')) window.open(link, '_blank');
       else window.location.href = link;
     }
+  }
+
+  onNotificationClick(n: ClientNotification) {
+    this.markRead(n);
+    this.go(n.link);
   }
 }
