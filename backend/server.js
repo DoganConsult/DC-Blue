@@ -13,6 +13,8 @@ const { Pool } = pkg;
 
 const app = express();
 
+app.set('trust proxy', 1);
+
 app.use(compression());
 
 app.use(helmet({ contentSecurityPolicy: false }));
@@ -93,7 +95,12 @@ const copilotRouter = require('./routes/copilot.cjs');
 // Health for deploy / latency badge
 app.get('/health', (_req, res) => {
   res.set('Cache-Control', 'no-store');
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  res.json({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    uptime: Math.floor(process.uptime()),
+    env: process.env.NODE_ENV || 'development',
+  });
 });
 
 // Landing content (EN/AR) — served by public-content router from DB with fallback

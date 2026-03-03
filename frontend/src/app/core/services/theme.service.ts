@@ -207,12 +207,16 @@ export class ThemeService {
     this.isDarkMode.set(false);
     localStorage.removeItem('dark-mode');
 
-    // Try to load from backend (if user is authenticated)
-    this.loadThemeFromBackend().subscribe(theme => {
-      if (theme) {
-        this.currentTheme.set(theme);
-      }
-    });
+    // Try to load from backend only if user is authenticated
+    const hasToken = typeof window !== 'undefined' && window.localStorage &&
+      (localStorage.getItem('dc_user_token') || localStorage.getItem('dc_partner_key'));
+    if (hasToken) {
+      this.loadThemeFromBackend().subscribe(theme => {
+        if (theme) {
+          this.currentTheme.set(theme);
+        }
+      });
+    }
   }
 
   /**

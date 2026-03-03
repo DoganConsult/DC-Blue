@@ -6,8 +6,8 @@ import { I18nService } from '../core/services/i18n.service';
   standalone: true,
   imports: [],
   template: `
-    <section class="py-24 lg:py-32 px-6 lg:px-8 bg-surface-dark" id="architecture">
-      <div class="container mx-auto max-w-6xl">
+    <section class="py-20 lg:py-24 px-6 lg:px-8 bg-surface-dark" id="architecture">
+      <div class="max-w-[1200px] mx-auto">
         <div class="max-w-2xl mb-12">
           <p class="text-[13px] font-semibold text-sky-400 tracking-widest uppercase mb-4">{{ i18n.t('Architecture', 'الهندسة المعمارية') }}</p>
           <h2 class="text-3xl lg:text-4xl font-bold text-white tracking-tight mb-4">{{ i18n.t('Technical Solutions', 'الحلول التقنية') }}</h2>

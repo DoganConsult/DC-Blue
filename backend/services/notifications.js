@@ -78,7 +78,7 @@ export async function notifyPartner(pool, partnerId, { type, title, body, link }
               ${link ? `<a href="${process.env.APP_URL || 'https://www.doganconsult.com'}${link}" style="display:inline-block;margin-top:16px;padding:10px 24px;background:#0f62fe;color:#fff;text-decoration:none;border-radius:4px;font-size:14px;">View Details</a>` : ''}
             </div>
           </div>`;
-        await sendRawEmail(pool, row.contact_email, `[Dogan Consult] ${title}`, html).catch(() => {});
+        await sendRawEmail(pool, row.contact_email, `[Dogan Consult] ${title}`, html).catch(e => console.error('Notification email:', e.message));
       }
     }
 

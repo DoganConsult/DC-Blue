@@ -329,8 +329,8 @@ export default function leadsRouter(pool) {
       if (!email || !password) {
         return res.status(400).json({ error: 'Email and password are required' });
       }
-      if (password.length < 8) {
-        return res.status(400).json({ error: 'Password must be at least 8 characters' });
+      if (password.length < 12) {
+        return res.status(400).json({ error: 'Password must be at least 12 characters' });
       }
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
@@ -391,8 +391,8 @@ export default function leadsRouter(pool) {
       if (!current_password || !new_password) {
         return res.status(400).json({ error: 'Current password and new password are required' });
       }
-      if (new_password.length < 8) {
-        return res.status(400).json({ error: 'New password must be at least 8 characters' });
+      if (new_password.length < 12) {
+        return res.status(400).json({ error: 'New password must be at least 12 characters' });
       }
       const u = await pool.query(
         'SELECT id, password_hash FROM users WHERE id = $1',
@@ -539,7 +539,7 @@ export default function leadsRouter(pool) {
           title: `Lead ${pr.rows[0].ticket_number} updated`,
           body: `${pr.rows[0].company_name}: ${changes}`,
           link: '/partner?tab=activity',
-        }).catch(() => {});
+        }).catch(e => console.error('Lead notification:', e.message));
       }
 
       res.json({ ok: true });
@@ -574,7 +574,7 @@ export default function leadsRouter(pool) {
             title: `Update on ${pr.rows[0].company_name}`,
             body: body.trim().substring(0, 200),
             link: '/partner?tab=activity',
-          }).catch(() => {});
+          }).catch(e => console.error('Lead notification:', e.message));
         }
       }
 
@@ -1157,7 +1157,7 @@ export default function leadsRouter(pool) {
           title: 'Your lead has been approved!',
           body: `Lead ${ctx.rows[0]?.ticket_number || ''} for ${ctx.rows[0]?.company_name || 'a client'} was approved.`,
           link: '/partner?tab=overview',
-        }).catch(() => {});
+        }).catch(e => console.error('Lead notification:', e.message));
       }
 
       try {
@@ -1208,7 +1208,7 @@ export default function leadsRouter(pool) {
           title: 'Lead submission update',
           body: `Your lead was not accepted.${reason ? ' Reason: ' + reason : ''}`,
           link: '/partner?tab=overview',
-        }).catch(() => {});
+        }).catch(e => console.error('Lead notification:', e.message));
       }
 
       try {

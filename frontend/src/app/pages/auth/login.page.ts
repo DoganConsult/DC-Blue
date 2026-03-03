@@ -84,14 +84,14 @@ import { I18nService } from '../../core/services/i18n.service';
             <form (ngSubmit)="login()" class="space-y-4">
               <div>
                 <label class="block text-th-text-3 text-xs mb-1.5 font-medium">{{ i18n.t('Email address', 'البريد الإلكتروني') }}</label>
-                <input [(ngModel)]="identifier" name="identifier" type="email" placeholder="you@company.com" required autocomplete="email"
+                <input [(ngModel)]="identifier" name="identifier" type="email" [placeholder]="i18n.lang() === 'ar' ? 'mohammed&#64;company.sa' : 'mohammed&#64;company.sa'" required autocomplete="email"
                        class="w-full bg-th-bg-tert border border-th-border-dk text-th-text placeholder-th-text-3 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition" />
               </div>
 
               <div>
                 <label class="block text-th-text-3 text-xs mb-1.5 font-medium">{{ i18n.t('Password', 'كلمة المرور') }}</label>
                 <div class="relative">
-                  <input [(ngModel)]="password" name="password" [type]="showPw() ? 'text' : 'password'" placeholder="Your password" required autocomplete="current-password"
+                  <input [(ngModel)]="password" name="password" [type]="showPw() ? 'text' : 'password'" [placeholder]="i18n.lang() === 'ar' ? 'كلمة المرور' : 'Your password'" required autocomplete="current-password"
                          class="w-full bg-th-bg-tert border border-th-border-dk text-th-text placeholder-th-text-3 rounded-xl px-4 py-3 pr-14 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition" />
                   <button type="button" (click)="showPw.set(!showPw())" class="absolute right-3 top-3 text-th-text-3 hover:text-th-text-3 transition text-xs px-1 py-0.5">
                     {{ showPw() ? i18n.t('Hide', 'إخفاء') : i18n.t('Show', 'إظهار') }}
@@ -127,6 +127,15 @@ import { I18nService } from '../../core/services/i18n.service';
               <p class="text-th-text-2 text-xs">
                 {{ i18n.t('No account?', 'ليس لديك حساب؟') }} <a routerLink="/register" class="text-primary hover:underline">{{ i18n.t('Register', 'تسجيل') }}</a>
               </p>
+            </div>
+
+            <!-- DOS (ERPNext) link -->
+            <div class="mt-6 pt-5 border-t border-th-border">
+              <a href="/erp" target="_blank" rel="noopener"
+                 class="flex items-center justify-center gap-2 w-full py-3 rounded-xl border border-amber-500/40 text-amber-500 font-semibold text-sm hover:bg-amber-500 hover:text-white transition">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" /></svg>
+                {{ i18n.t('DOS — Dogan Operating System', 'DOS — نظام دوغان التشغيلي') }}
+              </a>
             </div>
           }
         </div>

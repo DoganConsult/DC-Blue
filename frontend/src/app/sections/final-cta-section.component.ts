@@ -7,8 +7,8 @@ import { GRADIENTS } from '../core/data/page-styles';
   selector: 'app-final-cta-section',
   standalone: true,
   template: `
-    <section class="py-20 px-4 text-white" [class]="gradient" id="final-cta">
-      <div class="container mx-auto max-w-4xl text-center">
+    <section class="py-20 lg:py-24 px-6 lg:px-8 text-white" [class]="gradient" id="final-cta">
+      <div class="max-w-[1200px] mx-auto text-center">
         <h2 class="text-3xl md:text-4xl font-bold mb-4">
           {{ i18n.t('Talk to an ICT architect today', 'تحدث إلى مهندس تقنية معلومات اليوم') }}
         </h2>

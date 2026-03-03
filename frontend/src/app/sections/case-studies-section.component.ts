@@ -8,8 +8,8 @@ import { LandingContent } from '../core/models/landing.model';
   standalone: true,
   imports: [],
   template: `
-    <section class="py-24 lg:py-32 px-6 lg:px-8 bg-th-bg-alt" id="case-studies">
-      <div class="container mx-auto max-w-6xl">
+    <section class="py-20 lg:py-24 px-6 lg:px-8 bg-th-bg-alt" id="case-studies">
+      <div class="max-w-[1200px] mx-auto">
         <div class="max-w-2xl mb-12">
           <p class="text-[13px] font-semibold text-primary tracking-widest uppercase mb-4">{{ i18n.t('Case Studies', 'دراسات حالة') }}</p>
           <h2 class="text-3xl lg:text-4xl font-bold text-th-text tracking-tight mb-4">

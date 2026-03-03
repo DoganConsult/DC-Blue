@@ -201,14 +201,22 @@ const ENTITY_MAP = {
   },
 };
 
+const VALID_ENTITY_TYPES = new Set(Object.keys(ENTITY_MAP));
+
+function assertValidEntityType(entityType) {
+  if (!VALID_ENTITY_TYPES.has(entityType)) {
+    throw new Error(`Invalid entity type: ${entityType}`);
+  }
+}
+
 // ─── Sync Functions ────────────────────────────────
 
 /**
  * Push an entity from our DB to ERPNext
  */
 async function pushToERP(client, pool, entityType, entityId) {
+  assertValidEntityType(entityType);
   const mapping = ENTITY_MAP[entityType];
-  if (!mapping) throw new Error(`No ERP mapping for: ${entityType}`);
 
   // Get local record
   const res = await pool.query(`SELECT * FROM ${entityType} WHERE id = $1`, [entityId]);
@@ -245,7 +253,7 @@ async function pushToERP(client, pool, entityType, entityId) {
     await pool.query(
       `UPDATE ${entityType} SET erp_sync_id = $1, erp_sync_at = NOW() WHERE id = $2`,
       [result.data?.name || result.name, entityId]
-    ).catch(() => {});
+    ).catch(e => console.error('ERP sync update:', e.message));
   }
 
   return result;
@@ -255,8 +263,8 @@ async function pushToERP(client, pool, entityType, entityId) {
  * Pull an entity from ERPNext into our DB
  */
 async function pullFromERP(client, pool, entityType, erpName) {
+  assertValidEntityType(entityType);
   const mapping = ENTITY_MAP[entityType];
-  if (!mapping) throw new Error(`No ERP mapping for: ${entityType}`);
 
   const erpDoc = await client.getResource(mapping.erpDoctype, erpName);
   const data = erpDoc.data || erpDoc;

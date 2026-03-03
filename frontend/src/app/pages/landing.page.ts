@@ -56,13 +56,13 @@ import { FinalCtaSectionComponent } from '../sections/final-cta-section.componen
       </div>
     } @else {
       <app-hero-section-ict [content]="landingContent.content()" />
+      <app-social-proof-section [content]="landingContent.content()" />
+      <app-stats-section [content]="landingContent.content()" />
+      <app-problem-section [content]="landingContent.content()" />
+      <app-services-section [content]="landingContent.content()" />
+      <app-industries-section [content]="landingContent.content()" />
+      <app-why-choose-section [content]="landingContent.content()" />
       @defer (on viewport) {
-        <app-social-proof-section [content]="landingContent.content()" />
-        <app-stats-section [content]="landingContent.content()" />
-        <app-problem-section [content]="landingContent.content()" />
-        <app-services-section [content]="landingContent.content()" />
-        <app-industries-section [content]="landingContent.content()" />
-        <app-why-choose-section [content]="landingContent.content()" />
         <app-security-section [content]="landingContent.content()" />
         <app-certifications-showcase [content]="landingContent.content()" />
         <app-trust-section [content]="landingContent.content()" />
@@ -73,7 +73,7 @@ import { FinalCtaSectionComponent } from '../sections/final-cta-section.componen
         <app-faq-section [content]="landingContent.content()" />
         <app-final-cta-section />
       } @placeholder {
-        <div class="h-2 min-h-[60vh]" aria-hidden="true"></div>
+        <div class="min-h-[120vh]" aria-hidden="true"></div>
       }
     }
 

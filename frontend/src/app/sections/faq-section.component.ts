@@ -13,8 +13,8 @@ const FAQ_ITEMS = [
   selector: 'app-faq-section',
   standalone: true,
   template: `
-    <section class="py-20 px-4 bg-th-bg-alt" id="faq">
-      <div class="container mx-auto max-w-3xl">
+    <section class="py-20 lg:py-24 px-6 lg:px-8 bg-th-bg-alt" id="faq">
+      <div class="max-w-[1200px] mx-auto">
         <h2 class="text-3xl font-bold text-center text-brand-dark mb-2">
           {{ i18n.t('Frequently asked questions', 'الأسئلة الشائعة') }}
         </h2>

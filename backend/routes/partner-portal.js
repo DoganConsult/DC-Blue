@@ -911,7 +911,7 @@ Focus on: opportunities to increase revenue, pipeline health warnings, performan
         score: '',
         assigned_to: 'Account Manager',
         admin_url: `${process.env.APP_URL || 'https://www.doganconsult.com'}/admin`,
-      }).catch(() => {});
+      }).catch(e => console.error('Partner notification:', e.message));
 
       res.json({ ok: true });
     } catch (e) {
@@ -948,7 +948,7 @@ Focus on: opportunities to increase revenue, pipeline health warnings, performan
         score: '',
         assigned_to: 'Review',
         admin_url: `${process.env.APP_URL || 'https://www.doganconsult.com'}/admin/leads/${req.params.leadId}`,
-      }).catch(() => {});
+      }).catch(e => console.error('Partner notification:', e.message));
 
       res.status(201).json({ ok: true });
     } catch (e) {
@@ -1036,7 +1036,7 @@ Focus on: opportunities to increase revenue, pipeline health warnings, performan
              VALUES ($1, $2, $3, $4, $5)
              ON CONFLICT (partner_id, achievement_key) DO NOTHING`,
             [partnerId, a.key, a.title, a.description, a.icon]
-          ).catch(() => {}); // Ignore if table doesn't exist yet
+          ).catch(e => console.error('Achievement upsert:', e.message));
         }
       }
 

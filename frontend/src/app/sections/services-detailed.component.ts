@@ -7,8 +7,8 @@ import { GUIDANCE_TYPE_COLORS, ARCH_LAYER_COLORS } from '../core/data/page-style
   standalone: true,
   imports: [],
   template: `
-    <section class="py-24 lg:py-32 px-6 lg:px-8 bg-th-card" id="services">
-      <div class="container mx-auto max-w-6xl">
+    <section class="py-20 lg:py-24 px-6 lg:px-8 bg-th-card" id="services">
+      <div class="max-w-[1200px] mx-auto">
         <div class="flex flex-wrap gap-2 mb-10">
           <button (click)="selectedCategory.set('all')"
                   class="px-4 py-2 rounded-lg text-[13px] font-medium transition-all border"

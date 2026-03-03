@@ -15,8 +15,8 @@ const PILLARS = [
   selector: 'app-security-section',
   standalone: true,
   template: `
-    <section class="py-20 px-4 bg-th-card" id="security">
-      <div class="container mx-auto max-w-6xl">
+    <section class="py-20 lg:py-24 px-6 lg:px-8 bg-th-card" id="security">
+      <div class="max-w-[1200px] mx-auto">
         <h2 class="text-3xl font-bold text-center text-brand-dark mb-2">
           {{ i18n.t('Security architecture', 'هندسة الأمن') }}
         </h2>

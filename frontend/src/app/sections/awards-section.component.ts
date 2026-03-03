@@ -6,8 +6,8 @@ import { I18nService } from '../core/services/i18n.service';
   standalone: true,
   imports: [],
   template: `
-    <section class="py-20 px-4 bg-gradient-to-b from-th-bg-alt to-th-card">
-      <div class="container mx-auto max-w-7xl">
+    <section class="py-20 lg:py-24 px-6 lg:px-8 bg-gradient-to-b from-th-bg-alt to-th-card">
+      <div class="max-w-[1200px] mx-auto">
         <!-- Section Header -->
         <div class="text-center mb-16">
           <div class="inline-flex items-center gap-2 px-4 py-2 bg-amber-100 rounded-full mb-4">

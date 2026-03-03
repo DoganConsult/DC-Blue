@@ -26,8 +26,8 @@ export default function authRouter(pool) {
         return res.status(400).json({ error: 'Email and password are required' });
       }
 
-      if (password.length < 8) {
-        return res.status(400).json({ error: 'Password must be at least 8 characters' });
+      if (password.length < 12) {
+        return res.status(400).json({ error: 'Password must be at least 12 characters' });
       }
 
       // Email validation
@@ -282,8 +282,8 @@ export default function authRouter(pool) {
         return res.status(400).json({ error: 'Token, email, and new password are required' });
       }
 
-      if (new_password.length < 8) {
-        return res.status(400).json({ error: 'Password must be at least 8 characters' });
+      if (new_password.length < 12) {
+        return res.status(400).json({ error: 'Password must be at least 12 characters' });
       }
 
       const tokenHash = crypto.createHash('sha256').update(token).digest('hex');

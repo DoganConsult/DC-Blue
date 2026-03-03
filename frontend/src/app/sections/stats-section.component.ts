@@ -6,8 +6,8 @@ import { I18nService } from '../core/services/i18n.service';
   selector: 'app-stats-section',
   standalone: true,
   template: `
-    <section class="py-16 px-4 bg-th-bg-alt">
-      <div class="container mx-auto max-w-6xl">
+    <section class="py-20 lg:py-24 px-6 lg:px-8 bg-th-bg-alt">
+      <div class="max-w-[1200px] mx-auto">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
           @for (s of stats; track s.label.en) {
             <div class="advanced-widget-card bg-th-card rounded-2xl p-6 shadow-sm border border-th-border-lt text-center">

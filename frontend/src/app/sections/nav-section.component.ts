@@ -10,8 +10,8 @@ import { Subscription, filter } from 'rxjs';
   imports: [RouterModule, TranslatePipe],
   template: `
     <nav class="fixed top-0 left-0 right-0 z-sticky transition-all duration-300"
-         [style.background]="scrolled() ? 'rgba(6,18,36,0.95)' : 'transparent'"
-         [style.backdrop-filter]="scrolled() ? 'blur(24px)' : 'none'">
+         [style.background]="scrolled() || !isLanding() ? 'rgba(6,18,36,0.95)' : 'transparent'"
+         [style.backdrop-filter]="scrolled() || !isLanding() ? 'blur(24px)' : 'none'">
       <div class="max-w-[1200px] mx-auto px-6 lg:px-8 flex items-center justify-between h-[72px]">
 
         <!-- Logo -->
@@ -25,7 +25,7 @@ import { Subscription, filter } from 'rxjs';
         </a>
 
         <!-- Desktop Navigation -->
-        <div class="hidden lg:flex items-center gap-7">
+        <div class="hidden lg:flex items-center gap-7 ml-8">
           @for (item of navItems; track item.route) {
             <a [routerLink]="item.route"
                class="text-[14px] font-medium transition-colors duration-200 hover:text-white"
@@ -190,6 +190,10 @@ export class NavSectionComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.routerSub?.unsubscribe();
+  }
+
+  isLanding(): boolean {
+    return this.activePath() === '/';
   }
 
   isActive(route: string): boolean {

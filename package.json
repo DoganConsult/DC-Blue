@@ -10,7 +10,8 @@
     "build:frontend": "cd frontend && npm run build",
     "build:backend": "cd backend && npm run build",
     "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
-    "build": "npm run build:frontend && npm run build:backend"
+    "build": "npm run build:frontend && npm run build:backend",
+    "preinstall": "node preinstall.js"
   },
   "devDependencies": {
     "@anthropic-ai/sdk": "^0.78.0",

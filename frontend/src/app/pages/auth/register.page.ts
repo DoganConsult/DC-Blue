@@ -51,13 +51,13 @@ import { I18nService } from '../../core/services/i18n.service';
 
               <div>
                 <label class="block text-th-text-3 text-xs mb-1.5 font-medium">{{ i18n.t('Full Name', 'الاسم الكامل') }}</label>
-                <input [(ngModel)]="form.name" name="name" placeholder="Jane Smith"
+                <input [(ngModel)]="form.name" name="name" [placeholder]="i18n.lang() === 'ar' ? 'محمد العتيبي' : 'Mohammed Al-Otaibi'"
                        class="w-full bg-th-bg-tert border border-th-border-dk text-th-text placeholder-th-text-3 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition" />
               </div>
 
               <div>
                 <label class="block text-th-text-3 text-xs mb-1.5 font-medium">{{ i18n.t('Email Address', 'البريد الإلكتروني') }} <span class="text-red-500">*</span></label>
-                <input [(ngModel)]="form.email" name="email" type="email" placeholder="jane&#64;company.com" required autocomplete="email"
+                <input [(ngModel)]="form.email" name="email" type="email" [placeholder]="i18n.lang() === 'ar' ? 'mohammed&#64;company.sa' : 'mohammed&#64;company.sa'" required autocomplete="email"
                        class="w-full bg-th-bg-tert border border-th-border-dk text-th-text placeholder-th-text-3 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition" />
                 @if (isDoganconsultEmail()) {
                   <p class="text-amber-600 text-xs mt-1">{{ i18n.t('Dogan Consult team accounts are created by your administrator.', 'يتم إنشاء حسابات فريق دوغان كونسلت بواسطة المسؤول.') }}</p>
@@ -66,14 +66,14 @@ import { I18nService } from '../../core/services/i18n.service';
 
               <div>
                 <label class="block text-th-text-3 text-xs mb-1.5 font-medium">{{ i18n.t('Company / Organisation', 'الشركة / المنظمة') }}</label>
-                <input [(ngModel)]="form.company" name="company" placeholder="Acme Corp (optional)"
+                <input [(ngModel)]="form.company" name="company" [placeholder]="i18n.lang() === 'ar' ? 'شركة الرياض للتقنية (اختياري)' : 'Riyadh Tech Co. (optional)'"
                        class="w-full bg-th-bg-tert border border-th-border-dk text-th-text placeholder-th-text-3 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition" />
               </div>
 
               <div>
                 <label class="block text-th-text-3 text-xs mb-1.5 font-medium">{{ i18n.t('Password', 'كلمة المرور') }} <span class="text-red-500">*</span></label>
                 <div class="relative">
-                  <input [(ngModel)]="form.password" name="password" [type]="showPw() ? 'text' : 'password'" placeholder="Min. 8 characters" required autocomplete="new-password"
+                  <input [(ngModel)]="form.password" name="password" [type]="showPw() ? 'text' : 'password'" [placeholder]="i18n.lang() === 'ar' ? '12 حرفاً على الأقل' : 'Min. 12 characters'" required autocomplete="new-password"
                          class="w-full bg-th-bg-tert border border-th-border-dk text-th-text placeholder-th-text-3 rounded-xl px-4 py-3 pr-14 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition" />
                   <button type="button" (click)="showPw.set(!showPw())" class="absolute right-3 top-3 text-th-text-3 hover:text-th-text-3 transition text-xs px-1 py-0.5">
                     {{ showPw() ? i18n.t('Hide', 'إخفاء') : i18n.t('Show', 'عرض') }}
@@ -93,7 +93,7 @@ import { I18nService } from '../../core/services/i18n.service';
 
               <div>
                 <label class="block text-th-text-3 text-xs mb-1.5 font-medium">{{ i18n.t('Confirm Password', 'تأكيد كلمة المرور') }} <span class="text-red-500">*</span></label>
-                <input [(ngModel)]="form.confirm" name="confirm" [type]="showPw() ? 'text' : 'password'" placeholder="Re-enter password" required autocomplete="new-password"
+                <input [(ngModel)]="form.confirm" name="confirm" [type]="showPw() ? 'text' : 'password'" [placeholder]="i18n.lang() === 'ar' ? 'أعد إدخال كلمة المرور' : 'Re-enter password'" required autocomplete="new-password"
                        class="w-full bg-th-bg-tert border border-th-border-dk text-th-text placeholder-th-text-3 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition"
                        [class.border-red-600]="form.confirm && form.confirm !== form.password" />
                 @if (form.confirm && form.confirm !== form.password) {

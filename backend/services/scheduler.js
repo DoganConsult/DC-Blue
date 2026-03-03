@@ -156,7 +156,7 @@ export function startScheduler(pool) {
             <p style="font-size:11px;color:rgba(255,255,255,0.5);">You can disable weekly digests in your Partner Portal settings.</p>
           </div>`;
 
-        await sendRawEmail(pool, partner.contact_email, `Weekly Digest — ${partner.company_name}`, html).catch(() => {});
+        await sendRawEmail(pool, partner.contact_email, `Weekly Digest — ${partner.company_name}`, html).catch(e => console.error('Weekly digest email:', e.message));
       }
 
       if (partners.rows.length > 0) {
@@ -224,7 +224,7 @@ export function startScheduler(pool) {
             <p style="font-size:11px;color:rgba(255,255,255,0.5);">You can disable monthly reports in your Partner Portal settings.</p>
           </div>`;
 
-        await sendRawEmail(pool, partner.contact_email, `Monthly Report — ${partner.company_name}`, html).catch(() => {});
+        await sendRawEmail(pool, partner.contact_email, `Monthly Report — ${partner.company_name}`, html).catch(e => console.error('Monthly report email:', e.message));
       }
 
       if (partners.rows.length > 0) {
@@ -283,7 +283,7 @@ export function startScheduler(pool) {
         await pool.query(
           `INSERT INTO scheduled_tasks_log (task_name, status, details) VALUES ('erp_auto_sync', 'completed', $1)`,
           [`Pushed ${totalPushed} records to ERPNext`]
-        ).catch(() => {});
+        ).catch(e => console.error('ERP sync log:', e.message));
       }
     } catch (e) {
       console.error('ERP auto-sync error:', e.message);

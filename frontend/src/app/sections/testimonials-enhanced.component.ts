@@ -19,8 +19,8 @@ interface Testimonial {
   standalone: true,
   imports: [],
   template: `
-    <section class="py-24 px-4 bg-gradient-to-b from-th-bg-alt to-th-card" id="testimonials">
-      <div class="container mx-auto max-w-7xl">
+    <section class="py-20 lg:py-24 px-6 lg:px-8 bg-gradient-to-b from-th-bg-alt to-th-card" id="testimonials">
+      <div class="max-w-[1200px] mx-auto">
         <div class="text-center mb-14">
           <div class="inline-flex items-center gap-2 px-4 py-2 bg-th-bg-accent border border-th-border-lt rounded-full mb-4">
             <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 24 24">
