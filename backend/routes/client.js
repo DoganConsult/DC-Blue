@@ -543,6 +543,43 @@ export default function clientRouter(pool, portalAuth) {
   });
 
   // ──────────────────────────────────────────────────────
+  // PROFILE — update portal user name/email (optional)
+  // ──────────────────────────────────────────────────────
+  router.patch('/client/profile', portalAuth, clientOnly, async (req, res) => {
+    try {
+      const userId = req.portalUser.id;
+      const { full_name, email } = req.body || {};
+      const updates = [];
+      const params = [];
+      let idx = 1;
+      if (typeof full_name === 'string' && full_name.trim()) {
+        updates.push(`full_name = $${idx++}`);
+        params.push(full_name.trim());
+      }
+      if (typeof email === 'string' && email.trim()) {
+        const normalized = email.trim().toLowerCase();
+        const existing = await pool.query(
+          'SELECT id FROM users WHERE LOWER(email) = $1 AND id != $2',
+          [normalized, userId]
+        );
+        if (existing.rows.length) return res.status(400).json({ error: 'Email already in use' });
+        updates.push(`email = $${idx++}`);
+        params.push(normalized);
+      }
+      if (updates.length === 0) return res.status(400).json({ error: 'Provide full_name and/or email to update' });
+      params.push(userId);
+      await pool.query(
+        `UPDATE users SET ${updates.join(', ')}, updated_at = NOW() WHERE id = $${idx}`,
+        params
+      );
+      res.json({ ok: true });
+    } catch (e) {
+      console.error('Client profile update error:', e.message);
+      res.status(500).json({ error: 'Failed to update profile' });
+    }
+  });
+
+  // ──────────────────────────────────────────────────────
   // FILES — client's files across all entities
   // ──────────────────────────────────────────────────────
   router.get('/client/files', portalAuth, clientOnly, async (req, res) => {

@@ -408,6 +408,12 @@ export class PartnerDashboardPage implements OnInit, OnDestroy {
 
   switchTab(tab: TabKey) {
     this.activeTab.set(tab);
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { tab },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
     if (tab === 'commissions' && !this.commissionsLoaded) {
       this.loadCommissions(1);
     }

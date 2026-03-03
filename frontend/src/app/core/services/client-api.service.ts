@@ -20,6 +20,11 @@ export class ClientApiService {
     return this.http.get<ClientDashboard>('/api/v1/client/dashboard', { headers: this.headers() });
   }
 
+  // Profile
+  updateProfile(body: { full_name?: string; email?: string }): Observable<{ ok: boolean }> {
+    return this.http.patch<any>('/api/v1/client/profile', body, { headers: this.headers() });
+  }
+
   // Notifications
   getNotifications(limit = 20, offset = 0): Observable<{ data: ClientNotification[]; total: number }> {
     return this.http.get<any>('/api/v1/client/notifications', { headers: this.headers(), params: { limit: String(limit), offset: String(offset) } });
