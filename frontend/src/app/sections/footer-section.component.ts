@@ -86,6 +86,8 @@ import { CONTACT_INFO } from '../core/data/site-content';
           <div class="flex items-center gap-5 text-xs text-white/40">
             <a routerLink="/privacy" class="hover:text-white/70 transition-colors">{{ i18n.t('Privacy Policy', 'سياسة الخصوصية') }}</a>
             <a routerLink="/terms" class="hover:text-white/70 transition-colors">{{ i18n.t('Terms of Service', 'الشروط والأحكام') }}</a>
+            <a routerLink="/pdpl" class="hover:text-white/70 transition-colors">{{ i18n.t('PDPL', 'نظام حماية البيانات') }}</a>
+            <a routerLink="/cookies" class="hover:text-white/70 transition-colors">{{ i18n.t('Cookies', 'ملفات تعريف الارتباط') }}</a>
             <span class="flex items-center gap-1.5">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden="true"></span>
               {{ i18n.t('Made in KSA', 'صُنع في المملكة') }}
