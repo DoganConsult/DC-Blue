@@ -54,3 +54,18 @@ scripts/    → Build/deploy shell scripts
 5. All new services must have corresponding route files
 6. Database changes require migration scripts in `backend/scripts/`
 7. Respect KSA regulatory context in all compliance features
+
+## SOVENTRA owner-wide continuous-execution policy (v2.0)
+
+Before each material engineering phase, read the FULL repository-local
+`PROJECT_AGENT_PRODUCTION_ENGINEERING_EXECUTION_CONTRACT.md` and verify its
+SHA-256: `c64fdcb5a5ca2743f05f4d00ffcae7a585ae519cd03add6dc9a98e7fc4a21a4f`.
+
+The owner will not pay GitHub Actions bills. `startup_failure` with zero jobs
+caused by account billing is `EXTERNAL_CI_BILLING_BLOCKED`: checkpoint the
+affected release and continue every unrelated safe authorized task. Never fake
+CI passes, merge an uncertified release, disable security, or change tenant
+access. Require actual passing independent canonical CI before deployment.
+Preserve ALL other repository-specific instructions and stronger safety gates.
+A real durable supervisor is required before claiming continuous autonomous
+operation across agent sessions.
